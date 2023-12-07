@@ -1,0 +1,97 @@
+<div id="booking-dialog" class="ihs-dialog">
+    <div id="border">
+        <div id="content">
+            <div class="ihs-dialog-title">Make a booking</div>
+
+            <p>Please fill out your details and nominate your preferred days</p>
+
+            <form id="booking-form">
+                <div id="form-grid">
+                    <div class="grid-row">
+                        <div class="col1">
+                            <label class="grid-label">Name</label>
+
+                        </div>
+                        <div class="col2">
+                            <input id="name">
+                        </div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="col1">
+                            <label class="grid-label">Email</label>
+                        </div>
+                        <div class="col2">
+                            <input id="email">
+                        </div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="col1">
+                            <label class="grid-label">Phone No.</label>
+                        </div>
+                        <div class="col2">
+                            <input type="tel" id="phone">
+                        </div>
+                    </div>
+                    <p>Preferred Dates:</p>
+                    <div class="day grid-row">
+                        <div class="col1">
+                            <label class="grid-label">First :</label>
+                        </div>
+                        <div class="col-date2">
+                            <input type="date">
+                        </div>
+                        <div class="col3">
+                            <fieldset id="day1">
+                                <input type="radio" value="am" name="day1">AM
+                                <input type="radio" value="pm" name="day1">PM
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="day grid-row">
+                        <div class="col1">
+                            <label class="grid-label">Second:</label>
+                        </div>
+                        <div class="col-date2">
+                            <input type="date">
+                        </div>
+                        <div class="col3">
+                            <fieldset id="day2">
+                                <input type="radio" value="am" name="day2">AM
+                                <input type="radio" value="pm" name="day2">PM
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="day grid-row">
+                        <div class="col1">
+                            <label class="grid-label">Third:</label>
+                        </div>
+                        <div class="col-date2">
+                            <input type="date">
+                        </div>
+                        <div class="col3">
+                            <fieldset id="day3">
+                                <input type="radio" value="am" name="day3">AM
+                                <input type="radio" value="pm" name="day3">PM
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="booking-refund">
+                <p>
+                    Payment of the callout fee is required to confirm your booking.
+                    You will recieve a payment link with confirmation of the date and time.<br>
+                    <br>
+                    You may cancel the appointment <b>at least 3 business days</b> before the
+                    booked date and recieve a full refund, less a <b>$20 cancellation fee.</b><br>
+                    <br>
+                    If you cancel the booking with 3 business days then there is no refund.
+                </p>
+            </div>
+
+            <div class="button" onclick="submitBooking(event)">Submit</div>
+        </div>
+    </div>
+</div>

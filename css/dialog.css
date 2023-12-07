@@ -1,0 +1,17 @@
+.ihs-dialog {
+    background-color: var(--back-yellow);
+    padding: 5px;
+}
+
+.ihs-dialog-title {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+
+@media screen and (max-width: 600px) {
+    .lhs-dialog {
+        padding: 5px;
+    }
+
+}

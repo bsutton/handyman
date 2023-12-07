@@ -1,0 +1,16 @@
+.button {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 30px;
+    text-align: center;
+    height: 50px;
+    width: 80%;
+    border-radius: 20px;
+    background-color: var(--yellow-base-2);
+    padding: 20px;
+    margin: 20px;
+    justify-content: center;
+    align-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 20px;
+    column-gap: 20px;
+
+}
+
+.cell {
+    border-radius: 20px;
+    width: 100%;
+}
+
+.cell-shadow {
+    background-color: var(--back-yellow-light);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+}
+
+.cell-inner {
+    padding: 20px;
+
+}
+
+@media screen and (max-width: 1618px) {
+    .cell {
+        width: 49%;
+    }
+
+    #rhs-text li {
+        direction: ltr !important;
+        text-align: left !important;
+    }
+}
+
+
+@media screen and (max-width: 600px) {
+    .cell {
+        width: 100%;
+    }
+}
