@@ -5,15 +5,14 @@
 
             <p>Please fill out your details and nominate your preferred days</p>
 
-            <form id="booking-form">
+            <form name="booking-form" action="http://localhost:8080/booking" method="post">
                 <div id="form-grid">
                     <div class="grid-row">
                         <div class="col1">
                             <label class="grid-label">Name</label>
-
                         </div>
                         <div class="col2">
-                            <input id="name">
+                            <input name="name">
                         </div>
                     </div>
                     <div class="grid-row">
@@ -21,7 +20,7 @@
                             <label class="grid-label">Email</label>
                         </div>
                         <div class="col2">
-                            <input id="email">
+                            <input name="email">
                         </div>
                     </div>
                     <div class="grid-row">
@@ -29,21 +28,23 @@
                             <label class="grid-label">Phone No.</label>
                         </div>
                         <div class="col2">
-                            <input type="tel" id="phone">
+                            <input type="tel" name="phone">
                         </div>
                     </div>
+                    <p>Job Description:</p>
+                    <textarea id="booking-description" rows="10" maxlength="4096"></textarea>
                     <p>Preferred Dates:</p>
                     <div class="day grid-row">
                         <div class="col1">
                             <label class="grid-label">First :</label>
                         </div>
-                        <div class="col-date2">
-                            <input type="date">
+                        <div class="col2-date">
+                            <input type="date" name="day1-date">
                         </div>
                         <div class="col3">
                             <fieldset id="day1">
-                                <input type="radio" value="am" name="day1">AM
-                                <input type="radio" value="pm" name="day1">PM
+                                <input type="radio" value="am" name="day1-am">AM
+                                <input type="radio" value="pm" name="day1-pm">PM
                             </fieldset>
                         </div>
                     </div>
@@ -51,11 +52,11 @@
                         <div class="col1">
                             <label class="grid-label">Second:</label>
                         </div>
-                        <div class="col-date2">
-                            <input type="date">
+                        <div class="col2-date">
+                            <input type="date" name="day2-date">
                         </div>
                         <div class="col3">
-                            <fieldset id="day2">
+                            <fieldset id="day2" name="day2">
                                 <input type="radio" value="am" name="day2">AM
                                 <input type="radio" value="pm" name="day2">PM
                             </fieldset>
@@ -65,13 +66,13 @@
                         <div class="col1">
                             <label class="grid-label">Third:</label>
                         </div>
-                        <div class="col-date2">
-                            <input type="date">
+                        <div class="col2-date">
+                            <input type="date" name="day3-date">
                         </div>
                         <div class="col3">
                             <fieldset id="day3">
-                                <input type="radio" value="am" name="day3">AM
-                                <input type="radio" value="pm" name="day3">PM
+                                <input type="radio" value="am" name="day3-am">AM
+                                <input type="radio" value="pm" name="day3-pm">PM
                             </fieldset>
                         </div>
                     </div>

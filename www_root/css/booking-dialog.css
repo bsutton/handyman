@@ -27,7 +27,7 @@ fieldset {
 }
 
 
-.col-date2 {
+.col2-date {
     display: inline-block;
     width: 100px;
 
@@ -41,6 +41,10 @@ fieldset {
 
 .booking-refund p {
     font-size: 20px;
+}
+
+#booking-description {
+    width: 100%;
 }
 
 .grid-row input {}
