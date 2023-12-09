@@ -23,7 +23,35 @@ submitBooking = function (event) {
         // phone.value = "";
     }
 
+
 }
+
+
+submitBooking2 = function (event) {
+    var url = "/booking";
+    var request = new XMLHttpRequest();
+    request.open('POST', url, true);
+    request.onload = function () { // request successful
+        // we can use server response to our request now
+        console.log(request.responseText);
+    };
+
+    request.onerror = function () {
+        // request failed
+    };
+
+    let bookingForm = document.getElementById('booking-form');
+    let data = new FormData(bookingForm);
+
+    for (var pair of data.entries()) {
+        console.log(pair[0], pair[1]);
+    }
+    request.send(data); // create FormData from form that triggered event
+    event.preventDefault();
+}
+
+
+
 
 processing = function (form) {
     form.style.display = 'none';

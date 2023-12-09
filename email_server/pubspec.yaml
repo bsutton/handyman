@@ -1,0 +1,24 @@
+name: email_server
+version: 0.0.1
+description: A simple command-line application created by dcli
+environment: 
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: 
+dependencies: 
+  cron: ^0.5.1
+  dcli: 3.2.1
+  dcli_core: 3.2.1
+  http_parser: ^4.0.2
+  mailer: ^6.0.1
+  mime: ^1.0.4
+  mime_type: ^1.0.0
+  path: ^1.9.0
+  settings_yaml: ^7.1.0
+  shelf: ^1.4.1
+  shelf_letsencrypt: ^1.2.2
+  shelf_multipart: ^1.0.0
+  shelf_rate_limiter: ^1.0.1
+  shelf_router: ^1.1.4
+  shelf_static: ^1.1.2
+dev_dependencies: 
+  lint_hard: ^3.0.0

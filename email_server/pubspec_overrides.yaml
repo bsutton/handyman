@@ -1,0 +1,6 @@
+dependency_overrides:
+  shelf_letsencrypt: 
+    path: ../../shelf_letsencrypt
+
+  acme_client:
+    path: ../../Dart-Acme-Client

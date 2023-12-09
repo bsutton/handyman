@@ -1,0 +1,23 @@
+name: gcp_lambda
+description: A sample "Hello, World!" Functions Framework project.
+# version: 0.1.0
+# homepage: https://www.example.com
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  dcli: ^3.2.0
+  functions_framework: ^0.4.0
+  mailer: ^6.0.1
+  settings_yaml: ^7.1.0
+  shelf: ^1.0.0
+
+dev_dependencies:
+  build_runner: ^2.0.0
+  functions_framework_builder: ^0.4.0
+  http: '>=0.13.0 <2.0.0'
+  dart_flutter_team_lints: ^1.0.0
+  test: ^1.15.7
+  test_process: ^2.0.0
