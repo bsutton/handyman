@@ -1,7 +1,54 @@
+# Ivanhoe Handyman Services Web server.
 
-# app password
-To obtain a app password:
+This is a complete web server with a builtin letsencrypt client that obtains certs.
+
+The server is called the IHServer.
+
+# Development
+To test the cert aquistion and renewal you will need to forward 
+port 443 and 80 from your local router.
+
+You will need a DNS server with a real domain name and an A record that 
+points to your routers public IP.
+
+You will need to make the servers use ports above 1024.
+
+I suggest:
+80 -> 8080
+443 -> 8443
+
+You should test using a staging certificate.
+
+# configuration
+
+The config.yaml file is used to configure the server.
+The IHServer expects the config.yaml to be in its working directory.
+
+The following is a sample:
+
+```yaml
+gmail_app_username: bsutton@onepub.dev
+gmail_app_password: XXXXXXXXXXX
+path_to_static_content: /home/bsutton/git/handyman/www_root
+lets_encrypt_live: /opt/ihs/letsencrypt/live
+fqdn: squarephone.biz
+domain_email: bsutton@onepub.dev
+https_port: 10443
+http_port: 1080
+production: false
+
+```
+
+In testing you should set 'production: false', when deploying change it to true.
+
+# Email
+The IHServer has a '/booking' end-point which can send an email.
+It does this by connection to gmail. You will need a gmail app password
+for this to work.
+
+User the following to get an app password (assumes you have a gmail account.)
 https://myaccount.google.com/apppasswords
+
 
 
 ## Simulate a hosted environment on your own machine
