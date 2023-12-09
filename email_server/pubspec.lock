@@ -486,7 +486,7 @@ packages:
       path: "../../shelf_letsencrypt"
       relative: true
     source: path
-    version: "1.3.0"
+    version: "2.0.0"
   shelf_multipart:
     dependency: "direct main"
     description:

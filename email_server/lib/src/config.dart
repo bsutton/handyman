@@ -6,15 +6,16 @@ class Config {
   Config._() {
     _settings = SettingsYaml.load(pathToSettings: 'config.yaml');
 
-    username = _settings.asString('app_username');
-    password = _settings.asString('app_password');
+    username = _settings.asString('gmail_app_username');
+    password = _settings.asString('gmail_app_password');
     pathToStaticContent = _settings.asString('path_to_static_content');
     letsEncryptLive = _settings.asString('lets_encrypt_live',
-        defaultValue: '/etc/letsencrypt/live');
+        defaultValue: '/opt/ihs/letsencrypt/live');
     fqdn = _settings.asString('fqdn');
     domainEmail = _settings.asString('domain_email');
     httpsPort = _settings.asInt('https_port', defaultValue: 443);
     httpPort = _settings.asInt('http_port', defaultValue: 80);
+    production = _settings.asBool('production', defaultValue: false);
   }
   static Config? _config;
 
@@ -25,6 +26,8 @@ class Config {
   /// Path to the lets encrypt certiicates normally
   /// /etc/letsencrypt/live
   late final String letsEncryptLive;
+
+  late final bool production;
 
   late final String fqdn;
 

@@ -1,6 +1,6 @@
-name: email_server
+name: ihserver
 version: 0.0.1
-description: A simple command-line application created by dcli
+description: Ivanhoe Handyman Services web server.
 environment: 
   sdk: '>=3.0.0 <4.0.0'
   flutter: 
@@ -15,7 +15,7 @@ dependencies:
   path: ^1.9.0
   settings_yaml: ^7.1.0
   shelf: ^1.4.1
-  shelf_letsencrypt: ^1.2.2
+  shelf_letsencrypt: ^2.0.0
   shelf_multipart: ^1.0.0
   shelf_rate_limiter: ^1.0.1
   shelf_router: ^1.1.4
