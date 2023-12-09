@@ -5,6 +5,9 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: 
 dependencies: 
+  acme_client:
+    hosted: https://onepub.dev/api/jbbxpsdavu/
+    version: ^1.3.0
   cron: ^0.5.1
   dcli: 3.2.1
   dcli_core: 3.2.1
@@ -15,10 +18,22 @@ dependencies:
   path: ^1.9.0
   settings_yaml: ^7.1.0
   shelf: ^1.4.1
-  shelf_letsencrypt: ^2.0.0
+  shelf_letsencrypt:
+    hosted: https://onepub.dev/api/jbbxpsdavu/
+    version: ^2.0.1
   shelf_multipart: ^1.0.0
   shelf_rate_limiter: ^1.0.1
   shelf_router: ^1.1.4
   shelf_static: ^1.1.2
+
+dependency_overides:
+  x509:
+    hosted: https://onepub.dev/api/jbbxpsdavu/
+    version: ^0.2.5
+  jose:
+    hosted: https://onepub.dev/api/jbbxpsdavu/
+    version: ^0.3.4
+
+ 
 dev_dependencies: 
-  lint_hard: ^3.0.0
+  lint_hard: ^4.0.0

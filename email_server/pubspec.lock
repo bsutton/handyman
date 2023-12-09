@@ -2,12 +2,13 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   acme_client:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
-      path: "../../Dart-Acme-Client"
-      relative: true
-    source: path
-    version: "1.3.0"
+      name: acme_client
+      sha256: "326515df8a6f4c5dea370f7672b1ca74424c8e868fafe72dd288d6db2e84767a"
+      url: "https://onepub.dev/api/jbbxpsdavu/"
+    source: hosted
+    version: "1.3.1"
   archive:
     dependency: transitive
     description:
@@ -292,10 +293,10 @@ packages:
     dependency: transitive
     description:
       name: jose
-      sha256: "7955ec5d131960104e81fbf151abacb9d835c16c9e793ed394b2809f28b2198d"
-      url: "https://pub.dev"
+      sha256: d9620ccff76c47b0c7c5318e663971c3ca046854e247e4b72af6213053554c0c
+      url: "https://onepub.dev/api/jbbxpsdavu/"
     source: hosted
-    version: "0.3.4"
+    version: "0.3.5"
   js:
     dependency: transitive
     description:
@@ -324,10 +325,10 @@ packages:
     dependency: "direct dev"
     description:
       name: lint_hard
-      sha256: d9cb96856a6c08f9d9d012de17bd45a9aa3950738c7bb6e01676a1c29625a4aa
+      sha256: "44d15ec309b1a8e1aff99069df9dcb1597f49d5f588f32811ca28fb7b38c32fe"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "4.0.0"
   lists:
     dependency: transitive
     description:
@@ -372,10 +373,10 @@ packages:
     dependency: transitive
     description:
       name: meta
-      sha256: "3c74dbf8763d36539f114c799d8a2d87343b5067e9d796ca22b5eb8437090ee3"
+      sha256: d584fa6707a52763a52446f02cc621b077888fb63b93bbcb1143a7be5a0c0c04
       url: "https://pub.dev"
     source: hosted
-    version: "1.9.1"
+    version: "1.11.0"
   mime:
     dependency: "direct main"
     description:
@@ -483,10 +484,11 @@ packages:
   shelf_letsencrypt:
     dependency: "direct main"
     description:
-      path: "../../shelf_letsencrypt"
-      relative: true
-    source: path
-    version: "2.0.0"
+      name: shelf_letsencrypt
+      sha256: "4e97797efbe2b03df92bd8a6baeea86b5dead39fdcf37c4c9be3c2af78ebc6db"
+      url: "https://onepub.dev/api/jbbxpsdavu/"
+    source: hosted
+    version: "2.0.2"
   shelf_multipart:
     dependency: "direct main"
     description:
@@ -555,10 +557,10 @@ packages:
     dependency: transitive
     description:
       name: stack_trace
-      sha256: c3c7d8edb15bee7f0f74debd4b9c5f3c2ea86766fe4178eb2a18eb30a0bdaed5
+      sha256: "73713990125a6d93122541237550ee3352a2d84baad52d375a4cad2eb9b7ce0b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.11.0"
+    version: "1.11.1"
   stacktrace_impl:
     dependency: transitive
     description:
@@ -699,10 +701,10 @@ packages:
     dependency: transitive
     description:
       name: x509
-      sha256: f9ac84e137edc719767fb218b8d72b1ecc5b5e29ad607b79b253d1a517ca5ba8
-      url: "https://pub.dev"
+      sha256: "8d4af3c1e184d5f8bec307b2c5c68ab03713dd3a3e063da9abfacc76402c172e"
+      url: "https://onepub.dev/api/jbbxpsdavu/"
     source: hosted
-    version: "0.2.4"
+    version: "0.2.5"
   yaml:
     dependency: transitive
     description:
