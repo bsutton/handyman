@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:cron/cron.dart';
 import 'package:dcli/dcli.dart';
+import 'package:dnsolve/dnsolve.dart';
 import 'package:ihserver/src/config.dart';
 import 'package:ihserver/src/handle_booking.dart';
 import 'package:ihserver/src/handle_static.dart';
@@ -27,6 +28,8 @@ void main() async {
   final pathToStaticContent = config.pathToStaticContent;
   await _checkConfiguration(pathToStaticContent);
 
+  await _checkFQDNResolved(config.fqdn);
+
   final domain = Domain(name: config.fqdn, email: config.domainEmail);
 
   final letsEncrypt = build(
@@ -39,6 +42,17 @@ void main() async {
   await _startRenewalService(letsEncrypt, domain);
 
   await _sendTestEmail();
+}
+
+Future<void> _checkFQDNResolved(String fqdn) async {
+  // 'nslookup squarephone.biz'.run;
+  final dnsolve = DNSolve();
+  final response = await dnsolve.lookup(fqdn);
+  if (response.answer?.records != null) {
+    for (final record in response.answer!.records!) {
+      print(record.toBind);
+    }
+  }
 }
 
 Future<void> _startRenewalService(
@@ -117,6 +131,7 @@ LetsEncrypt build({CertificateMode mode = CertificateMode.staging}) {
   final letsEncrypt = LetsEncrypt(certificatesHandler,
       port: config.httpPort,
       securePort: config.httpsPort,
+      bindingAddress: config.bindingAddress,
       production: mode == CertificateMode.production)
     ..minCertificateValidityTime = const Duration(days: 10);
 

@@ -165,18 +165,18 @@ packages:
     dependency: "direct main"
     description:
       name: dcli
-      sha256: "9ae4f5275fc1ef1205ee35ab290301af34f92ff0926dea391c0f917615a7aecf"
+      sha256: a940b213986149acf2863c4d214af71998a3a81e841a1b2e6ce44fdece150256
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.1"
+    version: "3.2.2"
   dcli_core:
     dependency: "direct main"
     description:
       name: dcli_core
-      sha256: f4ce465a867e481ca58b0c5c4e38dd3e354ecb2b67665edb7130a2247999497b
+      sha256: "8bcba1b7edce99e42a74e56b184101ece0fb3994e0fd152cdef94c0f9aa2acdb"
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.1"
+    version: "3.2.2"
   dcli_terminal:
     dependency: transitive
     description:
@@ -193,6 +193,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.0"
+  dnsolve:
+    dependency: "direct main"
+    description:
+      name: dnsolve
+      sha256: "773146c310d2c38ab257b7705fd149708164f1c9432acb1b4c8e8b3ce995a2d6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   equatable:
     dependency: transitive
     description:
@@ -715,4 +723,3 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.2.0 <4.0.0"
-  flutter: any
