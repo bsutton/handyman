@@ -1,0 +1,14 @@
+# To obtain a app password:
+# https://myaccount.google.com/apppasswords
+
+gmail_app_username: bsutton@onepub.dev
+gmail_app_password: uwxy ysgn tvuw nkio
+path_to_static_content: /home/bsutton/git/handyman/ihserver/www_root
+lets_encrypt_live: /opt/ihs/letsencrypt/live
+fqdn: squarephone.biz
+domain_email: bsutton@onepub.dev
+https_port: 10443
+http_port: 1080
+production: false
+binding_address: 0.0.0.0
+logger_path: console

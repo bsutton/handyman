@@ -1,6 +1,7 @@
 #! /usr/bin/env dcli
 // ignore_for_file: avoid_types_on_closure_parameters
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cron/cron.dart';
@@ -9,6 +10,7 @@ import 'package:dnsolve/dnsolve.dart';
 import 'package:ihserver/src/config.dart';
 import 'package:ihserver/src/handle_booking.dart';
 import 'package:ihserver/src/handle_static.dart';
+import 'package:ihserver/src/logger.dart';
 import 'package:ihserver/src/mailer.dart';
 import 'package:path/path.dart';
 import 'package:shelf/shelf.dart';
@@ -38,6 +40,7 @@ void main() async {
           : CertificateMode.staging);
 
   await _startHttpsServer(letsEncrypt, domain);
+  // await _startWebServer();
 
   await _startRenewalService(letsEncrypt, domain);
 
@@ -50,7 +53,7 @@ Future<void> _checkFQDNResolved(String fqdn) async {
   final response = await dnsolve.lookup(fqdn);
   if (response.answer?.records != null) {
     for (final record in response.answer!.records!) {
-      print(record.toBind);
+      qlog(record.toBind);
     }
   }
 }
@@ -65,25 +68,43 @@ Future<void> _startRenewalService(
 
 Future<void> refreshIfRequired(
     int httpPort, LetsEncrypt letsEncrypt, Domain domain) async {
-  print(blue('Checking if cert needs to be renewed'));
+  qlog(blue('Checking if cert needs to be renewed'));
   final result =
       await letsEncrypt.checkCertificate(domain, requestCertificate: true);
 
   if (result.isOkRefreshed) {
-    print(blue('certificate was renewed - restarting service'));
+    qlog(blue('certificate was renewed - restarting service'));
     // restart the servers.
     await Future.wait<void>([server.close(), secureServer.close()]);
     await _startHttpsServer(letsEncrypt, domain);
-    print(blue('services restarted'));
+    qlog(blue('services restarted'));
   } else {
-    print(blue('Renewal not required'));
+    qlog(blue('Renewal not required'));
   }
 }
+
+// Future<void> _startWebServer() async {
+//   final router = _buildRouter();
+
+//   final handler = const Pipeline()
+//       .addMiddleware(rateLimiter.rateLimiter())
+//       .addHandler(router.call);
+
+//   final server = await serve(
+//     handler,
+//     InternetAddress.anyIPv4,
+//     Config().httpPort,
+//   );
+//   qlog('Serving at http://${server.address.host}:${server.port}');
+// }
 
 Future<void> _startHttpsServer(LetsEncrypt letsEncrypt, Domain domain) async {
   final router = _buildRouter();
 
+  final redirectToHttps = createMiddleware(requestHandler: _redirectToHttps);
+
   final handler = const Pipeline()
+      .addMiddleware(redirectToHttps)
       .addMiddleware(logRequests(logger: _log))
       .addMiddleware(rateLimiter.rateLimiter())
       .addHandler(router.call);
@@ -100,12 +121,27 @@ Future<void> _startHttpsServer(LetsEncrypt letsEncrypt, Domain domain) async {
   server.autoCompress = true;
   secureServer.autoCompress = true;
 
-  print('Serving at http://${server.address.host}:${server.port}');
-  print('Serving at https://${secureServer.address.host}:${secureServer.port}');
+  qlog('Serving at http://${server.address.host}:${server.port}');
+  qlog('Serving at https://${secureServer.address.host}:${secureServer.port}');
+}
+
+/// Redirect all http traffic to https.
+/// This shouldn't interfere with lets encrypt as ti hooks
+/// into the  pipeline before this middleware is called.
+FutureOr<Response?> _redirectToHttps(Request request) async {
+  if (request.requestedUri.scheme == 'http') {
+    final headers = <String, String>{
+      'location':
+          '''${request.requestedUri.replace(scheme: "https", port: Config().httpsPort)}'''
+    };
+    return Response(302, headers: headers);
+  }
+  return null;
 }
 
 void _log(String message, bool isError) {
-  print(orange(message));
+  qlog(orange(message));
+
 }
 
 Router _buildRouter() {
@@ -132,6 +168,7 @@ LetsEncrypt build({CertificateMode mode = CertificateMode.staging}) {
       port: config.httpPort,
       securePort: config.httpsPort,
       bindingAddress: config.bindingAddress,
+      selfTest: false,
       production: mode == CertificateMode.production)
     ..minCertificateValidityTime = const Duration(days: 10);
 
@@ -139,20 +176,20 @@ LetsEncrypt build({CertificateMode mode = CertificateMode.staging}) {
 }
 
 Future<void> _checkConfiguration(String pathToStaticContent) async {
-  print(green('Starting Handyman Server'));
-  print(blue('Loading config.yaml from ${truepath(Config().loadedFrom)}'));
-  print(blue('Path to static content: $pathToStaticContent'));
+  qlog(green('Starting Handyman Server'));
+  qlog(blue('Loading config.yaml from ${truepath(Config().loadedFrom)}'));
+  qlog(blue('Path to static content: $pathToStaticContent'));
   final pathToIndexHtml = join(pathToStaticContent, 'index.html');
 
   if (!exists(pathToIndexHtml)) {
-    printerr(red('Missing index.html in $pathToIndexHtml'));
+    qlogerr(red('Missing index.html in $pathToIndexHtml'));
     exit(32);
   }
-  print(blue('Starting web server'));
+  qlog(blue('Starting web server'));
 }
 
 Future<void> _sendTestEmail() async {
-  print('Sending test email to bsutton@onepub.dev');
+  qlog('Sending test email to bsutton@onepub.dev');
   final result = await sendEmail(
       from: 'startup@onepub.dev',
       to: 'bsutton@onepub.dev',
@@ -160,7 +197,7 @@ Future<void> _sendTestEmail() async {
       body: 'The Handy Server has been restarted');
 
   if (!result) {
-    printerr(red(
+    qlogerr(red(
         '''Failed to send startup email: check the configuration at ${Config().loadedFrom}'''));
     exit(33);
   }

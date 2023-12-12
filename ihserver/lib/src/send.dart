@@ -57,5 +57,5 @@
 //   const body = '<p>This is a test email sent from Dart.</p>';
 
 //   await sendEmail(to, subject, body);
-//   print('Email sent successfully!');
+//   qlog('Email sent successfully!');
 // }

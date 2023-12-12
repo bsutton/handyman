@@ -1,8 +1,8 @@
-import 'package:dcli/dcli.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_multipart/form_data.dart';
 import 'package:shelf_multipart/multipart.dart';
 
+import 'logger.dart';
 import 'mailer.dart';
 
 Future<Response> handleBooking(Request request) async {
@@ -47,7 +47,7 @@ $day3<br>
 ''';
 
   if (email == null) {
-    printerr('No email supplied for $name $phone');
+    qlogerr('No email supplied for $name $phone');
     return Response.badRequest(body: 'No email supplied for $name $phone');
   }
 

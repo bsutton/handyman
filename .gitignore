@@ -6,3 +6,5 @@ email_server/bin/ihserver
 ihserver/release/config.yaml
 ihserver/lib/src/dcli/resource/generated/*.dart
 ihserver/bin/ihserver
+ihserver/bin/launch
+ihserver/config/config.yaml

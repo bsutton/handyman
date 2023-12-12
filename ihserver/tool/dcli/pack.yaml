@@ -1,0 +1,16 @@
+externals:
+  - external:
+    path: www_root
+    mount: www_root
+
+  - external:
+    path: bin/ihserver
+    mount: bin/ihserver
+  - external:
+    path: bin/launch
+    mount: bin/launch
+
+
+  - external:
+    path: release/config.yaml
+    mount: config/config.yaml

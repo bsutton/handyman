@@ -4,6 +4,7 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server/gmail.dart';
 
 import 'config.dart';
+import 'logger.dart';
 
 Future<bool> sendEmail(
     {required String from,
@@ -25,10 +26,10 @@ Future<bool> sendEmail(
 
   try {
     final sendReport = await send(message, smtpServer);
-    print('email sent $sendReport');
+    qlog('email sent $sendReport');
     return true;
   } catch (e) {
-    print('Error: $e');
+    qlog('Error: $e');
     return false;
   }
 }
