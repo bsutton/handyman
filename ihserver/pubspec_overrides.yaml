@@ -1,0 +1,3 @@
+dependency_overrides:
+  shelf_letsencrypt:
+    path: ../../shelf_letsencrypt

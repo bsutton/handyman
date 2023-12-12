@@ -18,11 +18,16 @@ showModal = async function (event, contentUrl) {
     // obscure the main page
     let modalOverlay = document.getElementById("modal-overlay");
     modalOverlay.style.display = 'block';
+
+    // stop the body scrolling:
+    let body = document.getElementById("body");
+    body.classList.add('noscroll');
+
     return false;
 }
 
 // When the user clicks anywhere outside of the modal, close it
-closeModal = function (event, dialogId) {
+closeModal = function (event) {
     event.preventDefault();
     if (openModal !== null) {
         openModal.classList.remove("modal-box-open");
@@ -32,6 +37,9 @@ closeModal = function (event, dialogId) {
         let modalOverlay = document.getElementById("modal-overlay");
         modalOverlay.style.display = 'none';
 
+        // resume the body scrolling:
+        let body = document.getElementById("body");
+        body.classList.remove('noscroll');
     }
 }
 

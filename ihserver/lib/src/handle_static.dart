@@ -30,8 +30,11 @@ Response _handleStatic(Request request, String filename) {
   final mime = MediaType.parse(
       lookupMimeType('.${extension(filename)}') ?? 'application/octet-stream');
 
-  return Response.ok(File(pathToFile).openRead(),
-      headers: {'Content-Type': mime.mimeType});
+  const oneMonth = '2592000';
+  return Response.ok(File(pathToFile).openRead(), headers: {
+    'Content-Type': mime.mimeType,
+    'Cache-Control': 'max-age=$oneMonth'
+  });
 }
 
 String? _pathToStaticContent;

@@ -2,15 +2,24 @@
 <html>
 
 <head>
+    <title>Ivanhoe Handyman Services</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen">
-    <script type="application/javascript" src="js/modal.js"></script>
-    <script type="application/javascript" src="js/booking.js"></script>
+    <link rel="stylesheet" href="css/common.css" type="text/css" media="screen">
+    <link rel="stylesheet" defer href="css/booking-dialog.css" type="text/css" media="screen">
+    <link rel="stylesheet" defer href="css/button.css" type="text/css" media="screen">
+    <link rel="stylesheet" defer href="css/dialog.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/grid.css" type="text/css" media="screen">
+    <link rel="stylesheet" defer href="css/legal.css" type="text/css" media="screen">
+    <link rel="stylesheet" defer href="css/modal.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/text.css" type="text/css" media="screen">
+    <link rel="stylesheet" defer href="css/tooltip.css" type="text/css" media="screen">
+    <script type="application/javascript" defer src="js/modal.js"></script>
+    <script type="application/javascript" defer src="js/booking.js"></script>
 </head>
 
-<body>
+<body id="body">
     <div id="border">
-        <h1>Brett Sutton</h1>
+        <h1>Ivanhoe Handyman Services</h1>
         <hr class="line">
         <div id="content">
             <div id="image-row" class="container">
@@ -36,7 +45,7 @@
 
                 </div>
                 <div id="handyguy" class="cell">
-                    <img src="images/handyguy.webp">
+                    <img src="images/handyguy.webp" width="500" height="560">
                 </div>
                 <div id="rhs-text" class="cell">
 
@@ -70,7 +79,7 @@
             </div>
 
             <div id="business-name">
-                Ivanhoe Handyman Services
+                Brett the Handyman
             </div>
             <hr class="line">
 
@@ -121,6 +130,8 @@
                                         <li>Place towels under closed doors to stop dust spreading.</li>
                                         <li>Let me know if there are items/areas of concern</li>
                                         <li>Raise any concerns you have ASAP</li>
+                                        <li>Anything that looks like cement sheet will need to be tested for asbestos.
+                                        </li>
                                     </ul>
                                 </div>
 
@@ -132,7 +143,7 @@
                                         <li>I bring a brush and pan and small vaacum cleaner to cleanup</li>
                                         <li>I am happy to give the floor a quick mop if you can supply same</li>
                                         <li>Any waste materials will be deposited neatly in your bin</li>
-                                        <li>When painting we will need access to an area</li>
+                                        <li>When painting we will need access to an area to clean paint brushes</li>
                                         <li>Dust and noise are somewhat inevitable. </li>
                                     </ul>
                                 </div>
@@ -197,11 +208,12 @@
 
         </div>
     </div>
-
+    <div id="mobile-booking" class="button"><a href="" onclick="showAccept(event)"> Book a job</a>
+    </div>
 
     <!-- placeholder to insert modal dialog -->
-    <div id="modal-dialog" class="modal-box modal-box-closed">
-        <div id="modal-container"></div>
+    <div id="modal-dialog" class="modal-box modal-box-closed fixed-container">
+        <div id="modal-container" class="scrollable-child"></div>
     </div>
 
     <!-- the overlay is used to hide the page when we display a modal dialog-->

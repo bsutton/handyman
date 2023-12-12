@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../shelf_letsencrypt"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "ihserver"
+	}
+}

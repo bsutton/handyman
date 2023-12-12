@@ -3,12 +3,10 @@
     flex-wrap: wrap;
     font-size: 30px;
     text-align: center;
-    height: 50px;
-    width: 80%;
     border-radius: 20px;
     background-color: var(--yellow-base-2);
     padding: 20px;
-    margin: 20px;
+    margin: 10px;
     justify-content: center;
     align-content: center;
     cursor: pointer;

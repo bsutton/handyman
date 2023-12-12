@@ -1,4 +1,4 @@
-
+let bookingDialogId = 'booking-form';
 
 submitBooking = function (event) {
     event.preventDefault();
@@ -28,6 +28,7 @@ submitBooking = function (event) {
 
 
 submitBooking2 = function (event) {
+    event.preventDefault();
     var url = "/booking";
     var request = new XMLHttpRequest();
     request.open('POST', url, true);
@@ -40,17 +41,20 @@ submitBooking2 = function (event) {
         // request failed
     };
 
-    let bookingForm = document.getElementById('booking-form');
+    let bookingForm = document.getElementById(bookingDialogId);
     let data = new FormData(bookingForm);
 
     for (var pair of data.entries()) {
         console.log(pair[0], pair[1]);
     }
     request.send(data); // create FormData from form that triggered event
-    event.preventDefault();
+    closeModal(event);
 }
 
 
+cancelBooking = function (event) {
+    closeModal(event);
+}
 
 
 processing = function (form) {
