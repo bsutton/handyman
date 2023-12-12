@@ -1,10 +1,9 @@
-email_server/config.yaml
-email_server/.dart_tool
-email_server/.history
 .history
-email_server/bin/ihserver
+
 ihserver/release/config.yaml
+ihserver/config/config.yaml
 ihserver/lib/src/dcli/resource/generated/*.dart
 ihserver/bin/ihserver
 ihserver/bin/launch
-ihserver/config/config.yaml
+ihserver/bin/build
+ihserver/tool/deploy
