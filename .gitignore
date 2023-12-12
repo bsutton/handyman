@@ -5,5 +5,5 @@ ihserver/config/config.yaml
 ihserver/lib/src/dcli/resource/generated/*.dart
 ihserver/bin/ihserver
 ihserver/bin/launch
-ihserver/bin/build
+ihserver/tool/build
 ihserver/tool/deploy
