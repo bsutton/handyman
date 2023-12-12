@@ -369,7 +369,7 @@
     },
     {
       "name": "shelf_letsencrypt",
-      "rootUri": "file:///home/bsutton/.pub-cache/hosted/onepub.dev%2547api%2547jbbxpsdavu%2547/shelf_letsencrypt-2.0.2",
+      "rootUri": "../../../shelf_letsencrypt",
       "packageUri": "lib/",
       "languageVersion": "3.0"
     },
@@ -548,7 +548,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-12-11T03:05:46.818264Z",
+  "generated": "2023-12-11T03:33:44.908284Z",
   "generator": "pub",
   "generatorVersion": "3.2.3"
 }

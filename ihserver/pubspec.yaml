@@ -20,7 +20,7 @@ dependencies:
   shelf: ^1.4.1
   shelf_letsencrypt:
     hosted: https://onepub.dev/api/jbbxpsdavu/
-    version: ^2.0.1
+    version: ^2.0.0
   shelf_multipart: ^1.0.0
   shelf_rate_limiter: ^1.0.1
   shelf_router: ^1.1.4

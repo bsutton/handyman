@@ -492,11 +492,10 @@ packages:
   shelf_letsencrypt:
     dependency: "direct main"
     description:
-      name: shelf_letsencrypt
-      sha256: "4e97797efbe2b03df92bd8a6baeea86b5dead39fdcf37c4c9be3c2af78ebc6db"
-      url: "https://onepub.dev/api/jbbxpsdavu/"
-    source: hosted
-    version: "2.0.2"
+      path: "../../shelf_letsencrypt"
+      relative: true
+    source: path
+    version: "2.0.3"
   shelf_multipart:
     dependency: "direct main"
     description:
