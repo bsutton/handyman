@@ -217,6 +217,7 @@ body {
 
     #handyguy img {
         max-width: 80%;
+        height: 300px !important;
     }
 
     #rhs-text {

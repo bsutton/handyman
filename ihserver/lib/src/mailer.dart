@@ -28,6 +28,12 @@ Future<bool> sendEmail(
     final sendReport = await send(message, smtpServer);
     qlog('email sent $sendReport');
     return true;
+  } on SmtpMessageValidationException catch (e) {
+    qlogerr('Error: $e');
+    for (final problem in e.problems) {
+      qlogerr('${problem.code} ${problem.msg}');
+    }
+    return false;
   } catch (e) {
     qlog('Error: $e');
     return false;

@@ -152,6 +152,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "email_validator",
+      "rootUri": "file:///home/bsutton/.pub-cache/hosted/pub.dev/email_validator-2.1.17",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "equatable",
       "rootUri": "file:///home/bsutton/.pub-cache/hosted/pub.dev/equatable-2.0.5",
       "packageUri": "lib/",
@@ -548,7 +554,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-12-12T05:48:55.678456Z",
+  "generated": "2023-12-12T22:10:20.630473Z",
   "generator": "pub",
   "generatorVersion": "3.2.3"
 }

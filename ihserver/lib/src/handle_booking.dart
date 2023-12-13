@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_multipart/form_data.dart';
 import 'package:shelf_multipart/multipart.dart';
@@ -6,58 +7,166 @@ import 'logger.dart';
 import 'mailer.dart';
 
 Future<Response> handleBooking(Request request) async {
-  // final body = await request.readAsString();
-  // final uri = Uri(query: body);
+  try {
+    if (!_isMultipart(request)) {
+      return Response.badRequest(body: 'Exported formData');
+    }
 
-  if (!_isMultipart(request)) {
-    return Response.badRequest(body: 'Exported formData');
+    final params = <String, String>{};
+
+    await for (final formData in request.multipartFormData) {
+      final dataString = await formData.part.readString();
+      params[formData.name] = dataString;
+    }
+
+    final name = params['name'] ?? 'not supplied';
+    final email = params['email'];
+    final phone = params['phone'] ?? 'not supplied';
+    final description = params['description'] ?? 'not supplied';
+    final day1 = PreferredDate(params, 'day1');
+    final day2 = PreferredDate(params, 'day2');
+    final day3 = PreferredDate(params, 'day3');
+
+    qlog('New Booking details: $name $email $phone $day1 $day2 $day3');
+
+    if (!EmailValidator.validate(email ?? 'invalid')) {
+      return Response.badRequest(body: '''
+Your email address looks to be invalid. Please correct it or call 0451 086 561 to make a booking ''');
+    }
+
+    if (!await sendBooking(
+        name: name,
+        email: email,
+        phone: phone,
+        description: description,
+        day1: day1,
+        day2: day2,
+        day3: day3)) {
+      return Response.internalServerError(
+          body:
+              '''Sorry but the booking attempt fail. Please call 0451 086 561 to make a booking''');
+    }
+
+    await sendBookingReceived(
+        name: name,
+        email: email,
+        phone: phone,
+        description: description,
+        day1: day1,
+        day2: day2,
+        day3: day3);
+
+    return Response.ok("{result:'success'}");
+    // ignore: avoid_catches_without_on_clauses
+  } catch (e, st) {
+    qlogerr('Error handling booking: $e $st');
+    return Response.internalServerError(
+        body:
+            '''Sorry but the booking attempt fail. Please call 0451 086 561 to make a booking''');
   }
+}
 
-  // final params = uri.queryParameters;
-  final params = <String, String>{};
+Future<void> sendBookingReceived(
+    {required String name,
+    required String? email,
+    required String phone,
+    required String description,
+    required PreferredDate day1,
+    required PreferredDate day2,
+    required PreferredDate day3}) async {
+  final message = StringBuffer('''
+Ivanhoe Handyman Service - Your booking has been received<br>
+ <br>
+Thanks for trusting me with your job, I always aim to please. <br>
+ <br>
+You should hear back from me within one business day to confirm the  <br>
+details of your booking and confirm the job date. <br>
+ <br>
+Once everything is agreed I will send you a payment link for the call out fee <br>
+which needs to be paid to confirm your booking. <br>
+ <br>
+In the meantime, please read the <a href="ivanhoehandyman.com.au">'Hints' and 'Charges'</a> section on the  <br>
+Ivanhoe Handyman site to ensure there are no surprises. I'm a fun guy but nobody  <br>
+likes surprises on the job! <br>
 
-  await for (final formData in request.multipartFormData) {
-    final dataString = await formData.part.readString();
-    final parts = dataString.split(':');
-    params[parts[0]] = parts[1];
-  }
-  // Map<String, dynamic>? params = await request.multipartFormData;
-
-  final name = params['name'];
-  final email = params['email'];
-  final phone = params['phone'];
-  final day1 = PreferredDate(params, 'day1');
-  final day2 = PreferredDate(params, 'day2');
-  final day3 = PreferredDate(params, 'day3');
-
-  final message = '''
-Ivanhoe Handyman Service Booking
-
+When making the booking you will have clicked the 'I agree to the terms and conditions' but did you read the  <br>
+<a href="ivanhoehandyman.com.au/legal.html">T&Cs</a>? <br>
+It is short and in plain english. <br>
+ <br>
+The details you provided are: <br>
 Name: $name <br>
-Email: $email<br>
-Phone: $phone<br>
+  Email: $email<br>
+  Phone: $phone<br>
+  <br>
+  Description: <br>
+  $description<br>
+  <br>
+  Preferred Dates:<br>
+  ''');
+
+  if (day1.provided) {
+    message.write('$day1<br>');
+  }
+  if (day2.provided) {
+    message.write('$day2<br>');
+  }
+
+  if (day3.provided) {
+    message.write('$day3<br>');
+  }
+
+  message.write('''
 <br>
-Description: <br>
-${params['description']}<br>
 <br>
-Preferred Dates:<br>
-$day1<br>
-$day2<br>
-$day3<br>
-''';
+  Regards,<br>
+  Brett<br>
+  Your Ivanhoe Handyman.<br>
+  <br>
+  ''');
 
   if (email == null) {
-    qlogerr('No email supplied for $name $phone');
-    return Response.badRequest(body: 'No email supplied for $name $phone');
-  }
+    qlogerr('Unable to send booking received as no email supplied: $message');
+  } else {
+    qlog('Sending booking confirmaiton: $message');
 
-  await sendEmail(
-      from: email,
+    await sendEmail(
+        from: 'info@ivanhoehandyman.com.au',
+        to: email,
+        subject: 'Ivanhoe Handyman Service Booking Received',
+        body: message.toString());
+  }
+}
+
+Future<bool> sendBooking(
+    {required String name,
+    required String? email,
+    required String phone,
+    required String description,
+    required PreferredDate day1,
+    required PreferredDate day2,
+    required PreferredDate day3}) async {
+  final message = '''
+Ivanhoe Handyman Service Booking<br>
+<br>
+Name: $name <br>
+  Email: $email<br>
+  Phone: $phone<br>
+  <br>
+  Description: <br>
+  $description<br>
+  <br>
+  Preferred Dates:<br>
+  $day1<br>
+  $day2<br>
+  $day3<br>
+  ''';
+
+  qlog('Sending booking: $message');
+  return sendEmail(
+      from: email ?? 'notsupplied@ivanhohandyman.com.au',
       to: 'bsutton@onepub.dev',
       subject: 'Ivanhoe Handyman Service Booking',
       body: message);
-
-  return Response.ok("{result:'success'}");
 }
 
 bool _isMultipart(Request request) =>
@@ -65,12 +174,15 @@ bool _isMultipart(Request request) =>
 
 class PreferredDate {
   PreferredDate(Map<String, String> params, String key) {
-    date = params[key] ?? 'na';
-    ampm = params['$key-ampm'] ?? 'na';
+    date = params['$key-date'] ?? 'na';
+    final am = params['$key-am'];
+    ampm = am ?? params['$key-pm'] ?? 'not provided';
   }
   late final String date;
   late final String ampm;
 
   @override
   String toString() => '$date $ampm';
+
+  bool get provided => date != 'na';
 }
