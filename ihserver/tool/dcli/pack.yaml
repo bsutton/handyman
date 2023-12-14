@@ -5,10 +5,13 @@ externals:
 
   - external:
     path: bin/ihserver
-    mount: bin/ihserver
+    mount: altbin/ihserver
   - external:
-    path: bin/launch
-    mount: bin/launch
+    path: bin/ihlaunch
+    mount: altbin/ihlaunch
+  - external:
+    path: bin/ihlaunch.sh
+    mount: altbin/ihlaunch.sh    
 
 
   - external:
