@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:dcli/dcli.dart';
 import 'package:dcli/posix.dart';
 import 'package:ihserver/src/dcli/resource/generated/resource_registry.g.dart';
@@ -19,15 +20,17 @@ final pathToLauncher = join(pathToHandymanBin, 'ihlaunch');
 final pathToLauncherScript = join(pathToHandymanBin, 'ihlaunch.sh');
 
 void main(List<String> args) {
+  final argParser = ArgParser()..addFlag('verbose', abbr: 'v');
+  final parsed = argParser.parse(args);
+
+  Settings().setVerbose(enabled: parsed['verbose'] as bool);
+
   _createDirectory(pathToWwwRoot);
 
   Shell.current.withPrivileges(() {
     print(green('unpacking resouces to: $pathToHandyman'));
 
     unpackResources(pathToHandyman);
-
-    // set execute priviliged
-    makeExecutable(pathToIHServer, pathToLauncher, pathToLauncherScript);
 
     /// Create the dir to store letsencrypt files
     final pathToLetsEncrypt = join(pathToHandyman, 'letsencrypt', 'live');
@@ -44,10 +47,13 @@ void main(List<String> args) {
 /// and spawning them detached.
 void _restart() {
   _killProcess('ihlaunch.sh');
-  _killProcess('ihlaunch');
-  _killProcess('ihserver');
+  _killProcess('dart:ihlaunch');
+  _killProcess('dart:ihserver');
 
-  copyTree(pathToHandymanAltBin, pathToHandymanBin);
+  copyTree(pathToHandymanAltBin, pathToHandymanBin, overwrite: true);
+
+  // set execute priviliged
+  makeExecutable(pathToIHServer, pathToLauncher, pathToLauncherScript);
 
   pathToLauncherScript.start(detached: true);
 }
