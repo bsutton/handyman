@@ -150,6 +150,7 @@ Router _buildRouter() {
     ..get('/css/<.*>', handleStatic)
     ..get('/js/<.*>', handleStatic)
     ..get('/images/<.*>', handleStatic)
+    ..get('/images/samples/<.*>', handleStatic)
     ..post('/booking', (Request request) async => handleBooking(request));
   return router;
 }
