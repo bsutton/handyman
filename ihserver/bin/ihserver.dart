@@ -141,7 +141,6 @@ FutureOr<Response?> _redirectToHttps(Request request) async {
 
 void _log(String message, bool isError) {
   qlog(orange(message));
-
 }
 
 Router _buildRouter() {
