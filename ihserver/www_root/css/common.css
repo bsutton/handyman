@@ -259,3 +259,25 @@ body {
         width: 100%;
     }
 }
+
+.samples {
+    padding-top: 20px;
+    column-gap: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.sample-inner {
+    display: flex;
+    padding: 20px;
+    justify-content: center;
+
+}
+
+
+@media screen and (max-width: 1524px) {
+    .samples {
+        flex-direction: column;
+        row-gap: 20px;
+    }
+}
