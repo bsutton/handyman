@@ -13,7 +13,7 @@ void main(List<String> args) {
       .compile(overwrite: true);
 
   print(green('Compiling launch'));
-  DartScript.fromFile(join('bin', 'launch.dart'), project: project)
+  DartScript.fromFile(join('bin', 'ihlaunch.dart'), project: project)
       .compile(overwrite: true);
 
   print(green('Packing static resources under ${truepath('www_root')}'));
