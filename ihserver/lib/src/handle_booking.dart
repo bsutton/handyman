@@ -23,6 +23,9 @@ Future<Response> handleBooking(Request request) async {
     final email = params['email'];
     final phone = params['phone'] ?? 'not supplied';
     final description = params['description'] ?? 'not supplied';
+    final street = params['address-street'] ?? 'not supplied';
+    final suburb = params['address-suburb'] ?? 'not supplied';
+
     final day1 = PreferredDate(params, 'day1');
     final day2 = PreferredDate(params, 'day2');
     final day3 = PreferredDate(params, 'day3');
@@ -39,6 +42,8 @@ Your email address looks to be invalid. Please correct it or call 0451 086 561 t
         email: email,
         phone: phone,
         description: description,
+        street: street,
+        suburb: suburb,
         day1: day1,
         day2: day2,
         day3: day3)) {
@@ -52,6 +57,8 @@ Your email address looks to be invalid. Please correct it or call 0451 086 561 t
         email: email,
         phone: phone,
         description: description,
+        street: street,
+        suburb: suburb,
         day1: day1,
         day2: day2,
         day3: day3);
@@ -66,29 +73,31 @@ Your email address looks to be invalid. Please correct it or call 0451 086 561 t
   }
 }
 
-Future<void> sendBookingReceived(
-    {required String name,
-    required String? email,
-    required String phone,
-    required String description,
-    required PreferredDate day1,
-    required PreferredDate day2,
-    required PreferredDate day3}) async {
+Future<void> sendBookingReceived({
+  required String name,
+  required String? email,
+  required String phone,
+  required String description,
+  required String street,
+  required String suburb,
+  required PreferredDate day1,
+  required PreferredDate day2,
+  required PreferredDate day3,
+}) async {
   final message = StringBuffer('''
 Ivanhoe Handyman Service - Your booking has been received<br>
  <br>
 Thanks for trusting me with your job, I always aim to please. <br>
  <br>
 You should hear back from me within one business day to confirm the  <br>
-details of your booking and confirm the job date. <br>
+details of your booking and the job date. <br>
  <br>
-Once everything is agreed I will send you a payment link for the call out fee <br>
-which needs to be paid to confirm your booking. <br>
+Once everything is agreed, I will send you a payment link for the call out fee <br>
+which needs to be paid to 3 business days before the agreed job date to confirm your booking. <br>
  <br>
 In the meantime, please read the <a href="ivanhoehandyman.com.au">'Hints' and 'Charges'</a> section on the  <br>
-Ivanhoe Handyman site to ensure there are no surprises. I'm a fun guy but nobody  <br>
-likes surprises on the job! <br>
-
+Ivanhoe Handyman site to ensure there are no surprises.<br>
+<br>
 When making the booking you will have clicked the 'I agree to the terms and conditions' but did you read the  <br>
 <a href="ivanhoehandyman.com.au/legal.html">T&Cs</a>? <br>
 It is short and in plain english. <br>
@@ -97,6 +106,9 @@ The details you provided are: <br>
 Name: $name <br>
   Email: $email<br>
   Phone: $phone<br>
+  Address: <br>
+  Street: $street<br>
+  Suburb: $suburb<br>
   <br>
   Description: <br>
   $description<br>
@@ -144,13 +156,18 @@ Future<bool> sendBooking(
     required String description,
     required PreferredDate day1,
     required PreferredDate day2,
-    required PreferredDate day3}) async {
+    required PreferredDate day3,
+    required String street,
+    required String suburb}) async {
   final message = '''
 Ivanhoe Handyman Service Booking<br>
 <br>
 Name: $name <br>
   Email: $email<br>
   Phone: $phone<br>
+  Address: <br>
+  Street: $street<br>
+  Suburb: $suburb<br>
   <br>
   Description: <br>
   $description<br>

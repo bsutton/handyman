@@ -20,7 +20,7 @@
                             <label class="grid-label">Email</label>
                         </div>
                         <div class="col2">
-                            <input name="email">
+                            <input name="email" type="email">
                         </div>
                     </div>
                     <div class="grid-row">
@@ -31,8 +31,12 @@
                             <input type="tel" name="phone">
                         </div>
                     </div>
+                    <label for="address-street">Street</label>
+                    <input id="address-street" name="address-street"></input>
+                    <label for="address-suburb">Suburb</label>
+                    <input id="address-suburb" name="address-suburb"></input>
                     <p>Job Description:</p>
-                    <textarea id="booking-description" rows="10" maxlength="4096"></textarea>
+                    <textarea id="description" name="description" rows="10" maxlength="4096"></textarea>
                     <p>Preferred Dates:</p>
                     <div class="day grid-row">
                         <div class="col1">
@@ -92,8 +96,8 @@
                 </p>
             </div>
 
-            <div class="button" onclick="submitBooking(event)">Submit</div>
-            <div class="button" onclick="cancelBooking(event)">Cancel</div>
+            <div class="button" id="submit-button" onclick="submitBooking(event)">Submit</div>
+            <div class="button" id="cancel-button" onclick="cancelBooking(event)">Cancel</div>
         </div>
     </div>
 </div>

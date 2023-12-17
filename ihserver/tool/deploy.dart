@@ -28,7 +28,7 @@ void main(List<String> args) {
   _createDirectory(pathToWwwRoot);
 
   Shell.current.withPrivileges(() {
-    print(green('unpacking resouces to: $pathToHandyman'));
+    print(green('unpacking resources to: $pathToHandyman'));
 
     unpackResources(pathToHandyman);
 
@@ -46,9 +46,9 @@ void main(List<String> args) {
 /// Restart the the ihserver by killing the existing processes
 /// and spawning them detached.
 void _restart() {
-  _killProcess('ihlaunch.sh');
-  _killProcess('dart:ihlaunch');
-  _killProcess('dart:ihserver');
+  killProcess('ihlaunch.sh');
+  killProcess('dart:ihlaunch');
+  killProcess('dart:ihserver');
 
   copyTree(pathToHandymanAltBin, pathToHandymanBin, overwrite: true);
 
@@ -56,9 +56,13 @@ void _restart() {
   makeExecutable(pathToIHServer, pathToLauncher, pathToLauncherScript);
 
   pathToLauncherScript.start(detached: true);
+
+  print(red('Reboot the system to complete the deployment'));
+
+  print(green('sudo reboot --reboot -f'));
 }
 
-void _killProcess(String processName) {
+void killProcess(String processName) {
   final processes = ProcessHelper().getProcessesByName(processName);
   for (final process in processes) {
     'kill -9 ${process.pid}'.run;

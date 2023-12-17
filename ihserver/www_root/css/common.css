@@ -274,6 +274,10 @@ body {
 
 }
 
+.sample-p {
+    padding: 20px;
+}
+
 
 @media screen and (max-width: 1524px) {
     .samples {

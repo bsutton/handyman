@@ -7,6 +7,9 @@ submitBooking = function (event) {
 
 
     if (validateForm()) {
+
+        showSubmitting();
+
         var request = new XMLHttpRequest();
         request.open('POST', url, true);
         request.onload = function () { // request successful
@@ -23,10 +26,13 @@ submitBooking = function (event) {
                 if (request.status === 200) {
                     // Request was successful
                     console.log('Request successful:', request.responseText);
+                    alert('You booking has been submitted.')
+                    closeModal(event);
                 } else {
                     // Handle other HTTP status codes
                     console.error('Unexpected status code:', request.status, request.responseText);
                     alert(request.responseText)
+                    closeModal(event);
                 }
             }
         };
@@ -40,9 +46,18 @@ submitBooking = function (event) {
             console.log(pair[0], pair[1]);
         }
         request.send(data); // create FormData from form that triggered event
-        alert('You booking has been submitted.')
-        closeModal(event);
+
+
     }
+}
+
+showSubmitting = function () {
+    let submit = document.getElementById('submit-button');
+    let cancel = document.getElementById('cancel-button');
+
+    cancel.remove();
+    submit.innerHTML = "Submitting...";
+    submit.onclick = null;
 }
 
 validateForm = function () {
@@ -73,13 +88,3 @@ cancelBooking = function (event) {
     closeModal(event);
 }
 
-
-processing = function (form) {
-    form.style.display = 'none';
-
-    var processing = document.createElement('span');
-
-    processing.appendChild(document.createTextNode('processing ...'));
-
-    form.parentNode.insertBefore(processing, form);
-}
