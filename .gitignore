@@ -8,4 +8,5 @@ ihserver/bin/launch
 ihserver/tool/build
 ihserver/tool/deploy
 ihserver/bin/ihlaunch
-ihserver/.dart_tool/package_config.json
+ihserver/.dart_tool
+ihserver/.dart_tool
