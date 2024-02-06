@@ -1,0 +1,3 @@
+target_server:  handyman
+target_directory: /opt/handyman
+scp_command: op-scp

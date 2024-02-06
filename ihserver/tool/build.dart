@@ -2,6 +2,7 @@
 
 import 'package:dcli/dcli.dart';
 import 'package:path/path.dart';
+import 'package:settings_yaml/settings_yaml.dart';
 
 void main(List<String> args) {
   // 'dcli pack'.run;
@@ -19,6 +20,13 @@ void main(List<String> args) {
   print(green('Packing static resources under ${truepath('www_root')}'));
   Resources().pack();
 
+  final buildSettings = SettingsYaml.load(
+      pathToSettings: join(project.pathToProjectRoot, 'tool', 'build.yaml'));
+
+  final scpCommand = buildSettings.asString('scp_command');
+  final targetServer = buildSettings.asString('target_server');
+  final targetDirectory = buildSettings.asString('target_directory');
+
   /// Order is important.
   /// We must compile iahserver and the resources as they are all
   /// compiled into the deploy script.
@@ -27,9 +35,9 @@ void main(List<String> args) {
   DartScript.fromFile(join('tool', 'deploy.dart'), project: project)
       .compile(overwrite: true);
 
-  print(green("deploying 'deploy' to /opt/handyman"));
-  'op-scp tool/deploy handyman:/opt/handyman'.run;
+  print(green("deploying 'deploy' to $targetDirectory"));
+  '$scpCommand tool/deploy $targetServer:$targetDirectory'.run;
 
   print(orange('build/deploy complete'));
-  print("log into the handyman server and run 'sudo ./deploy'");
+  print("log into the $targetServer and run 'sudo ./deploy'");
 }

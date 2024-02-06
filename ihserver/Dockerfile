@@ -1,26 +1,10 @@
-# Official Dart image: https://hub.docker.com/_/dart
-# Specify the Dart SDK base image version using dart:<version> (ex: dart:2.14)
-# FROM dart:stable AS build
+# A potential docker container that you can use to run the IAHServer
+# This is not well tested.
+# This could be used in either development or production by changing
+# EXPOSE command at the bottom this file as well as the config.yaml
+# port settings.
 
 FROM google/dart as build
-
-# FROM ubuntu:23.04 as builder
-
-# RUN apt update  && apt install --no-install-recommends -y \
-#     apt-transport-https \
-#     ca-certificates \
-#     git \
-#     gnupg \
-#     openssh-client \
-#     wget 
-
-# RUN  wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/dart.gpg
-# RUN ECHO 'deb [signed-by=/usr/share/keyrings/dart.gpg arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian stable main' |  tee /etc/apt/sources.list.d/dart_stable.list
-
-
-# RUN apt update  && apt install --no-install-recommends -y \
-#     dart
-
 
 ENV ONEPUB_TOKEN=MTg2MDpjZDVkNjA3Mi1jZWFjLTQzMzYtYjdkZC0zODZhMjQ3NGI1ZmU=
 RUN dart pub global activate onepub
@@ -56,7 +40,7 @@ COPY --from=build /runtime/ /
 COPY --from=build /app/ /app/
 
 WORKDIR /app
-# Start server.
-EXPOSE 1080 10443
+# Expose ports for development
+EXPOSE 80 443
 ENTRYPOINT ["/app/bin/ihserver"]
 # ENTRYPOINT ["/bin/sh"]

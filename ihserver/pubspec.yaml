@@ -27,6 +27,7 @@ dependencies:
   shelf_rate_limiter: ^1.0.1
   shelf_router: ^1.1.4
   shelf_static: ^1.1.2
+  simple_mysql_orm: ^4.0.0
 
 dependency_overides:
   x509:

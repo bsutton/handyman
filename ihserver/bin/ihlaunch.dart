@@ -6,7 +6,7 @@ import 'package:ihserver/src/logger.dart';
 import 'package:path/path.dart';
 
 /// launch the ihserver and restart it if it fails.
-/// We expect the ihserver to be in the same directory as the launch exe
+/// We expect the ihserver to be in the same directory as the ihlaunch exe
 ///
 
 void main(List<String> args) {
@@ -15,6 +15,7 @@ void main(List<String> args) {
       join(dirname(DartScript.self.pathToScript), 'ihserver');
   qlog('Launching ihserver');
 
+  // start the server and relaunch it if it fails.
   for (;;) {
     final result = pathToIHServer.start(
         nothrow: true, progress: Progress(qlog, stderr: qlogerr));
