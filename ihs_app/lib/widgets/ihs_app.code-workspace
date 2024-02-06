@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../ihserver"
+		},
+		{
+			"path": "../../../../simple_mysql_orm"
+		},
+		{
+			"path": "../../../../squarephone_app"
+		}
+	],
+	"settings": {}
+}

@@ -1,0 +1,1 @@
+enum HttpProtocol { HTTP, HTTPS }
