@@ -33,3 +33,9 @@ ul {
 .legal li {
     padding: 5px;
 }
+
+
+a:link.phone {
+    color: var(--back-yellow);
+    background-color: transparent;
+}

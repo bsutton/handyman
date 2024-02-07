@@ -1,0 +1,24 @@
+#testimonials {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#testimonial {
+    background-color: var(--back-yellow-light);
+    padding: 20px;
+
+}
+
+#testimonial-heading {
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.testimonial-name {
+    font-weight: 600;
+    padding-bottom: 10px;
+}
+
+.testimonial-body {
+    font-weight: 400;
+}

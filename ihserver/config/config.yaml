@@ -4,7 +4,7 @@
 gmail_app_username: bsutton@onepub.dev
 gmail_app_password: uwxy ysgn tvuw nkio
 path_to_static_content: /home/bsutton/git/handyman/ihserver/www_root
-lets_encrypt_live: /opt/ihs/letsencrypt/live
+lets_encrypt_live: /home/bsutton/git/handyman/ihserver/test/letsencrypt/live
 fqdn: squarephone.biz
 domain_email: bsutton@onepub.dev
 https_port: 10443

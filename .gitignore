@@ -10,3 +10,8 @@ ihserver/tool/deploy
 ihserver/bin/ihlaunch
 ihserver/.dart_tool
 ihserver/.dart_tool
+ihserver/test/letsencrypt/live/account/privkey.pem
+ihserver/test/letsencrypt/live/account/pubkey.pem
+ihserver/test/letsencrypt/live/squarephone.biz/fullchain.pem
+ihserver/test/letsencrypt/live/squarephone.biz/privkey.pem
+ihserver/test/letsencrypt/live/squarephone.biz/pubkey.pem

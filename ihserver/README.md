@@ -31,8 +31,6 @@ Run tool/build.dart
 The build/deploy process is controlled by tool/build.yaml
 
 
-
-
 # configuration
 
 The config.yaml file is used to configure the server.
