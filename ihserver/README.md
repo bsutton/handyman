@@ -24,11 +24,43 @@ create the config file under the project:
 <project root>/config/config.yaml
 <project root>/www_root
 
+# Build/Deploy
 
 To build and deploy the content run:
-Run tool/build.dart
+On the target system create:
+`/opt/handyman`
+
+Change the permissions so that you have access:
+
+`sudo chown <me>:<me> /opt/handyman`
 
 The build/deploy process is controlled by tool/build.yaml
+
+Configure your build.yaml
+
+Example
+```
+target_server:  handyman.com
+target_directory: /opt/handyman
+scp_command: scp
+```
+
+
+Run tool/build.dart
+
+
+Once the build has run it will have copied a single exe `deploy` to the
+target system in /opt/handyman.
+
+Login to the target system and run:
+```
+cd /opt/handyman
+sudo ./deploy
+```
+
+Update your DNS A record to point to your new system.
+
+You are now live.
 
 
 # configuration
