@@ -18,6 +18,7 @@ class Config {
     httpsPort = _settings.asInt('https_port', defaultValue: 443);
     httpPort = _settings.asInt('http_port', defaultValue: 80);
     production = _settings.asBool('production', defaultValue: false);
+    useHttps = _settings.asBool('use_https');
     bindingAddress =
         _settings.asString('binding_address', defaultValue: '0.0.0.0');
     pathToLogfile = _settings.asString('logger_path', defaultValue: 'print');
@@ -40,6 +41,9 @@ class Config {
 
   late final SettingsYaml _settings;
 
+  // if false we handle request via http and don't
+  // start the https service.
+  late final bool useHttps;
   late final int httpPort;
   late final int httpsPort;
   late final String bindingAddress;

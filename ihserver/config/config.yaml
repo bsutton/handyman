@@ -12,3 +12,4 @@ http_port: 1080
 production: false
 binding_address: 0.0.0.0
 logger_path: console
+use_https: false

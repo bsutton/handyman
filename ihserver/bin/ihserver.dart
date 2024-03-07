@@ -14,6 +14,7 @@ import 'package:ihserver/src/logger.dart';
 import 'package:ihserver/src/mailer.dart';
 import 'package:path/path.dart';
 import 'package:shelf/shelf.dart';
+import 'package:shelf/shelf_io.dart';
 import 'package:shelf_letsencrypt/shelf_letsencrypt.dart';
 import 'package:shelf_rate_limiter/shelf_rate_limiter.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -39,10 +40,12 @@ void main() async {
           ? CertificateMode.production
           : CertificateMode.staging);
 
-  await _startHttpsServer(letsEncrypt, domain);
-  // await _startWebServer();
-
-  await _startRenewalService(letsEncrypt, domain);
+  if (Config().useHttps) {
+    await _startHttpsServer(letsEncrypt, domain);
+    await _startRenewalService(letsEncrypt, domain);
+  } else {
+    await _startWebServer();
+  }
 
   await _sendTestEmail();
 }
@@ -83,20 +86,21 @@ Future<void> refreshIfRequired(
   }
 }
 
-// Future<void> _startWebServer() async {
-//   final router = _buildRouter();
+Future<void> _startWebServer() async {
+  final router = _buildRouter();
 
-//   final handler = const Pipeline()
-//       .addMiddleware(rateLimiter.rateLimiter())
-//       .addHandler(router.call);
+  final handler = const Pipeline()
+      .addMiddleware(logRequests(logger: _log))
+      .addMiddleware(rateLimiter.rateLimiter())
+      .addHandler(router.call);
 
-//   final server = await serve(
-//     handler,
-//     InternetAddress.anyIPv4,
-//     Config().httpPort,
-//   );
-//   qlog('Serving at http://${server.address.host}:${server.port}');
-// }
+  final server = await serve(
+    handler,
+    Config().bindingAddress,
+    Config().httpPort,
+  );
+  qlog('Serving at http://${server.address.host}:${server.port}');
+}
 
 Future<void> _startHttpsServer(LetsEncrypt letsEncrypt, Domain domain) async {
   final router = _buildRouter();

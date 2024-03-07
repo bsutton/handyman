@@ -1,9 +1,6 @@
 {
 	"folders": [
 		{
-			"path": "../.."
-		},
-		{
 			"path": "../../../ihserver"
 		},
 		{
@@ -11,6 +8,9 @@
 		},
 		{
 			"path": "../../../../squarephone_app"
+		},
+		{
+			"path": "../../../../overlay_container"
 		}
 	],
 	"settings": {}
