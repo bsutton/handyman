@@ -2,17 +2,14 @@
 
 import 'package:flutter/material.dart';
 
-import 'dao/crud_providers/product_editable.dart';
-import 'dao/models/product.dart';
-import 'screens/crud_holder.dart';
-import 'screens/product_list.dart';
-import 'supabase_factory.dart';
+import 'src/dao/crud_providers/product_editable.dart';
+import 'src/dao/models/product.dart';
+import 'src/screens/crud_holder.dart';
+import 'src/screens/product_list.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  await SupabaseFactory.initialise();
 
   runApp(const MyApp());
 }

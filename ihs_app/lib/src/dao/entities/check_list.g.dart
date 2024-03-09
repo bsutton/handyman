@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'after_hours.dart';
+part of 'task_list.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

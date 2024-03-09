@@ -5,7 +5,7 @@ import '../../util/money_converter.dart';
 import '../repository/repos.dart';
 import '../types/er.dart';
 import '../types/phone_number.dart';
-import 'call_forward_target.dart';
+import 'check_list_item_type.dart';
 import 'customer.dart';
 import 'did_pool.dart';
 import 'did_range.dart';

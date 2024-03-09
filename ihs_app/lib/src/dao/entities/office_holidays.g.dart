@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'office_holidays.dart';
+part of 'checklist_template.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

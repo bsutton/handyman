@@ -6,10 +6,10 @@ import '../transaction/transaction.dart';
 import '../types/day_of_week.dart';
 import '../types/er.dart';
 import 'business_hours_for_day.dart';
-import 'call_forward_target.dart';
+import 'check_list_item_type.dart';
 import 'customer.dart';
 import 'entity.dart';
-import 'override_hours.dart';
+import 'organisation.dart';
 import 'region.dart';
 import 'user.dart';
 

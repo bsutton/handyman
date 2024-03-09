@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../types/er.dart';
-import 'audio_file.dart';
+import 'check_list_item.dart';
 import 'contact.dart';
 import 'entity.dart';
 import 'voicemail_box.dart';

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart' hide Shadow;
 
 import '../../app/router.dart';
-import '../../dao/entities/call_forward_target.dart';
+import '../../dao/entities/check_list_item_type.dart';
 import '../../dialogs/dialog_alert.dart';
 import '../../util/named_provider.dart';
 import '../blocking_ui.dart';

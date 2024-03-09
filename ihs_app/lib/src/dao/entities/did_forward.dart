@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import '../types/er.dart';
 import '../types/phone_number.dart';
-import 'call_forward_target.dart';
+import 'check_list_item_type.dart';
 import 'customer.dart';
 import 'did_allocation.dart';
 import 'entity.dart';

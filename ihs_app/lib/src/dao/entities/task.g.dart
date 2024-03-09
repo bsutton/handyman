@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'leave.dart';
+part of 'task.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
