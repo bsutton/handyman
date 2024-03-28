@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/app_scaffold.dart';
@@ -25,14 +24,6 @@ class CrudCreate<T extends Entity<T>> extends StatefulWidget {
 
   @override
   CrudCreateState<T> createState() => CrudCreateState<T>();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty<GlobalKey<FormState>>('formKey', formKey))
-      ..add(
-          ObjectFlagProperty<EntityCallback<Future<T>>>.has('onSave', onSave));
-  }
 }
 
 class CrudCreateState<T extends Entity<T>> extends State<CrudCreate<T>> {
@@ -42,12 +33,12 @@ class CrudCreateState<T extends Entity<T>> extends State<CrudCreate<T>> {
     Navigator.of(context).pop<bool>(false);
   }
 
-  void _save() {
-    if (!widget.formKey.currentState!.validate()) {
+  Future<void> _save() async {
+    if (!(widget.formKey.currentState?.validate() ?? true)) {
       return;
     }
-    widget.formKey.currentState!.save();
-    BlockingUI().run<void>(() async => widget.onSave().then((entity) {
+    widget.formKey.currentState?.save();
+    await BlockingUI().run<void>(() async => widget.onSave().then((entity) {
           repository.insert(entity).then((result) {
             Bus().add<T>(BusAction.insert, instance: entity);
             Navigator.of(context).pop<bool>(true);
@@ -59,15 +50,15 @@ class CrudCreateState<T extends Entity<T>> extends State<CrudCreate<T>> {
 
   @override
   Widget build(BuildContext context) {
-    final children = List<Widget>.from(widget.children)
-      ..add(Expanded(child: Container()))
-      ..add(Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          NJButtonPrimary(label: 'Cancel', onPressed: _cancel),
-          NJButtonPrimary(label: 'Create', onPressed: _save),
-        ],
-      ));
+    final children = List<Widget>.from(widget.children);
+    children.add(Expanded(child: Container()));
+    children.add(Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        NJButtonPrimary(label: 'Cancel', onPressed: _cancel),
+        NJButtonPrimary(label: 'Create', onPressed: _save),
+      ],
+    ));
     return AppScaffold(
       builder: (context) => Form(
         key: widget.formKey,
@@ -83,12 +74,5 @@ class CrudCreateState<T extends Entity<T>> extends State<CrudCreate<T>> {
         ),
       ),
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-        .add(DiagnosticsProperty<Repository<T>>('repository', repository));
   }
 }

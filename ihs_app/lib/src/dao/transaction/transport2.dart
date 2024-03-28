@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:stacktrace_impl/stacktrace_impl.dart';
 
-import '../../../util/log.dart';
+import '../../util/log.dart';
 import 'api/api_error.dart';
 import 'api/http_protocol.dart';
 
@@ -60,9 +60,9 @@ class Transport2 {
   }
 
   Uri _uri(String service, Map<String, String> params) {
-    if (_httpProtocol == HttpProtocol.HTTP) {
+    if (_httpProtocol == HttpProtocol.http) {
       return Uri.http(_host, _basePath + service, params);
-    } else if (_httpProtocol == HttpProtocol.HTTPS) {
+    } else if (_httpProtocol == HttpProtocol.https) {
       return Uri.https(_host, _basePath + service, params);
     } else {
       throw Exception('Invalid Http Protocol');

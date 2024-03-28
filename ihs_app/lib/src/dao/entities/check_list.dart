@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../types/er.dart';
-import 'check_list_item_type.dart';
 import 'entity.dart';
+import 'job.dart';
 
 part 'check_list.g.dart';
 
@@ -12,7 +12,7 @@ class Checklist extends Entity<Checklist> {
   factory Checklist.fromJson(Map<String, dynamic> json) =>
       _$ChecklistFromJson(json);
   // The Job that this Note belongs to.
-  @ERJobConverter()
+  @ERConverterJob()
   List<ER<Job>> checkListItem = [];
 
   @override

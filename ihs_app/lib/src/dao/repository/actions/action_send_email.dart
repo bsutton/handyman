@@ -1,31 +1,37 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+
 import '../../transaction/transaction.dart';
 import '../non_entity_repository.dart';
 import 'action.dart';
 
 @immutable
 class ActionSendEmail extends CustomAction<SendEmailResponse> {
+  ActionSendEmail(
+      {required this.from,
+      required this.to,
+      this.bcc = const <String>[],
+      this.cc = const <String>[],
+      this.plainBody,
+      this.htmlBody});
   final String from;
   final List<String> to;
   final List<String> cc;
   final List<String> bcc;
 
-  final String plainBody;
-  final String htmlBody;
-
-  ActionSendEmail({@required this.from, @required this.to, this.bcc, this.cc, this.plainBody, this.htmlBody});
+  final String? plainBody;
+  final String? htmlBody;
 
   @override
-  SendEmailResponse decodeResponse(ActionResponse response) {
-    return SendEmailResponse(response.success, response.exception);
-  }
+  SendEmailResponse decodeResponse(ActionResponse data) =>
+      SendEmailResponse(data.success!, data.exception!);
 
   @override
   String encodeRequest() {
-    var map = <String, dynamic>{};
-    map[Action.ACTION] = 'sendEmail';
-    map[Action.MUTATES] = causesMutation;
+    final map = <String, dynamic>{};
+    map[Action.action] = 'sendEmail';
+    map[Action.mutatesKey] = causesMutation;
     map['details'] = toJson();
 
     return json.encode(map);
@@ -38,9 +44,8 @@ class ActionSendEmail extends CustomAction<SendEmailResponse> {
   List<Object> get props => [];
 
   @override
-  Future<SendEmailResponse> run() async {
-    return await NonEntityRepository().taskAction(this);
-  }
+  Future<SendEmailResponse> run() async =>
+      NonEntityRepository().taskAction(this);
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'from': from,
@@ -53,10 +58,9 @@ class ActionSendEmail extends CustomAction<SendEmailResponse> {
 }
 
 class SendEmailResponse {
+  // ignore: avoid_positional_boolean_parameters
+  SendEmailResponse(this.success, this.exception);
   bool success;
   // If success if false then this will contain an error message.
   String exception;
-
-  // ignore: avoid_positional_boolean_parameters
-  SendEmailResponse(this.success, this.exception);
 }

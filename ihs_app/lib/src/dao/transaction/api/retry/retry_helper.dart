@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:completer_ex/completer_ex.dart';
 import 'package:faker/faker.dart';
 
-import '../../../../../util/log.dart';
+import '../../../../util/log.dart';
 import '../api_error.dart';
 import 'retry_data.dart';
 import 'retry_overlay.dart';
@@ -49,9 +49,9 @@ class RetryHelper<T> implements RetryOverlayData {
       }
     }
     if (option == RetryOption.USER) {
-      RetryOverlay(this);
+      await RetryOverlay(this).show();
     } else if (option == RetryOption.USER_RETRY_ONLY) {
-      RetryOverlay(this);
+      await RetryOverlay(this).show();
     } else if (option == RetryOption.WITH_BACK_OFF && errorCount < 10) {
       final delay = errorCount + RandomGenerator().integer(5, min: 1);
       Log.w('Retry in $delay seconds');

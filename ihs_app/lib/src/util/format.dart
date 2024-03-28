@@ -63,15 +63,14 @@ class Format {
   static String time(DateTime date, [String pattern = 'h:mm:ss a']) =>
       DateFormat(pattern).format(date);
 
-  static String localTime(LocalTime time, [String pattern = 'h:mm:ss a']) {
-    return Format.time(time.toDateTime(), pattern);
-    // AMPMParts parts = AMPMParts.fromLocalTime(time);
+  static String localTime(LocalTime time, [String pattern = 'h:mm:ss a']) =>
+      Format.time(time.toDateTime(), pattern);
+  // AMPMParts parts = AMPMParts.fromLocalTime(time);
 
-    // return parts.hour.toString() +
-    //     ':' +
-    //     parts.minute.toString().padLeft(2, '0') +
-    //     (parts.am ? ' am' : ' pm');
-  }
+  // return parts.hour.toString() +
+  //     ':' +
+  //     parts.minute.toString().padLeft(2, '0') +
+  //     (parts.am ? ' am' : ' pm');
 
   ///
   /// Makes the first character of each word upper case
@@ -146,7 +145,9 @@ class Format {
       ordinal = 'st';
     } else if (day == 2) {
       ordinal = 'nd';
-    } else if (day == 3) ordinal = 'rd';
+    } else if (day == 3) {
+      ordinal = 'rd';
+    }
 
     return ordinal;
   }

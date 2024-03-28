@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart' hide AnsiColor;
 import 'package:stacktrace_impl/stacktrace_impl.dart';
@@ -36,7 +38,9 @@ class Log extends Logger {
       }
       _recentLogs[message] = DateTime.now();
     }
-    if (!suppress) _self.d(message, error: error, stackTrace: stackTrace);
+    if (!suppress) {
+      _self.d(message, error: error, stackTrace: stackTrace);
+    }
     return _self;
   }
 
@@ -62,6 +66,8 @@ class Log extends Logger {
   }
   static late Log _self;
   static late String _localPath;
+
+  static final _recentLogs = <String, DateTime>{};
 
   /// The default log level.
   static Level loggingLevel = Level.debug;
@@ -96,8 +102,6 @@ class Log extends Logger {
     autoInit();
     Log.i(color.apply(message), error: error, stackTrace: stackTrace);
   }
-
-  static final Map<String, DateTime> _recentLogs = {};
 
   ///
   static void autoInit() {}
@@ -153,7 +157,7 @@ class MyLogPrinter extends LogPrinter {
     final frame = StackTraceImpl(skipFrames: depth).frames[0];
 
     var details = frame.details;
-    if (frame.details!.contains('closure')) {
+    if (details != null && details.contains('closure')) {
       details = '<closure>';
     }
 
@@ -213,7 +217,7 @@ class MyLogPrinter extends LogPrinter {
         result += line;
         break;
       case Level.fatal:
-        result += red(line, bgcolor: AnsiColor.yellow);
+        result += red(line);
         break;
       case Level.off:
         break;

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+
 import 'theme/nj_text_themes.dart';
 import 'wizard.dart';
 
 abstract class WizardStep {
+
+  WizardStep({required String title}) : _title = title;
   final String _title;
   bool buildRequired = false;
 
-  WizardState wizardState;
-
-  WizardStep({@required String title}) : _title = title {
-    assert(title != null);
-  }
+  WizardState? wizardState;
 
   Widget build(BuildContext context);
 
@@ -36,7 +35,7 @@ abstract class WizardStep {
   bool hidden = false;
 
   void setState(VoidCallback fn) {
-    wizardState.refresh(fn);
+    wizardState?.refresh(fn);
   }
 
   ///
@@ -70,7 +69,7 @@ abstract class WizardStep {
   /// the UI will lock up.
   Future<void> onEntry(
       BuildContext context, WizardStep priorStep, WizardStepTarget self,
-      {@required bool userOriginated}) async {
+      {required bool userOriginated}) async {
     self.confirm();
   }
 
@@ -79,7 +78,7 @@ abstract class WizardStep {
   /// You can veto the transition by calling [intendedStep].cancel or call
   /// [intendedStep].redirect to set an alternate step to move to.
   Future<void> onNext(BuildContext context, WizardStepTarget intendedStep,
-      {@required bool userOriginated}) async {
+      {required bool userOriginated}) async {
     intendedStep.confirm();
   }
 
@@ -88,11 +87,11 @@ abstract class WizardStep {
   /// You can veto the transition by calling [intendedStep].cancel or call
   /// [intendedStep].redirect to set an alternate step to move to.
   Future<void> onPrev(BuildContext context, WizardStepTarget intendedStep,
-      {@required bool userOriginated}) async {
+      {required bool userOriginated}) async {
     intendedStep.confirm();
   }
 
-  void reorderStep({@required WizardStep move, @required WizardStep after}) {
-    wizardState.reorderStep(move: move, after: after);
+  void reorderStep({required WizardStep move, required WizardStep after}) {
+    wizardState?.reorderStep(move: move, after: after);
   }
 }

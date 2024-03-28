@@ -3,7 +3,7 @@ import 'package:quiver/core.dart';
 
 import 'entity.dart';
 
-part 'Address.g.dart';
+part 'address.g.dart';
 
 @JsonSerializable()
 class Address extends Entity<Address> {

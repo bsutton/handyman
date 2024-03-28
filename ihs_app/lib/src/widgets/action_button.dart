@@ -1,47 +1,24 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatefulWidget {
   const ActionButton(
       {required this.title,
       required this.icon,
-      required this.onPressed,
       super.key,
+      this.onPressed,
       this.checked = false,
       this.fillColor});
   final String title;
   final IconData icon;
   final bool checked;
   final Color? fillColor;
-  final void Function() onPressed;
+  final void Function()? onPressed;
 
   @override
-  _ActionButtonState createState() => _ActionButtonState();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(StringProperty('title', title))
-      ..add(DiagnosticsProperty<IconData>('icon', icon))
-      ..add(DiagnosticsProperty<bool>('checked', checked))
-      ..add(ColorProperty('fillColor', fillColor))
-      ..add(ObjectFlagProperty<void Function()>.has('onPressed', onPressed))
-      ..add(DiagnosticsProperty<IconData>('icon', icon))
-      ..add(DiagnosticsProperty<bool>('checked', checked))
-      ..add(ColorProperty('fillColor', fillColor))
-      ..add(ObjectFlagProperty<void Function()>.has('onPressed', onPressed))
-      ..add(DiagnosticsProperty<IconData>('icon', icon))
-      ..add(DiagnosticsProperty<bool>('checked', checked))
-      ..add(ColorProperty('fillColor', fillColor))
-      ..add(ObjectFlagProperty<void Function()>.has('onPressed', onPressed))
-      ..add(DiagnosticsProperty<IconData>('icon', icon))
-      ..add(DiagnosticsProperty<bool>('checked', checked))
-      ..add(ColorProperty('fillColor', fillColor))
-      ..add(ObjectFlagProperty<void Function()>.has('onPressed', onPressed));
-  }
+  ActionButtonState createState() => ActionButtonState();
 }
 
-class _ActionButtonState extends State<ActionButton> {
+class ActionButtonState extends State<ActionButton> {
   @override
   Widget build(BuildContext context) => Column(
         mainAxisSize: MainAxisSize.min,

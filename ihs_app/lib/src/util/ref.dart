@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:completer_ex/completer_ex.dart';
 
-import '../dao/entities/task.dart';
-
 class Ref<T> {
   Ref(this.obj);
   Ref.empty();
@@ -12,7 +10,7 @@ class Ref<T> {
   bool get isNotEmpty => obj != null;
   bool get isEmpty => obj == null;
 
-  static bool isNotNullOrEmpty(Ref<Leave> leaveRef) => leaveRef.obj != null;
+  static bool isNotNullOrEmpty<T>(Ref<T> ref) => ref.obj != null;
 }
 
 /// A reference to an object of type [T]
@@ -29,7 +27,7 @@ class FutureRef<T> {
   /// Once the [resolver] completes [future] will
   /// return the resolved entity.
   FutureRef.withResolver(Future<T> Function() resolver) {
-    resolver().then((resolved) => obj = resolved);
+    unawaited(resolver().then((resolved) => obj = resolved));
   }
   CompleterEx<Ref<T>> completer = CompleterEx();
 

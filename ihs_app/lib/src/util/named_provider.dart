@@ -13,7 +13,7 @@ import 'log.dart';
 /// An NamedProvider is useful if your widget needs to launch Dialogs
 /// or open new pages. Dialogs and Pages are anchoured to the root
 /// of the widget tree and as such can't see a normal Provider.
-/// A [NamedProvider] is always visible provided that it remains
+/// A [NamedProvider] is always visible, provided that it remains
 /// in the wiget tree which is normally the case if you load a Dialog
 /// or a Page.
 ///
@@ -36,7 +36,7 @@ class NamedProvider<T extends ChangeNotifier> extends StatefulWidget {
   static T? of<T extends ChangeNotifier>() => NamedProviderFactory().of<T>();
 
   @override
-  _NamedProviderState createState() => _NamedProviderState(create, child);
+  NamedProviderState createState() => NamedProviderState();
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -44,13 +44,11 @@ class NamedProvider<T extends ChangeNotifier> extends StatefulWidget {
   }
 }
 
-class _NamedProviderState<T extends ChangeNotifier>
+class NamedProviderState<T extends ChangeNotifier>
     extends State<NamedProvider> {
-  _NamedProviderState(this.create, this.child) {
-    state = create();
+  NamedProviderState() {
+    state = widget.create() as T;
   }
-  final T Function() create;
-  final Widget child;
 
   late T state;
 
@@ -69,11 +67,10 @@ class _NamedProviderState<T extends ChangeNotifier>
   }
 
   @override
-  Widget build(BuildContext context) => child;
+  Widget build(BuildContext context) => widget.child;
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<T Function()>.has('create', create));
     properties.add(DiagnosticsProperty<T>('state', state));
   }
 }
@@ -95,7 +92,7 @@ class NamedProviderFactory {
   static NamedProviderFactory? _self;
 
   // The set of registered subscribers
-  static Map<_StateKey, _StateSubscriber> registered = {};
+  static Map<StateKey<dynamic>, StateSubscriber> registered = {};
 
   /// Returns the state object identified by the given
   /// type.
@@ -108,7 +105,7 @@ class NamedProviderFactory {
   /// be thrown unless the parameter [throwOnNotFound] is set to false.
   ///
   T? of<T extends ChangeNotifier>({bool throwOnNotFound = true}) {
-    final sub = registered[_StateKey<T>(T)];
+    final sub = registered[StateKey<T>(T)];
     if (sub == null) {
       final message = 'The Named State $T was not found.';
 
@@ -125,9 +122,9 @@ class NamedProviderFactory {
   void _register<T extends ChangeNotifier>(T state,
       {bool throwOnExisting = true}) {
     Log.d('Registering state: ${state.runtimeType}');
-    final stateKey = _StateKey<T>(state.runtimeType);
+    final stateKey = StateKey<T>(state.runtimeType);
     if (!registered.containsKey(stateKey)) {
-      registered[stateKey] = _StateSubscriber<T>(state);
+      registered[stateKey] = StateSubscriber<T>(state);
     } else if (throwOnExisting) {
       final message = 'The Named State  $state.runtimeType already exists.';
       Log.d(message);
@@ -140,7 +137,7 @@ class NamedProviderFactory {
   /// that are no longer required.
   void _deregister<T extends ChangeNotifier>(T state) {
     Log.d('Registering state: ${state.runtimeType}');
-    final stateKey = _StateKey<T>(state.runtimeType);
+    final stateKey = StateKey<T>(state.runtimeType);
     if (registered.containsKey(stateKey)) {
       registered.remove(stateKey);
     } else {
@@ -152,7 +149,8 @@ class NamedProviderFactory {
 }
 
 class NamedProviderException implements Exception {
-  NamedProviderException(String message);
+  NamedProviderException(this.message);
+  String message;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -186,7 +184,7 @@ class NamedConsumer<T extends ChangeNotifier> extends StatefulWidget {
   final Widget? child;
 
   @override
-  _NamedConsumerState createState() => _NamedConsumerState<T>();
+  NamedConsumerState createState() => NamedConsumerState<T>();
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -196,9 +194,9 @@ class NamedConsumer<T extends ChangeNotifier> extends StatefulWidget {
   }
 }
 
-class _NamedConsumerState<T extends ChangeNotifier>
+class NamedConsumerState<T extends ChangeNotifier>
     extends State<NamedConsumer<T>> {
-  _NamedConsumerState() {
+  NamedConsumerState() {
     state = NamedProviderFactory().of<T>();
     state!.addListener(updated);
   }
@@ -224,8 +222,8 @@ class _NamedConsumerState<T extends ChangeNotifier>
   }
 }
 
-class _StateKey<T> extends Equatable {
-  const _StateKey(this.runtimeType);
+class StateKey<T> extends Equatable {
+  const StateKey(this.runtimeType);
   @override
   final Type runtimeType;
 
@@ -233,8 +231,8 @@ class _StateKey<T> extends Equatable {
   List<Object> get props => [runtimeType];
 }
 
-class _StateSubscriber<T extends ChangeNotifier> {
-  _StateSubscriber(this.state)
+class StateSubscriber<T extends ChangeNotifier> {
+  StateSubscriber(this.state)
       : runtimeType = state.runtimeType,
         st = StackTraceImpl();
   @override

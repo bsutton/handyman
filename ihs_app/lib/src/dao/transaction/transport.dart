@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:completer_ex/completer_ex.dart';
 import 'package:stacktrace_impl/stacktrace_impl.dart';
 
-import '../../../util/log.dart';
+import '../../util/log.dart';
 import 'api/api_error.dart';
 import 'api/http_protocol.dart';
 
@@ -52,7 +52,9 @@ class Transport {
             );
       }).catchError(
           // ignore: avoid_types_on_closure_parameters
-          (dynamic e, StackTrace s) => _onError(e, s, callSite, completer));
+          (Object e, StackTrace s) {
+        _onError(e, s, callSite, completer);
+      });
     }
     // ignore: avoid_catches_without_on_clauses
     catch (e, s) {
@@ -91,9 +93,9 @@ class Transport {
   }
 
   Uri _uri(String service, Map<String, String> params) {
-    if (_httpProtocol == HttpProtocol.HTTP) {
+    if (_httpProtocol == HttpProtocol.http) {
       return Uri.http(_host, _basePath + service, params);
-    } else if (_httpProtocol == HttpProtocol.HTTPS) {
+    } else if (_httpProtocol == HttpProtocol.https) {
       return Uri.https(_host, _basePath + service, params);
     } else {
       throw Exception('Invalid Http Protocol');

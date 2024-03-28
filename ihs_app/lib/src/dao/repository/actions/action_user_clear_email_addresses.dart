@@ -1,23 +1,22 @@
 import 'dart:convert';
+
 import '../../transaction/api/retry/retry_data.dart';
 import '../../transaction/transaction.dart';
 import 'action.dart';
 
 class ActionUserClearEmailAddress extends Action<bool> {
+  ActionUserClearEmailAddress(this.emailAddress, RetryData retryData)
+      : super(retryData);
   final String emailAddress;
 
-  ActionUserClearEmailAddress(this.emailAddress, RetryData retryData) : super(retryData);
-
   @override
-  bool decodeResponse(ActionResponse data) {
-    return data.wasSuccessful();
-  }
+  bool decodeResponse(ActionResponse data) => data.wasSuccessful();
 
   @override
   String encodeRequest() {
-    var map = <String, dynamic>{};
-    map[Action.ACTION] = 'userClearEmailAddress';
-    map[Action.MUTATES] = causesMutation;
+    final map = <String, dynamic>{};
+    map[Action.action] = 'userClearEmailAddress';
+    map[Action.mutatesKey] = causesMutation;
     map['emailAddress'] = emailAddress;
 
     return json.encode(map);

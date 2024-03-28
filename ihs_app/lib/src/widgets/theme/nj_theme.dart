@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class NJTheme {
@@ -102,8 +101,7 @@ class NJColors {
   static const Color surface24dp = Color(0xFF373737);
 }
 
-// ignore: constant_identifier_names
-enum SurfaceElevation { E0, E1, E2, E3, E4, E6, E8, E12, E16, E24 }
+enum SurfaceElevation { e0, e1, e2, e3, e4, e6, e8, e12, e16, e24 }
 
 ///
 /// Creates a Material design surface with a given [elevation].
@@ -116,9 +114,9 @@ enum SurfaceElevation { E0, E1, E2, E3, E4, E6, E8, E12, E16, E24 }
 class Surface extends StatelessWidget {
   const Surface(
       {required this.child,
-      this.padding ,
       super.key,
-      this.elevation = SurfaceElevation.E4});
+      this.elevation = SurfaceElevation.e4,
+      this.padding});
   final Widget child;
   final SurfaceElevation elevation;
   final EdgeInsetsGeometry? padding;
@@ -135,45 +133,37 @@ class Surface extends StatelessWidget {
     Color color;
 
     switch (elevation) {
-      case SurfaceElevation.E0:
+      case SurfaceElevation.e0:
         color = NJColors.surface0dp;
         break;
-      case SurfaceElevation.E1:
+      case SurfaceElevation.e1:
         color = NJColors.surface1dp;
         break;
-      case SurfaceElevation.E2:
+      case SurfaceElevation.e2:
         color = NJColors.surface2dp;
         break;
-      case SurfaceElevation.E3:
+      case SurfaceElevation.e3:
         color = NJColors.surface3dp;
         break;
-      case SurfaceElevation.E4:
+      case SurfaceElevation.e4:
         color = NJColors.surface4dp;
         break;
-      case SurfaceElevation.E6:
+      case SurfaceElevation.e6:
         color = NJColors.surface6dp;
         break;
-      case SurfaceElevation.E8:
+      case SurfaceElevation.e8:
         color = NJColors.surface8dp;
         break;
-      case SurfaceElevation.E12:
+      case SurfaceElevation.e12:
         color = NJColors.surface12dp;
         break;
-      case SurfaceElevation.E16:
+      case SurfaceElevation.e16:
         color = NJColors.surface16dp;
         break;
-      case SurfaceElevation.E24:
+      case SurfaceElevation.e24:
         color = NJColors.surface24dp;
         break;
     }
     return color;
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(EnumProperty<SurfaceElevation>('elevation', elevation))
-      ..add(DiagnosticsProperty<EdgeInsetsGeometry>('padding', padding));
   }
 }

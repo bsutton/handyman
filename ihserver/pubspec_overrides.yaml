@@ -1,5 +1,11 @@
 dependency_overrides:
-  shelf_letsencrypt:
-    path: ../../shelf_letsencrypt
-  simple_mysql_orm:
-    path: ../../simple_mysql_orm
+  # shelf_letsencrypt:
+  #   path: ../../shelf_letsencrypt
+  # simple_mysql_orm:
+  #   path: ../../simple_mysql_orm
+  x509:
+    hosted: https://squarephone.biz/api/jbbxpsdavu/
+    version: ^0.2.5
+  jose:
+    hosted: https://squarephone.biz/api/jbbxpsdavu/
+    version: ^0.3.4

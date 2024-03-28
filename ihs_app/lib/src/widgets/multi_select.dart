@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+
 import 'theme/nj_text_themes.dart';
 
 class MultiSelect<T extends Selectable> extends StatefulWidget {
+
+  const MultiSelect(
+      {required this.items, required this.nonSelectedIcon, required this.selectedIcon, required this.selectedBackGroundColor, super.key,
+       this.onChanged});
   final List<T> items;
   final Icon selectedIcon;
   final Icon nonSelectedIcon;
   final Color selectedBackGroundColor;
-  final void Function() onChanged;
-
-  MultiSelect(
-      {@required this.items, this.selectedIcon, this.nonSelectedIcon, this.selectedBackGroundColor, this.onChanged});
+  final void Function()? onChanged;
 
   @override
-  State<StatefulWidget> createState() {
-    return MultiSelectState<T>(items);
-  }
+  State<StatefulWidget> createState() => MultiSelectState<T>();
 }
 
 abstract class Selectable {
@@ -24,22 +24,21 @@ abstract class Selectable {
 }
 
 class MultiSelectState<T extends Selectable> extends State<MultiSelect> {
-  final List<T> items;
+
+  MultiSelectState();
 
   final List<T> selected = [];
 
-  MultiSelectState(this.items);
-
   @override
-  Widget build(BuildContext context) {
-    return ListView(children: buildItems());
-  }
+  Widget build(BuildContext context) => ListView(children: buildItems());
 
   List<Widget> buildItems() {
-    var widgets = <Widget>[];
+    final widgets = <Widget>[];
 
-    for (var item in items) {
-      widgets.add(Container(
+    for (final item in widget.items) {
+      widgets.add(DecoratedBox(
+          decoration: BoxDecoration(
+              color: (item.selected ? widget.selectedBackGroundColor : null)),
           child: SwitchListTile(
               title: NJTextBody(item.title),
               value: item.selected,
@@ -49,11 +48,11 @@ class MultiSelectState<T extends Selectable> extends State<MultiSelect> {
                   widget.onChanged?.call();
                 });
               },
-              secondary: (item.selected ? widget.selectedIcon : widget.nonSelectedIcon)
+              secondary:
+                  (item.selected ? widget.selectedIcon : widget.nonSelectedIcon)
               //  Icon(Icons.lightbulb_outline),
 
-              ),
-          decoration: BoxDecoration(color: (item.selected ? widget.selectedBackGroundColor : null))));
+              )));
     }
 
     return widgets;

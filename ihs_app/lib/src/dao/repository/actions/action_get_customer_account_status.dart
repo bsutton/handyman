@@ -1,29 +1,31 @@
 import 'dart:convert';
-import '../../../../util/customer_account_status.dart';
-import '../../../../util/enum_helper.dart';
-import '../../../entities/user.dart';
+
+import '../../../util/customer_account_status.dart';
+import '../../../util/enum_helper.dart';
+import '../../entities/user.dart';
 import '../../transaction/api/retry/retry_data.dart';
 import '../../transaction/transaction.dart';
 import '../repository.dart';
 import 'action.dart';
 
-class ActionGetCustomerAccountStatus extends Action<CustomerAccountStatusResponse> {
+class ActionGetCustomerAccountStatus
+    extends Action<CustomerAccountStatusResponse> {
+  ActionGetCustomerAccountStatus(
+      this.user, this.repository, RetryData retryData)
+      : super(retryData);
   final Repository repository;
 
   final User user;
 
-  ActionGetCustomerAccountStatus(this.user, this.repository, RetryData retryData) : super(retryData);
-
   @override
-  CustomerAccountStatusResponse decodeResponse(ActionResponse data) {
-    return CustomerAccountStatusResponse.fromJson(data);
-  }
+  CustomerAccountStatusResponse decodeResponse(ActionResponse data) =>
+      CustomerAccountStatusResponse.fromJson(data);
 
   @override
   String encodeRequest() {
-    var map = <String, dynamic>{};
-    map[Action.ACTION] = 'customerAccountStatus';
-    map[Action.MUTATES] = causesMutation;
+    final map = <String, dynamic>{};
+    map[Action.action] = 'customerAccountStatus';
+    map[Action.mutatesKey] = causesMutation;
 
     return json.encode(map);
   }
@@ -36,16 +38,16 @@ class ActionGetCustomerAccountStatus extends Action<CustomerAccountStatusRespons
 }
 
 class CustomerAccountStatusResponse {
-  bool success;
-  CustomerAccountStatus accountStatus;
-
-  String failureCause;
-
   CustomerAccountStatusResponse({this.success});
 
   CustomerAccountStatusResponse.fromJson(ActionResponse response) {
     success = response.wasSuccessful();
-    accountStatus = EnumHelper.getEnum(response.data['status'] as String, CustomerAccountStatus.values);
+    accountStatus = EnumHelper.getEnum(
+        response.data!['status'] as String, CustomerAccountStatus.values);
     failureCause = response.userExceptionMessage;
   }
+  bool? success;
+  CustomerAccountStatus? accountStatus;
+
+  String? failureCause;
 }

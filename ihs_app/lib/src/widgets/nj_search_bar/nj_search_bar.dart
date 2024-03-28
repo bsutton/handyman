@@ -4,18 +4,17 @@ import 'package:flutter/material.dart';
 typedef SearchCallback = void Function(String searchTerm);
 
 class NjSearchBar extends StatefulWidget {
+  const NjSearchBar({required this.onClose, required this.onSearch, super.key});
   final VoidCallback onClose;
   final SearchCallback onSearch;
-  NjSearchBar({Key key, @required this.onClose, @required this.onSearch}) : super(key: key);
 
   @override
-  _NjSearchBarState createState() => _NjSearchBarState();
+  NjSearchBarState createState() => NjSearchBarState();
 }
 
-class _NjSearchBarState extends State<NjSearchBar> {
-  final Debouncer<String> _debouncer = Debouncer<String>(
-    Duration(milliseconds: 500),
-  );
+class NjSearchBarState extends State<NjSearchBar> {
+  final Debouncer<String> _debouncer =
+      Debouncer<String>(const Duration(milliseconds: 500), initialValue: '');
 
   @override
   void initState() {
@@ -30,33 +29,29 @@ class _NjSearchBarState extends State<NjSearchBar> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BottomAppBar(
+  Widget build(BuildContext context) => BottomAppBar(
       child: Padding(
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
         child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Expanded(
               child: TextField(
                 autofocus: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Search...',
-                  contentPadding: EdgeInsets.only(left: 16.0),
+                  contentPadding: EdgeInsets.only(left: 16),
                 ),
                 onChanged: (search) => _debouncer.value = search,
               ),
             ),
             IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: widget.onClose,
             )
           ],
         ),
       ),
     );
-  }
 }

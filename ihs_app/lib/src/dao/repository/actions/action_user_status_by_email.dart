@@ -1,5 +1,6 @@
 import 'dart:convert';
-import '../../../entities/entity.dart';
+
+import '../../entities/entity.dart';
 import '../../transaction/api/retry/retry_data.dart';
 import '../../transaction/transaction.dart';
 import '../../types/firebase_user_uid.dart';
@@ -20,26 +21,28 @@ import 'user_status_details.dart';
 ///
 /// and we now need to find their user details.
 /// This may fail if the user has changed their mobile no.
-class ActionUserStatusByEmail<E extends Entity<E>> extends Action<UserStatusDetails> {
+class ActionUserStatusByEmail<E extends Entity<E>>
+    extends Action<UserStatusDetails> {
+  ActionUserStatusByEmail(this.firebaseTempUserUid, this.emailAddress,
+      this.repository, RetryData retryData)
+      : super(retryData);
   final FirebaseTempUserUid firebaseTempUserUid;
   final String emailAddress;
   final Repository<E> repository;
-  ActionUserStatusByEmail(this.firebaseTempUserUid, this.emailAddress, this.repository, RetryData retryData)
-      : super(retryData);
 
   @override
   UserStatusDetails decodeResponse(ActionResponse data) {
-    var user = UserStatusDetails.fromJson(data);
+    final user = UserStatusDetails.fromJson(data);
     return user;
   }
 
   @override
   String encodeRequest() {
-    var map = <String, dynamic>{};
-    map[Action.ACTION] = 'userStatusByEmail';
-    map[Action.ENTITY_TYPE] = 'UserInvitation';
-    map[Action.MUTATES] = causesMutation;
-    map[Action.EMAIL_ADDRESS] = emailAddress.toString();
+    final map = <String, dynamic>{};
+    map[Action.action] = 'userStatusByEmail';
+    map[Action.entityTypeKey] = 'UserInvitation';
+    map[Action.mutatesKey] = causesMutation;
+    map[Action.emailAdderssKey] = emailAddress;
 
     return json.encode(map);
   }

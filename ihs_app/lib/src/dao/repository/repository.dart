@@ -7,6 +7,7 @@ import '../entities/entity_settings.dart';
 import '../transaction/api/retry/retry_data.dart';
 import '../transaction/query.dart';
 import '../transaction/transaction.dart';
+import '../transaction/transaction_factory.dart';
 import '../types/er.dart';
 import 'actions/action.dart';
 import 'actions/action_count.dart';
@@ -39,24 +40,27 @@ abstract class Repository<E extends Entity<E>> extends EntitySettings<E> {
     return select(query, force: force, retryData: retryData);
   }
 
-  Future<E> getFirst(String fieldName, String value,
-      { Transaction? transaction,
+  Future<E?> getFirst(String fieldName, String value,
+      {Transaction? transaction,
       bool force = false,
-      RetryData retryData = RetryData.defaultRetry}) {
+      RetryData retryData = RetryData.defaultRetry}) async {
     final filters = <Match>[Match(fieldName, value)];
     final query = Query(entity, limit: 1, filters: filters);
 
     final completer = CompleterEx<E>();
-    select(query, force: force, retryData: retryData, transaction: transaction)
-        .then((list) {
+
+    try {
+      final list = await select(query,
+          force: force, retryData: retryData, transaction: transaction);
       if (list.isNotEmpty) {
         completer.complete(list[0]);
       } else {
         completer.complete(null);
       }
-    })
-        // ignore: avoid_types_on_closure_parameters
-        .catchError(completer.completeError);
+      // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+      completer.completeError(e);
+    }
     return completer.future;
   }
 
@@ -69,7 +73,7 @@ abstract class Repository<E extends Entity<E>> extends EntitySettings<E> {
   }
 
   Future<int> count(Query query,
-      { Transaction? transaction,
+      {Transaction? transaction,
       bool force = false,
       RetryData retryData = RetryData.defaultRetry}) {
     final action = ActionCount<E>(query, this, retryData);
@@ -106,14 +110,19 @@ abstract class Repository<E extends Entity<E>> extends EntitySettings<E> {
     return action.future;
   }
 
-  static Transaction? findTransaction(Transaction? transaction) => transaction;
+  static Transaction findTransaction(Transaction? transaction) {
+    if (transaction == null) {
+      return TransactionFactory.getActiveTransaction();
+    }
+    return transaction;
+  }
 
   Future<E> getById(int id,
           {required Transaction transaction,
           RetryData retryData = RetryData.defaultRetry}) =>
       addGetAction(ActionGetById<E>(id, this, retryData), transaction);
 
-  Future<E> addGetAction(Action<E> action, Transaction transaction) {
+  Future<E> addGetAction(Action<E> action, Transaction? transaction) {
     final value = _cache.getByEntityAction(action);
     return Future.value(value);
   }
@@ -121,12 +130,12 @@ abstract class Repository<E extends Entity<E>> extends EntitySettings<E> {
   /// Retrives an entity [E] by its guid.
   /// The Future will return null if the entity doesn't exist.
   Future<E> getByGUID(GUID guid,
-          {required Transaction transaction,
+          {Transaction? transaction,
           RetryData retryData = RetryData.defaultRetry}) async =>
       addGetAction(ActionGetByGuid<E>(guid, this, retryData), transaction);
 
   Future<ER<E>> insert(E entity,
-      {required Transaction transaction,
+      {Transaction? transaction,
       RetryData retryData = RetryData.defaultRetry}) {
     final action = ActionInsert<E>(entity, this, retryData);
     findTransaction(transaction).addAction(action);
@@ -139,7 +148,7 @@ abstract class Repository<E extends Entity<E>> extends EntitySettings<E> {
   /// Updates the server db and then the local cache
   /// with a full copy of the new entity.
   Future<ER<E>> update(E entity,
-      {required Transaction transaction,
+      {Transaction? transaction,
       RetryData retryData = RetryData.defaultRetry}) {
     final action = ActionUpdate<E>(entity, this, retryData);
     findTransaction(transaction).addAction(action);
@@ -150,7 +159,7 @@ abstract class Repository<E extends Entity<E>> extends EntitySettings<E> {
   }
 
   Future<bool> delete(E entity,
-      {required Transaction transaction,
+      {Transaction? transaction,
       RetryData retryData = RetryData.defaultRetry}) {
     final action = ActionDelete<E>(entity, this, retryData);
     findTransaction(transaction).addAction(action);

@@ -6,21 +6,39 @@ part of 'tutorial_was_viewed.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-TutorialWasViewed _$TutorialWasViewedFromJson(Map<String, dynamic> json) {
-  $checkKeys(json, allowedKeys: const ['id', 'guid', 'user', 'tutorial', 'dateViewed']);
-  return TutorialWasViewed(
-    user: const ERUserConverter().fromJson(json['user'] as String),
-    tutorial: const ERTutorialConverter().fromJson(json['tutorial'] as String),
-    dateViewed: const LocalDateConverter().fromJson(json['dateViewed'] as String),
-  )
-    ..id = json['id'] as int
-    ..guid = const GUIDConverter().fromJson(json['guid']);
-}
+TutorialWasViewed _$TutorialWasViewedFromJson(Map<String, dynamic> json) =>
+    TutorialWasViewed(
+      user: _$JsonConverterFromJson<String, ER<User>>(
+          json['user'], const ERConverterUser().fromJson),
+      tutorial: _$JsonConverterFromJson<String, ER<Tutorial>>(
+          json['tutorial'], const ERTutorialConverter().fromJson),
+      dateViewed: _$JsonConverterFromJson<String, LocalDate>(
+          json['dateViewed'], const LocalDateConverter().fromJson),
+    )
+      ..id = json['id'] as int?
+      ..guid = const GUIDConverter().fromJson(json['guid']);
 
-Map<String, dynamic> _$TutorialWasViewedToJson(TutorialWasViewed instance) => <String, dynamic>{
+Map<String, dynamic> _$TutorialWasViewedToJson(TutorialWasViewed instance) =>
+    <String, dynamic>{
       'id': instance.id,
-      'guid': const GUIDConverter().toJson(instance.guid),
-      'user': const ERUserConverter().toJson(instance.user),
-      'tutorial': const ERTutorialConverter().toJson(instance.tutorial),
-      'dateViewed': const LocalDateConverter().toJson(instance.dateViewed),
+      'guid': _$JsonConverterToJson<dynamic, GUID>(
+          instance.guid, const GUIDConverter().toJson),
+      'user': _$JsonConverterToJson<String, ER<User>>(
+          instance.user, const ERConverterUser().toJson),
+      'tutorial': _$JsonConverterToJson<String, ER<Tutorial>>(
+          instance.tutorial, const ERTutorialConverter().toJson),
+      'dateViewed': _$JsonConverterToJson<String, LocalDate>(
+          instance.dateViewed, const LocalDateConverter().toJson),
     };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);

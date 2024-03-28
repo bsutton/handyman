@@ -1,5 +1,6 @@
 import 'dart:convert';
-import '../../../entities/tutorial.dart';
+
+import '../../entities/tutorial.dart';
 import '../../transaction/transaction.dart';
 import '../tutorial_repository.dart';
 import 'action.dart';
@@ -9,9 +10,9 @@ class ActionGetNewTutorials extends CustomAction<List<Tutorial>> {
 
   @override
   List<Tutorial> decodeResponse(ActionResponse data) {
-    var results = <Tutorial>[];
+    final results = <Tutorial>[];
 
-    for (var entity in data.entityList) {
+    for (final entity in data.entityList!) {
       results.add(repository.fromJson(entity as Map<String, Object>));
     }
 
@@ -20,9 +21,9 @@ class ActionGetNewTutorials extends CustomAction<List<Tutorial>> {
 
   @override
   String encodeRequest() {
-    var map = <String, dynamic>{};
-    map[Action.ACTION] = 'getNewTutorials';
-    map[Action.MUTATES] = causesMutation;
+    final map = <String, dynamic>{};
+    map[Action.action] = 'getNewTutorials';
+    map[Action.mutatesKey] = causesMutation;
 
     return json.encode(map);
   }
@@ -34,7 +35,5 @@ class ActionGetNewTutorials extends CustomAction<List<Tutorial>> {
   List<Object> get props => [];
 
   @override
-  Future<List<Tutorial>> run() async {
-    return await repository.getNewTutorials();
-  }
+  Future<List<Tutorial>> run() async => repository.getNewTutorials();
 }

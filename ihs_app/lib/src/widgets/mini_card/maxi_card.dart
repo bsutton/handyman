@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:completer_ex/completer_ex.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart' hide Shadow;
-import 'package:stacktrace_impl/stacktrace_impl.dart';
+import 'package:future_builder_ex/future_builder_ex.dart';
 
 import '../../dialogs/dialog_alert.dart';
 import '../blocking_ui.dart';
-import '../future_builder_ex.dart';
 import '../hero_text.dart';
 import '../theme/nj_button.dart';
 import '../theme/nj_text_themes.dart';
@@ -18,7 +15,8 @@ import 'mini_card.dart';
 import 'mini_row_state.dart';
 
 /// Base for all MaxCard implementors
-abstract class MaxiContent<T, S> implements Widget {
+// ignore: avoid_implementing_value_types
+abstract class MaxiContent<T> implements Widget {
   /// Each implementor of the MaxiContent class
   /// MUST call this method each time the content
   /// changes.
@@ -38,19 +36,14 @@ class MaxiCard<T, S extends MiniRowState<T, S>> extends StatefulWidget {
 
   const MaxiCard(this.miniCard, this.miniRowState, {super.key});
   final MiniCard<T, S> miniCard;
-  final MiniRowState miniRowState;
+  final MiniRowState<T,S> miniRowState;
 
   @override
-  _MaxiCardState createState() => _MaxiCardState();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<MiniRowState<dynamic, MiniRowState>>(
-        'miniRowState', miniRowState));
-  }
+  MaxiCardState<T,S> createState() => MaxiCardState<T, S>();
 }
 
-class _MaxiCardState extends State<MaxiCard> {
+class MaxiCardState<T, S extends MiniRowState<T, S>>
+    extends State<MaxiCard<T, S>> {
   bool selected = false;
   GlobalKey<ToggleSwitchState> toggleSwitchKey = GlobalKey<ToggleSwitchState>();
 
@@ -78,18 +71,16 @@ class _MaxiCardState extends State<MaxiCard> {
         ],
       );
 
-  Widget buildPanel() {
-    // elevation: selected ? 0 : 12,
-    // return Hero(
-    //   tag: 'mini-card-${widget.miniCard.title}-panel',
-    return Expanded(
-      child: Column(
-          // mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [buildTitle(), buildContent()]),
-      //   ),
-    );
-  }
+  // elevation: selected ? 0 : 12,
+  // return Hero(
+  //   tag: 'mini-card-${widget.miniCard.title}-panel',
+  Widget buildPanel() => Expanded(
+        child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [buildTitle(), buildContent()]),
+        //   ),
+      );
 
   Widget buildRightBar() => HeroNoop(
       noop: false,
@@ -103,58 +94,53 @@ class _MaxiCardState extends State<MaxiCard> {
   Widget buildContent() => Expanded(
         // child: Hero(
         //     tag: 'mini-card-${widget.miniCard.title}-content',
-        child: FutureBuilderEx<MaxiContent>(
-            future: () => widget.miniCard.maxiBuilder(),
-            waitingBuilder: (context) => NJTextBodyBold('Loading...'),
-            builder: (context, content) => content,
-            stackTrace: StackTraceImpl()),
+        child: FutureBuilderEx<MaxiContent<T>>(
+          future: () async => widget.miniCard.maxiBuilder!(),
+          waitingBuilder: (context) => NJTextBodyBold('Loading...'),
+          builder: (context, content) => content!,
+        ),
       );
 
-  Widget buildTitle() {
-    // this hero cause the problem.
-    // only causes the issue on close.
-    // Even if its just a Hero same problem
-
-    return GestureDetector(
-        onTap: onClose,
-        child: Hero(
-          tag: 'mini-card-${widget.miniCard.title}',
-          child: Container(
-            padding: const EdgeInsets.all(NJTheme.padding),
-            decoration: const BoxDecoration(
-              color: Colors.green,
-            ),
-            child: NJTextSubheading(widget.miniCard.title),
+  // this hero cause the problem.
+  // only causes the issue on close.
+  // Even if its just a Hero same problem
+  Widget buildTitle() => GestureDetector(
+      onTap: onClose,
+      child: Hero(
+        tag: 'mini-card-${widget.miniCard.title}',
+        child: Container(
+          padding: const EdgeInsets.all(NJTheme.padding),
+          decoration: const BoxDecoration(
+            color: Colors.green,
           ),
-        ));
-  }
+          child: NJTextSubheading(widget.miniCard.title),
+        ),
+      ));
 
-  Widget buildActivation(BuildContext context) {
-    // this one may cause an overflow.
-    // confirmed !
-    return Hero(
-        tag: 'mini-card-${widget.miniCard.title}-activation',
-        child: Material(
-            child: Container(
-                decoration: BoxDecoration(
-                  color: selected ? Colors.yellow[500] : Colors.yellow[200],
-                ),
-                alignment: Alignment.centerLeft,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: buildToggleSwitch(),
-                      ),
-                      Expanded(child: Container()),
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child:
-                            NJButtonPrimary(label: 'Close', onPressed: onClose),
-                      )
-                    ]))));
-  }
+  // this one may cause an overflow.
+  // confirmed !
+  Widget buildActivation(BuildContext context) => Hero(
+      tag: 'mini-card-${widget.miniCard.title}-activation',
+      child: Material(
+          child: Container(
+              decoration: BoxDecoration(
+                color: selected ? Colors.yellow[500] : Colors.yellow[200],
+              ),
+              alignment: Alignment.centerLeft,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: buildToggleSwitch(),
+                    ),
+                    Expanded(child: Container()),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child:
+                          NJButtonPrimary(label: 'Close', onPressed: onClose),
+                    )
+                  ]))));
 
   // Called when the user clicks the close button.
   void onClose() {
@@ -172,7 +158,7 @@ class _MaxiCardState extends State<MaxiCard> {
       inactiveTextColor: Colors.white,
       labels: const ['On', 'Off'],
       // icons: [FontAwesomeIcons.check, FontAwesomeIcons.times],
-      onToggle: (index) async => await onActivationChanged(value: index == 0));
+      onToggle: (index) async => onActivationChanged(value: index == 0));
 
   // Called when the user taps the Switch to activate/deactive this card.
   Future<bool> onActivationChanged({required bool value}) {
@@ -202,14 +188,5 @@ class _MaxiCardState extends State<MaxiCard> {
       });
     }
     return complete.future;
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty<bool>('selected', selected))
-      ..add(DiagnosticsProperty<GlobalKey<ToggleSwitchState>>(
-          'toggleSwitchKey', toggleSwitchKey));
   }
 }

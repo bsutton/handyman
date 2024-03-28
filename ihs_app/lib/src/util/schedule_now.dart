@@ -7,5 +7,5 @@ import 'dart:async';
 /// Useful for when you need to trigger an action during
 /// a build that isn't permitted during a build cycle.
 void scheduleNow(void Function() action) {
-  Future<void>.delayed(Duration(seconds: 0), action);
+  Future<void>.delayed(Duration.zero, action);
 }

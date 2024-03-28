@@ -7,21 +7,21 @@ typedef EntityFieldMatcher<E extends Entity<E>> = Future<bool> Function(
 
 class RepositoryCache<E extends Entity<E>> {
   RepositoryCache(this.cacheDuration);
-  static final TTLCache<Action, Entity> _entityActionCache =
-      TTLCache<Action, Entity>(
+  static final TTLCache<Action<dynamic>, Entity> _entityActionCache =
+      TTLCache<Action<dynamic>, Entity>(
     size: 1000,
   );
 
-  static final TTLCache<Action, List<Entity>> _listActionCache =
-      TTLCache<Action, List<Entity>>(size: 100);
+  static final TTLCache<Action<dynamic>, List<Entity>> _listActionCache =
+      TTLCache<Action<dynamic>, List<Entity>>(size: 100);
 
   Duration cacheDuration;
 
-  void cacheListAction(Action query, List<E> entities) {
+  void cacheListAction(Action<dynamic> query, List<E> entities) {
     _listActionCache.set(query, entities);
   }
 
-  void cacheEntityAction(Action query, E entities) {
+  void cacheEntityAction(Action<dynamic> query, E entities) {
     _entityActionCache.set(query, entities);
   }
 
@@ -30,16 +30,16 @@ class RepositoryCache<E extends Entity<E>> {
     _entityActionCache.clear();
   }
 
-  void removeByAction(Action action) {
+  void removeByAction(Action<dynamic> action) {
     _listActionCache.remove(action);
     _entityActionCache.remove(action);
   }
 
-  E getByEntityAction(Action action) =>
-      _entityActionCache.get(action, cacheDuration) as E;
+  E getByEntityAction(Action<dynamic> action) =>
+      _entityActionCache.get(action, cacheDuration)! as E;
 
-  List<E>? getByListAction(Action action) =>
-      _listActionCache.get(action, cacheDuration);
+  List<E>? getByListAction(Action<dynamic> action) =>
+      _listActionCache.get(action, cacheDuration)! as List<E>;
 
   void removeByGUID(GUID guid) {
     // remove for entity cache

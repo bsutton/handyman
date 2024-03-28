@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
 class TextHeadline5 extends StatelessWidget {
+
+  const TextHeadline5(this.text, {super.key});
   final String text;
 
-  TextHeadline5(this.text);
-
   @override
-  Widget build(BuildContext context) {
-    return Text(text, style: Theme.of(context).textTheme.headline5);
-  }
+  Widget build(BuildContext context) => Text(text, style: Theme.of(context).textTheme.headlineSmall);
 }

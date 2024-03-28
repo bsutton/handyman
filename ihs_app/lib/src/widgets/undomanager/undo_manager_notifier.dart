@@ -23,13 +23,13 @@ class UndoManagerNotifier extends ChangeNotifier {
 
   List<DeletableItem> get entities => _entities;
 
-  void markForDelete(DeletableItem entity, BuildContext context) {
+  Future<void> markForDelete(DeletableItem entity, BuildContext context) async {
     final index = _entities.indexOf(entity);
 
     if (_entities.remove(entity)) {
       pendingDelete[entity] = index;
       scheduleDelete();
-      showUndoSnackBar(context, entity);
+      await showUndoSnackBar(context, entity);
       eventListener.onItemMarkForDelete(index, entity);
       notifyListeners();
     }
@@ -43,9 +43,10 @@ class UndoManagerNotifier extends ChangeNotifier {
     return SlideTransition(position: animation.drive(mt), child: item);
   }
 
-  void showUndoSnackBar(BuildContext context, DeletableItem entity) {
+  Future<void> showUndoSnackBar(
+      BuildContext context, DeletableItem entity) async {
     QuickSnack().clear(context);
-    QuickSnack().undo(
+    await QuickSnack().undo(
         context: context,
         duration: snackBarDuration,
         message: '${entity.getDescription()} deleted }',
@@ -54,9 +55,7 @@ class UndoManagerNotifier extends ChangeNotifier {
   }
 
   void scheduleDelete() {
-    if (deleteFuture != null) {
-      deleteFuture!.cancel();
-    }
+    deleteFuture?.cancel();
     deleteFuture = CancelableFuture(undoDuration, () {
       for (final item in pendingDelete.keys) {
         item.delete();
@@ -66,16 +65,14 @@ class UndoManagerNotifier extends ChangeNotifier {
   }
 
   void undo(DeletableItem entity) {
-    if (deleteFuture != null) {
-      deleteFuture!.cancel();
-    }
+    deleteFuture?.cancel();
     if (pendingDelete.isNotEmpty) {
-      pendingDelete
-        ..forEach((item, idx) {
-          _entities.add(item);
-          eventListener.onItemUndo(idx);
-        })
-        ..clear();
+      pendingDelete.forEach((item, idx) {
+        _entities.add(item);
+        eventListener.onItemUndo(idx);
+      });
+
+      pendingDelete.clear();
       notifyListeners();
     }
   }
@@ -94,7 +91,7 @@ class UndoManagerNotifier extends ChangeNotifier {
 }
 
 abstract class DeletableItem extends StatefulWidget {
-  const DeletableItem(ValueKey key) : super(key: key);
+  const DeletableItem(ValueKey<String> key) : super(key: key);
 
   void delete();
   String getDescription();

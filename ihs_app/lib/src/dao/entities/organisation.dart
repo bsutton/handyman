@@ -1,13 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../util/local_date.dart';
-import '../../util/local_time.dart';
-import '../types/er.dart';
-import 'business_hours_for_day.dart';
-import 'check_list_item_type.dart';
 import 'entity.dart';
-import 'team.dart';
-import 'user.dart';
 
 part 'organisation.g.dart';
 
@@ -18,12 +11,12 @@ part 'organisation.g.dart';
 ///
 @JsonSerializable()
 class Organisation extends Entity<Organisation> {
-
-  late String name;
-
+  Organisation();
 
   factory Organisation.fromJson(Map<String, dynamic> json) =>
       _$OrganisationFromJson(json);
+
+  late String name;
 
   @override
   Map<String, dynamic> toJson() => _$OrganisationToJson(this);

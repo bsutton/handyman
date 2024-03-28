@@ -14,10 +14,6 @@ typedef OnTick = void Function(int index);
 
 ///
 class TickBuilder extends StatefulWidget {
-  final TickerBuilder _builder;
-  final Duration _interval;
-  final int _limit;
-  final bool _active;
 
   /// Create a TickBuilder
   /// [interval] is the time between each tick. We could the [builder]
@@ -26,20 +22,20 @@ class TickBuilder extends StatefulWidget {
   /// If limit is null then it will increment forever.
   /// If [active] is false the tick builder will stop ticking.
   /// The build is called each [interval] period.
-  TickBuilder(
-      {@required TickerBuilder builder,
-      @required Duration interval,
-      int limit,
+  const TickBuilder(
+      {required TickerBuilder builder, required Duration interval, required int limit, super.key,
       bool active = true})
       : _builder = builder,
         _interval = interval,
         _limit = limit,
         _active = active;
+  final TickerBuilder _builder;
+  final Duration _interval;
+  final int _limit;
+  final bool _active;
 
   @override
-  State<StatefulWidget> createState() {
-    return _TickBuilderState();
-  }
+  State<StatefulWidget> createState() => _TickBuilderState();
 }
 
 class _TickBuilderState extends State<TickBuilder> {
@@ -52,16 +48,14 @@ class _TickBuilderState extends State<TickBuilder> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return widget._builder(context, tickCount);
-  }
+  Widget build(BuildContext context) => widget._builder(context, tickCount);
 
   void queueTicker() {
     Future.delayed(widget._interval, () {
       if (mounted && widget._active) {
         setState(() {
           tickCount++;
-          if (widget._limit != null && tickCount > widget._limit) {
+          if (tickCount > widget._limit) {
             tickCount = 0;
           }
         });

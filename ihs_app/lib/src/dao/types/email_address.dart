@@ -1,7 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import '../../../util/strings.dart';
+import 'package:strings/strings.dart';
 
 class EmailAddress {
   EmailAddress(this.value) {
@@ -20,12 +19,11 @@ class EmailAddress {
   bool isValidAddress() => EmailAddress.isValid(value);
 
   static bool isValid(String emailAddress) =>
-      !Strings.isNullOrEmpty(emailAddress) &&
-      EmailValidator.validate(emailAddress);
+      !Strings.isBlank(emailAddress) && EmailValidator.validate(emailAddress);
 }
 
-class EmailAddressConverter implements JsonConverter<EmailAddress, String> {
-  const EmailAddressConverter();
+class ConverterEmailAddress implements JsonConverter<EmailAddress, String> {
+  const ConverterEmailAddress();
 
   @override
   EmailAddress fromJson(String? json) =>

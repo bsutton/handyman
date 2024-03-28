@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import '../../../entities/email_verification.dart';
-
-import '../../../entities/entity.dart';
+import '../../entities/email_verification.dart';
+import '../../entities/entity.dart';
 import '../../transaction/api/retry/retry_data.dart';
 import '../../transaction/transaction.dart';
 import '../repository.dart';
@@ -10,24 +9,27 @@ import 'action.dart';
 
 /// Used when a user is attempting to recover their account.
 /// We have validated their email address
-class ActionCreateEmailVerification<E extends Entity<E>> extends Action<EmailVerification> {
+class ActionCreateEmailVerification<E extends Entity<E>>
+    extends Action<EmailVerification> {
+  ActionCreateEmailVerification(
+      this.verification, this.repository, RetryData retryData)
+      : super(retryData);
   final EmailVerification verification;
   final Repository<E> repository;
-  ActionCreateEmailVerification(this.verification, this.repository, RetryData retryData) : super(retryData);
 
   @override
   EmailVerification decodeResponse(ActionResponse data) {
-    var verification = EmailVerification.fromJson(data.singleEntity);
+    final verification = EmailVerification.fromJson(data.singleEntity!);
     return verification;
   }
 
   @override
   String encodeRequest() {
-    var map = <String, dynamic>{};
-    map[Action.ACTION] = 'createEmailVerification';
-    map[Action.MUTATES] = causesMutation;
-    map[Action.ENTITY_TYPE] = verification.runtimeType.toString();
-    map[Action.ENTITY] = verification;
+    final map = <String, dynamic>{};
+    map[Action.action] = 'createEmailVerification';
+    map[Action.mutatesKey] = causesMutation;
+    map[Action.entityTypeKey] = verification.runtimeType.toString();
+    map[Action.entityKey] = verification;
 
     return json.encode(map);
   }

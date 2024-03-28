@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'context_help.dart';
@@ -13,21 +12,15 @@ final Color _kCutoutBackgroundColor = Colors.black.withOpacity(0.87);
 
 class _InheritedContextHelpController extends InheritedWidget {
   const _InheritedContextHelpController({
-    required this.state,
     required super.child,
+    required this.state,
   });
 
   final ContextHelpControllerState state;
 
   @override
+  //return old.state != state || old.child != child;
   bool updateShouldNotify(_InheritedContextHelpController old) => false;
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-        .add(DiagnosticsProperty<ContextHelpControllerState>('state', state));
-  }
 }
 
 /// This controller is included in any page that is built using AppScaffold.
@@ -54,8 +47,8 @@ class ContextHelpControllerState extends State<ContextHelpController>
   final List<ContextHelpState> _steps = <ContextHelpState>[];
   final List<OverlayEntry> _overlayEntries = <OverlayEntry>[];
   final _ContextHelpNotifier _notifier = _ContextHelpNotifier();
-  late AnimationController _animationController;
-  late Animation<double> _animation;
+  late final AnimationController _animationController;
+  late final Animation<double> _animation;
 
   @override
   void initState() {
@@ -113,7 +106,8 @@ class ContextHelpControllerState extends State<ContextHelpController>
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: ElevatedButton(
-            onPressed: lastStep ? hide : () => show(step: _steps[stepNo + 1]),
+            onPressed:
+                lastStep ? hide : () async => show(step: _steps[stepNo + 1]),
             child: lastStep ? const Text('Done') : const Text('Next'),
           ),
         ),
@@ -240,33 +234,32 @@ class ContextHelpControllerState extends State<ContextHelpController>
     notifyListeners();
   }
 
-  Future<void> show({ContextHelpState? step}) async {
+  Future<void> show({required ContextHelpState step}) async {
     if (!active) {
       return;
     }
-    step ??= _steps[0];
-    await step.ensureVisible();
-    if (_overlayEntries.isNotEmpty) {
-      await hide();
-    }
-    if (context.mounted) {
-      final overlay = Overlay.of(context);
-      // The ancestor is a hack to calculate the correct coordinates for
-      // the target, I'd like to remove this if I can work out how.
-      final targetDimensions = _TargetDimensions.parse(
-        step.context,
-        ancestor: context.findRenderObject(),
-      );
-      final painter =
-          _ContextHelpCutoutPainter(step, targetDimensions, _animation.value);
-      final background = _buildOverlayBackground(step, targetDimensions);
-      final foreground = _buildOverlayForeground(step, painter.dimensions);
-      overlay.insert(background);
-      _overlayEntries.add(background);
-      overlay.insert(foreground);
-      _overlayEntries.add(foreground);
-      await _animationController.forward().orCancel;
-    }
+    await step.ensureVisible().then((value) async {
+      if (_overlayEntries.isNotEmpty) {
+        await hide();
+      }
+      if (mounted) {
+        final overlay = Overlay.of(context);
+        // The ancestor is a hack to calculate the correct coordinates for the target, I'd like to remove this if I can work out how.
+        final targetDimensions = _TargetDimensions.parse(
+          step.context,
+          ancestor: context.findRenderObject(),
+        );
+        final painter =
+            _ContextHelpCutoutPainter(step, targetDimensions, _animation.value);
+        final background = _buildOverlayBackground(step, targetDimensions);
+        final foreground = _buildOverlayForeground(step, painter.dimensions);
+        overlay.insert(background);
+        _overlayEntries.add(background);
+        overlay.insert(foreground);
+        _overlayEntries.add(foreground);
+        await _animationController.forward().orCancel;
+      }
+    });
   }
 
   Future<void> hide() async {
@@ -299,11 +292,6 @@ class ContextHelpControllerState extends State<ContextHelpController>
         state: this,
         child: widget.child,
       );
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<bool>('active', active));
-  }
 }
 
 class _ContextHelpCutoutPainter extends CustomPainter {
@@ -344,10 +332,10 @@ class _ContextHelpCutoutPainter extends CustomPainter {
 
   void _drawCutout(Canvas canvas) {
     switch (help.widget.shape) {
-      case ContextHelpShape.Circle:
+      case ContextHelpShape.circle:
         _drawCircle(canvas);
         break;
-      case ContextHelpShape.Rectangle:
+      case ContextHelpShape.rectangle:
         _drawRectangle(canvas);
         break;
     }
@@ -358,7 +346,7 @@ class _ContextHelpCutoutPainter extends CustomPainter {
       return _TargetDimensions(size: Size.zero, offset: Offset.zero);
     }
     switch (help.widget.shape) {
-      case ContextHelpShape.Circle:
+      case ContextHelpShape.circle:
         final diameter = sqrt(pow(targetDimensions.size.width, 2) +
                 pow(targetDimensions.size.height, 2)) *
             _kCutoutScaleFactor;
@@ -370,7 +358,7 @@ class _ContextHelpCutoutPainter extends CustomPainter {
           size: Size(diameter, diameter),
           offset: Offset(dx, dy),
         );
-      case ContextHelpShape.Rectangle:
+      case ContextHelpShape.rectangle:
         double additionalSize;
         if (targetDimensions.size.width > targetDimensions.size.height) {
           additionalSize = (targetDimensions.size.width * _kCutoutScaleFactor) -
@@ -395,9 +383,8 @@ class _ContextHelpCutoutPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas
-      ..saveLayer(Offset.zero & size, Paint())
-      ..drawColor(_kCutoutBackgroundColor, BlendMode.dstATop);
+    canvas.saveLayer(Offset.zero & size, Paint());
+    canvas.drawColor(_kCutoutBackgroundColor, BlendMode.dstATop);
     if (help.widget.highlight) {
       _drawCutout(canvas);
     }

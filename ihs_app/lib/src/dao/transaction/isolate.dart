@@ -1,20 +1,20 @@
 import 'dart:isolate';
 
-import '../../../app/service_locator.dart';
-import '../../../util/log.dart';
+import '../../app/service_locator.dart';
+import '../../util/log.dart';
 import 'api/http_protocol.dart';
 import 'transaction.dart';
 import 'transport.dart';
 
 class TransportIsolate {
-  static SendPort isolateSendPort;
-  static Isolate isolate;
+  static late SendPort isolateSendPort;
+  static late Isolate isolate;
 
   Future<List<ActionResponse>> isolateSend(RequestSenderData data) async {
     // create isolate
     data.basePath = '/micropbx/rest/flutterService2/';
-    data.host = ServiceLocator.getPersistentKeyStore().getMpbxApiHost();
-    data.httpProtocol = ServiceLocator.micropbxHttpProtocol;
+    data.host = ServiceLocator.getPersistentKeyStore().getServerAPIFQDN();
+    data.httpProtocol = ServiceLocator.serverHttpProtocol;
 
     Log.w('Sending request to isolate');
     // send request to isolate
@@ -31,6 +31,7 @@ class TransportIsolate {
     return Future.value(t as List<ActionResponse>);
   }
 
+  // ignore: unused_element
   Future<void> _createIsolate() async {
     Log.w('Creating isolate');
     final isolateReceivePort = ReceivePort();
@@ -46,9 +47,9 @@ class TransportIsolate {
 
 class RequestSenderData {
   RequestSenderData(this.serviceUrl, this.params, this.body);
-  String basePath;
-  HttpProtocol httpProtocol;
-  String host;
+  String? basePath;
+  HttpProtocol? httpProtocol;
+  String? host;
   String serviceUrl;
   Map<String, String> params;
   String body;
@@ -68,8 +69,8 @@ Future<void> _isolateRequestSender(SendPort callerSendPort) async {
     final requestData = incomingMessage.message;
 
     // init transport
-    final transport = Transport(requestData.host, requestData.httpProtocol,
-        basePath: requestData.basePath);
+    final transport = Transport(requestData.host!, requestData.httpProtocol!,
+        basePath: requestData.basePath!);
 
     transport
         .request(requestData.serviceUrl, requestData.params, requestData.body)

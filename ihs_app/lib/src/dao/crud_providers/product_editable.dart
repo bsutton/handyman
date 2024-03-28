@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-import '../models/product.dart';
+import '../entities/organisation.dart';
 import '../product_dao.dart';
 
 /// The current product being edited by the crud
 ///
-class ProductEditable with ChangeNotifier {
+class OrganisationEditable with ChangeNotifier {
   String? _name;
-  double? _price;
-  String? _productId;
+  String? _organisationId;
   Uuid uuid = const Uuid();
 
   //Getters
   String? get name => _name;
-  double? get price => _price;
 
   //Setters
   void changeName(String value) {
@@ -22,28 +20,21 @@ class ProductEditable with ChangeNotifier {
     notifyListeners();
   }
 
-  // ignore: avoid_setters_without_getters
-  void changePrice(String value) {
-    _price = double.parse(value);
-    notifyListeners();
-  }
-
-  void loadValues(Product product) {
-    _name = product.name;
-    _price = product.price;
-    _productId = product.productId;
+  void loadValues(Organisation organisation) {
+    _name = organisation.name;
+    _organisationId = organisation.id;
   }
 
   Future<void> saveProduct() async {
-    if (_productId == null) {
+    if (_organisationId == null) {
       final newProduct =
-          Product(name: name, price: price, productId: uuid.v4());
-      await ProductDao().saveProduct(newProduct);
+          Organisation(name: name, organisationId: uuid.v4());
+      await OrganisationDao().saveProduct(newProduct);
     } else {
       //Update
       final updatedProduct =
-          Product(name: name, price: _price, productId: _productId);
-      await ProductDao().saveProduct(updatedProduct);
+          Organisation(name: name, price: _price, organisationId: _organisationId);
+      await OrganisationDao().saveProduct(updatedProduct);
     }
   }
 }

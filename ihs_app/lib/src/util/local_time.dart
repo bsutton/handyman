@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'format.dart';
 import 'local_date.dart';
 
-/// Provides a class which wraps a DateTime but just supplies the time component.
+/// Provides a class which wraps a DateTime but just supplies the date component.
 @immutable
 class LocalTime {
   const LocalTime({required this.hour, required this.minute, this.second = 0});
@@ -33,6 +33,7 @@ class LocalTime {
       dateTime.millisecond,
       dateTime.microsecond);
 
+  // ignore: prefer_constructors_over_static_methods
   static LocalTime now() {
     final now = DateTime.now();
 

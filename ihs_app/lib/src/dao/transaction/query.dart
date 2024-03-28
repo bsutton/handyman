@@ -5,7 +5,7 @@ import 'api/enum.dart';
 class Query extends Equatable {
   const Query(
     String entityType, {
-    FilterMode<String> filterMode = FilterMode.AND,
+    FilterMode<String> filterMode = FilterMode.and,
     List<Match> filters = const <Match>[],
     List<String> fields = const [],
     List<String> sort = const [],
@@ -51,24 +51,24 @@ class Query extends Equatable {
 class FilterMode<String> extends Enum<String> {
   const FilterMode(super.value);
 
-  static const OR = FilterMode('OR');
-  static const AND = FilterMode('AND');
+  static const or = FilterMode('OR');
+  static const and = FilterMode('AND');
 }
 
 class MatchMode<String> extends Enum<String> {
   const MatchMode(super.value);
 
-  static const EQ = MatchMode('EQ');
-  static const NOT_EQ = MatchMode('NOT_EQ');
-  static const LIKE = MatchMode('LIKE');
-  static const WILD = MatchMode('WILD');
-  static const GT = MatchMode('GT');
-  static const GT_EQ = MatchMode('GT_EQ');
-  static const LT = MatchMode('LT');
+  static const eq = MatchMode('EQ');
+  static const notEq = MatchMode('NOT_EQ');
+  static const like = MatchMode('LIKE');
+  static const wild = MatchMode('WILD');
+  static const gt = MatchMode('GT');
+  static const gtEq = MatchMode('GT_EQ');
+  static const lt = MatchMode('LT');
 }
 
 class Match extends Equatable {
-  const Match(this.field, this.value, {this.matchMode = MatchMode.EQ});
+  const Match(this.field, this.value, {this.matchMode = MatchMode.eq});
   final String field;
   final String value;
   final MatchMode<String> matchMode;

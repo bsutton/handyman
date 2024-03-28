@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:dcache/dcache.dart';
 import 'package:debounce_throttle/debounce_throttle.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:quiver/cache.dart';
+import 'package:future_builder_ex/future_builder_ex.dart';
 
 import '../../app/app_scaffold.dart';
 import '../../app/router.dart';
@@ -38,7 +36,7 @@ enum ListPageStatus { unknown, forced, pending, avaliable }
 
 class ListItem<T extends Entity<T>> {
   ListItem({required this.entity, required this.animationController});
-  final T entity;
+  final T? entity;
   bool isDeleted = false;
   AnimationController animationController;
 }
@@ -64,49 +62,34 @@ class CrudIndex<T extends Entity<T>> extends StatefulWidget {
 
   @override
   CrudIndexState createState() => CrudIndexState<T>();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(StringProperty('title', title))
-      ..add(
-          DiagnosticsProperty<RouteName>('currentRouteName', currentRouteName))
-      ..add(ObjectFlagProperty<WidgetBuilder?>.has(
-          'createPageBuilder', createPageBuilder))
-      ..add(ObjectFlagProperty<EntityIndexedWidgetBuilder<T>?>.has(
-          'editPageBuilder', editPageBuilder))
-      ..add(ObjectFlagProperty<EntityIndexedWidgetBuilder<T>>.has(
-          'listItemBuilder', listItemBuilder))
-      ..add(ObjectFlagProperty<IndexedWidgetBuilder?>.has(
-          'skeletonItemBuilder', skeletonItemBuilder));
-  }
 }
 
 class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
     with TickerProviderStateMixin {
   final RepositorySearch<T> _repository = Repos().searchOf<T>();
-  StreamSubscription<BusEvent<T>> _subscription;
-  late Cache<int, List<ListItem<T>>> _cache;
-  List<ListPageStatus> _pageStatus = [];
-  int _totalRecords = 0;
+  late final StreamSubscription<BusEvent<T>> _subscription;
+  late final Cache<int, List<ListItem<T>>> _cache;
+  late final List<ListPageStatus> _pageStatus;
+  int? _totalRecords;
   String? _error;
-  String? _searchTerm;
+  String _searchTerm = '';
   bool _isSearching = false;
   final Map<int, ListItem<T>> _deletedItems = <int, ListItem<T>>{};
   final Map<int, ListItem<T>> _pendingDeletedItems = <int, ListItem<T>>{};
   CancelableFuture? _deleteFuture;
-  BuildContext? _scaffoldContext;
+  late BuildContext _scaffoldContext;
 
   @override
   void initState() {
     super.initState();
     _cache = SimpleCache<int, List<ListItem<T>>>(
-      storage: SimpleStorage(size: 4),
+      storage: InMemoryStorage(4),
       onEvict: (key, _) => _pageStatus[key] = ListPageStatus.unknown,
     );
     final eventDebouncer = Debouncer<BusEvent<T>>(
+      initialValue: BusEvent<T>(T.runtimeType, BusAction.init, null, null),
       const Duration(milliseconds: 200),
-      onChanged: (_) => _fetchTotal(force: true),
+      onChanged: (_) async => _fetchTotal(force: true),
     );
     _subscription = Bus().listen<T>((event) {
       if (event.action == BusAction.insert ||
@@ -114,26 +97,26 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
         eventDebouncer.value = event;
       }
     });
-    _fetchTotal();
   }
 
   @override
   void dispose() {
-    _subscription.cancel();
+    unawaited(_subscription.cancel());
     super.dispose();
   }
 
-  void createEntity() {
-    Navigator.of(context).push<bool>(MaterialPageRoute(
-      builder: widget.createPageBuilder,
+  Future<void> createEntity() async {
+    await Navigator.of(context).push<bool>(MaterialPageRoute(
+      builder: widget.createPageBuilder!,
     ));
   }
 
   Future<void> editEntity(int index, T entity) async {
-    await _repository.getByGUID(entity.guid).then((fullEntity) {
+    await _repository.getByGUID(entity.guid!).then((fullEntity) {
       Navigator.of(context).push<bool>(MaterialPageRoute(
         builder: (context) =>
-            widget.editPageBuilder(context, index, fullEntity),
+            widget.editPageBuilder?.call(context, index, fullEntity) ??
+            const Empty(),
       ));
     }).catchError((dynamic error) {
       Log.e('CrudIndexState.editEntity tried to fetch non-existent entity');
@@ -144,8 +127,8 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
   }
 
   void _performDelete() {
-    _pendingDeletedItems.forEach((id, item) {
-      _repository.delete(item.entity).then((_) {
+    _pendingDeletedItems.forEach((id, item) async {
+      await _repository.delete(item.entity!).then((_) {
         _deletedItems[id] = item;
         Bus().add(BusAction.delete, oldInstance: item.entity);
       }).catchError((dynamic error) {
@@ -165,25 +148,27 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
     _pendingDeletedItems.clear();
   }
 
-  void deleteEntity(int index, T entity) {
+  Future<void> deleteEntity(int index, T entity) async {
     _deleteFuture?.cancel();
-    final pageNum = _itemPage(index);
-    final item = _cache.get(pageNum)[_itemIndex(pageNum, index)];
-    _pendingDeletedItems[item.entity.id] = item;
-    item.animationController.reverse();
+    final pageNum = skeletonItemBuilderItemPage(index);
+    final item = _cache.get(pageNum)![_itemIndex(pageNum, index)];
+    _pendingDeletedItems[item.entity!.id!] = item;
+    await item.animationController.reverse();
     _deleteFuture = CancelableFuture(_kUndoDuration, _performDelete);
-    QuickSnack().undo(
-      context: _scaffoldContext,
-      duration: _kUndoDuration,
-      message: 'Deleted ${_pendingDeletedItems.length} item(s)',
-      callback: _cancelDelete,
-    );
+    if (mounted) {
+      await QuickSnack().undo(
+        context: _scaffoldContext,
+        duration: _kUndoDuration,
+        message: 'Deleted ${_pendingDeletedItems.length} item(s)',
+        callback: _cancelDelete,
+      );
+    }
   }
 
-  void _fetchTotal({bool force = false}) {
+  Future<void> _fetchTotal({bool force = false}) async {
     Future<int> count;
     count = _repository.countSearch(_searchTerm, force: force);
-    count.then((count) {
+    await count.then((count) {
       setState(() {
         _error = null;
         if (force) {
@@ -204,7 +189,7 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
     });
   }
 
-  void _fetchPage(int pageNum, {bool force = false}) {
+  Future<void> _fetchPage(int pageNum, {bool force = false}) async {
     final offset = pageNum * _kPageSize;
     Future<List<T>> page;
     page = _repository.search(
@@ -213,7 +198,7 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
       limit: _kPageSize,
       force: force,
     );
-    page.then((entities) {
+    await page.then((entities) {
       setState(() {
         _cache.set(
           pageNum,
@@ -238,20 +223,20 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
   }
 
   void _submitSearch(String searchTerm) {
-    setState(() {
+    setState(() async {
       _searchTerm = searchTerm;
-      _fetchTotal();
+      await _fetchTotal();
     });
   }
 
   void _enterSearch(BuildContext context) {
-    setState(() {
+    setState(() async {
       _isSearching = true;
-      Navigator.of(context).push(CrudSearchRoute<void>()).then((_) {
+      await Navigator.of(context).push(CrudSearchRoute<void>()).then((_) {
         setState(() {
           final hadResults = _searchTerm.isNotEmpty;
           _isSearching = false;
-          _searchTerm = null;
+          _searchTerm = '';
           if (hadResults) {
             _fetchTotal();
           }
@@ -266,11 +251,13 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
 
   int _itemIndex(int page, int index) => index - (page * _kPageSize);
 
-  int skeletonItemBuilder_itemPage(int index) => (index / _kPageSize).floor();
+  int skeletonItemBuilderItemPage(int index) => (index / _kPageSize).floor();
 
   Widget _buildSkeleton(BuildContext context, int index) {
-    return widget.skeletonItemBuilder(context, _totalRecords);
-    return ExpansionFlipTileSkeleton();
+    if (widget.skeletonItemBuilder != null) {
+      return widget.skeletonItemBuilder!(context, _totalRecords ?? 0);
+    }
+    return const ExpansionFlipTileSkeleton();
   }
 
   Widget _buildWaiting(BuildContext context) => const SliverPadding(
@@ -294,44 +281,50 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
       );
 
   Widget _buildItem(BuildContext context, int index) {
-    final pageNum = _itemPage(index);
+    final pageNum = skeletonItemBuilderItemPage(index);
     switch (_pageStatus[pageNum]) {
       case ListPageStatus.unknown:
         _pageStatus[pageNum] = ListPageStatus.pending;
-        _fetchPage(pageNum);
-        return _buildSkeleton(context, index);
-        break;
+        return FutureBuilderEx(
+            future: () async => _fetchPage(pageNum),
+            builder: (context, _) => _buildSkeleton(context, index));
       case ListPageStatus.forced:
         _pageStatus[pageNum] = ListPageStatus.pending;
-        _fetchPage(pageNum, force: true);
-        return _buildSkeleton(context, index);
-        break;
+        return FutureBuilderEx(
+            future: () async => _fetchPage(pageNum, force: true),
+            builder: (context, _) => _buildSkeleton(context, index));
       case ListPageStatus.pending:
         return _buildSkeleton(context, index);
-        break;
       case ListPageStatus.avaliable:
-        final item = _cache.get(pageNum)[_itemIndex(pageNum, index)];
+        final item = _cache.get(pageNum)?[_itemIndex(pageNum, index)];
         // In case our entity got deleted from the remote while paging, render empty container
         if (item == null || item.entity == null) {
-          return Empty();
+          return const Empty();
         }
         return CollapseTransition(
           controller: item.animationController,
           child: widget.listItemBuilder(
             context,
             index,
-            item.entity,
+            item.entity!,
           ),
         );
-        break;
+      // ignore: no_default_cases
       default:
         return _buildSkeleton(context, index);
     }
   }
 
   Widget _buildList(BuildContext context) {
-    Log.e(_error);
-    return _buildEmpty(context);
+    Log.e(_error.toString());
+    if (_error != null) {
+      Log.e(_error.toString());
+      return _buildEmpty(context);
+    } else if (_totalRecords == null) {
+      return _buildWaiting(context);
+    } else if (_totalRecords == 0) {
+      return _buildEmpty(context);
+    }
     return SliverPadding(
       padding: const EdgeInsets.all(_kListPadding),
       sliver: SliverList(
@@ -362,13 +355,13 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
     );
   }
 
-  Widget _buildFloatingActionButton(BuildContext context) {
+  Widget? _buildFloatingActionButton(BuildContext context) {
     if (_isSearching) {
       return null;
     }
     return FloatingActionButton(
       backgroundColor: Colors.pinkAccent,
-      onPressed: createEntity,
+      onPressed: () => widget.createPageBuilder != null ? createEntity : null,
       child: const Icon(Icons.add),
     );
   }
@@ -377,14 +370,17 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
   Widget build(BuildContext context) => AppScaffold(
         appBar: _buildAppBar(context),
         floatingActionButton: _buildFloatingActionButton(context),
-        showHomeButton: _isSearching ? false : true,
+        showHomeButton: !_isSearching,
         builder: (context) {
           _scaffoldContext = context;
-          return SliverScaffold(
-            title: widget.title,
-            currentRouteName: widget.currentRouteName,
-            refreshCallback: () => _fetchTotal(force: true),
-            sliver: _buildList(context),
+          return FutureBuilderEx(
+            future: () async => _fetchTotal(),
+            builder: (context, _) => SliverScaffold(
+              title: widget.title,
+              currentRouteName: widget.currentRouteName,
+              refreshCallback: () async => _fetchTotal(force: true),
+              sliver: _buildList(context),
+            ),
           );
         },
       );

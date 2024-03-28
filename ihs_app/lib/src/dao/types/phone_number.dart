@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:quiver/core.dart';
-
-import '../../../util/strings.dart';
+import 'package:strings/strings.dart';
 
 @immutable
 class PhoneNumber {
@@ -46,7 +45,7 @@ class PhoneNumber {
 
   /// Use this method to pass to a FormTextField validator.
   static String? formFieldValidate(String phoneNumber,
-      {required String fieldName, bool allowEmpty = true}) {
+      {String fieldName = '', bool allowEmpty = true}) {
     final results = PhoneNumber.validate(phoneNumber,
         allowEmpty: allowEmpty, fieldName: fieldName);
 
@@ -58,10 +57,10 @@ class PhoneNumber {
   }
 
   static ValidationResult validate(String phoneNumber,
-      {String fieldName = '', bool allowEmpty = true}) {
+      {String? fieldName, bool allowEmpty = true}) {
     final regex = RegExp(r'^\d+$');
 
-    final isEmpty = Strings.isNullOrEmpty(phoneNumber);
+    final isEmpty = Strings.isEmpty(phoneNumber);
 
     if (allowEmpty && isEmpty) {
       return const ValidationResult.ok();
@@ -139,7 +138,7 @@ class PhoneNumber {
   }
 
   @override
-  bool operator ==(covariant PhoneNumber rhs) => phone == rhs.phone;
+  bool operator ==(covariant PhoneNumber other) => phone == other.phone;
 
   @override
   int get hashCode => phone.hashCode;
@@ -225,8 +224,11 @@ class PhoneNumber {
 
   bool isMobileNo() => PhoneNumber.isMobile(phone);
 
-  static bool isMobile(String phoneNumber) {
-    phoneNumber = phoneNumber.replaceAll(' ', '');
+  static bool isMobile(String? phoneNumber) {
+    if (Strings.isBlank(phoneNumber)) {
+      return true;
+    }
+    phoneNumber = phoneNumber!.replaceAll(' ', '');
     return (phoneNumber.startsWith('04') && phoneNumber.length == 10) ||
         (phoneNumber.startsWith('614') && phoneNumber.length == 11);
   }
@@ -270,7 +272,9 @@ class PhoneNumber {
   String toNational() {
     var national = phone;
 
-    if (phone.startsWith('61')) national = '0${phone.substring(2)}';
+    if (phone.startsWith('61')) {
+      national = '0${phone.substring(2)}';
+    }
 
     return prettyPrint(national);
   }
@@ -292,14 +296,13 @@ class PhoneNumber {
   }
 }
 
-class PhoneNumberConverter implements JsonConverter<PhoneNumber, String> {
-  const PhoneNumberConverter();
+class ConverterPhoneNumber implements JsonConverter<PhoneNumber, String> {
+  const ConverterPhoneNumber();
   @override
   PhoneNumber fromJson(String json) => PhoneNumber(json);
 
   @override
-  String toJson(PhoneNumber phoneNumber) =>
-      phoneNumber == null ? '' : phoneNumber.toCompactString();
+  String toJson(PhoneNumber phoneNumber) => phoneNumber.toCompactString();
 }
 
 @immutable

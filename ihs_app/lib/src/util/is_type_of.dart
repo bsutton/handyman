@@ -1,4 +1,4 @@
-import 'strings.dart';
+import 'package:strings/strings.dart';
 
 bool isTypeOf<ThisType, OfType>() => _Instance<ThisType>() is _Instance<OfType>;
 

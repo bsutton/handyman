@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/router.dart';
@@ -11,7 +10,7 @@ class SliverScaffold extends StatelessWidget {
     super.key,
     this.refreshCallback,
     this.headerActions,
-  }) : super(key: key);
+  });
   final String title;
   final Widget sliver;
   final RouteName currentRouteName;
@@ -39,26 +38,10 @@ class SliverScaffold extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) {
-    if (refreshCallback != null) {
-      return RefreshIndicator(
+  Widget build(BuildContext context) => RefreshIndicator(
         onRefresh: () async {
           refreshCallback?.call();
         },
         child: _buildScrollView(context),
       );
-    }
-    return _buildScrollView(context);
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(StringProperty('title', title))
-      ..add(
-          DiagnosticsProperty<RouteName>('currentRouteName', currentRouteName))
-      ..add(ObjectFlagProperty<VoidCallback?>.has(
-          'refreshCallback', refreshCallback));
-  }
 }

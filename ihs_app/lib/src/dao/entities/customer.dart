@@ -14,7 +14,7 @@ class Customer extends Entity<Customer> {
   factory Customer.fromJson(Map<String, dynamic> json) =>
       _$CustomerFromJson(json);
 
-  @ERUserConverter()
+  @ERConverterUser()
   late ER<User> primaryContact;
 
   late String name;

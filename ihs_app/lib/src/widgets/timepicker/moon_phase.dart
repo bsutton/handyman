@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../svg.dart';
 import '../theme/nj_text_themes.dart';
 import 'time_of_day_state.dart';
 
 class MoonPhase extends StatefulWidget {
+  const MoonPhase({super.key});
+
   @override
-  State<StatefulWidget> createState() {
-    return MoonPhaseState();
-  }
+  State<StatefulWidget> createState() => MoonPhaseState();
 }
 
 class MoonPhaseState extends State<MoonPhase> {
@@ -17,25 +18,25 @@ class MoonPhaseState extends State<MoonPhase> {
   Color color = Colors.yellow;
 
   @override
-  Widget build(BuildContext context) {
-    return Consumer<LocalTimeState>(builder: (context, timeOfDay, _) {
-      determineDisplay(timeOfDay);
-      return Row(
-        children: [getSvg(), NJTextSubheading(period)],
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-      );
-    });
-  }
+  Widget build(BuildContext context) =>
+      Consumer<LocalTimeState>(builder: (context, timeOfDay, _) {
+        determineDisplay(timeOfDay);
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [getSvg(), NJTextSubheading(period)],
+        );
+      });
 
   Svg getSvg() {
-    var image = Svg(icon, location: LOCATION.VAADIN, height: 16, width: 24, color: color);
+    final image = Svg(icon,
+        location: LOCATION.vaadin, height: 16, width: 24, color: color);
     return image;
   }
 
   void determineDisplay(LocalTimeState timeOfDay) {
-    var minute = timeOfDay.minute;
-    var hour = timeOfDay.hour;
-    var am = timeOfDay.isAM();
+    final minute = timeOfDay.minute;
+    final hour = timeOfDay.hour;
+    final am = timeOfDay.isAM();
 
     if (am) {
       if (hour == 12 && minute == 0) {
@@ -45,7 +46,7 @@ class MoonPhaseState extends State<MoonPhase> {
       } else if (hour == 12 || hour < 4) {
         period = 'Early Morning';
         icon = 'moon-o';
-        color = Color(0xFF312e57);
+        color = const Color(0xFF312e57);
       } else if (hour < 6) {
         period = 'Early Morning';
         icon = 'sun-rise';

@@ -1,6 +1,8 @@
 import 'dart:async';
+
 import 'package:completer_ex/completer_ex.dart';
 import 'package:equatable/equatable.dart';
+
 import '../../transaction/api/retry/retry_data.dart';
 import '../../transaction/transaction.dart';
 
@@ -34,39 +36,38 @@ import '../../transaction/transaction.dart';
 ///     this may be an Entity a List<Entity> or any other data
 ///  that the action chooses to return.
 abstract class Action<RESPONSE_TYPE> extends Equatable {
-  final RetryData retryData;
-  final CompleterEx completer = CompleterEx<RESPONSE_TYPE>();
-  final DateTime createdAt;
-
   Action(this.retryData) : createdAt = DateTime.now();
+  final RetryData retryData;
+  final completer = CompleterEx<RESPONSE_TYPE>();
+  final DateTime createdAt;
 
   /// Return your object encoded as a json string.
   String encodeRequest();
   RESPONSE_TYPE decodeResponse(ActionResponse data);
 
-  Future<RESPONSE_TYPE> get future => completer.future as Future<RESPONSE_TYPE>;
+  Future<RESPONSE_TYPE> get future => completer.future;
 
   // mutating actions will be processed before non mutating actions
   bool get causesMutation;
 
   /// Set of map keys used when sending/receiving action arguments
   // case is important!
-  static const ACTION = 'Action';
-  static const String MUTATES =
+  static const action = 'Action';
+  static const String mutatesKey =
       'MUTATES'; // If true indicates that the action mutates the db.
-  static const ENTITY_TYPE = 'EntityType';
-  static const ENTITY = 'Entity';
-  static const QUERY = 'Query';
-  static const PROGRESS_UUID = 'progressUUID';
-  static const FIREBASE_TEMP_USER_UID = 'firebaseTempUserUid';
-  static const MOBILE_NUMBER = 'mobileNumber';
+  static const entityTypeKey = 'EntityType';
+  static const entityKey = 'Entity';
+  static const queryKey = 'Query';
+  static const processUuidKey = 'progressUUID';
+  static const firebaseTempUserUidKey = 'firebaseTempUserUid';
+  static const mobileNumberKey = 'mobileNumber';
 
   /// used to communicate a single boolean response.
-  static const BOOL = 'BOOL';
-  static const EMAIL_ADDRESS = 'emailAddress';
-  static const TIMEZONE = 'timezone';
-  static const GUID = 'guid';
-  static const ID = 'id';
+  static const boolKey = 'BOOL';
+  static const emailAdderssKey = 'emailAddress';
+  static const timezoneKey = 'timezone';
+  static const guidKey = 'guid';
+  static const idKey = 'id';
 }
 
 /// [T] the return type for the data returned by the [Action].

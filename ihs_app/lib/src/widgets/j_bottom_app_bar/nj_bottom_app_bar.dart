@@ -1,25 +1,24 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../dialogs/dialog_alert.dart';
 import '../context_help/context_help_button.dart';
 import '../theme/nj_theme.dart';
 
 class NjBottomAppBar extends StatelessWidget {
-  const NjBottomAppBar({super.key, this.actions, this.shape});
+  const NjBottomAppBar({required this.actions, required this.shape, super.key});
   // Hero transitions here do not work as expected, due to:
   // https://github.com/flutter/flutter/issues/36220
   static const String heroTag = 'AppBar';
-  final List<Widget>? actions;
-  final NotchedShape? shape;
+  final List<Widget> actions;
+  final NotchedShape shape;
 
-  void _showNotices(BuildContext context) {
-    DialogAlert.show(context, 'Notices', 'Please implement the Notices dialog');
+  Future<void> _showNotices(BuildContext context) async {
+    await DialogAlert.show(
+        context, 'Notices', 'Please implement the Notices dialog');
   }
 
   Widget _buildNoticesChip(BuildContext context) => InkWell(
-        onTap: () => _showNotices(context),
+        onTap: () async => _showNotices(context),
         child: const Padding(
           padding: EdgeInsets.only(left: 8),
           child: Chip(
@@ -50,9 +49,4 @@ class NjBottomAppBar extends StatelessWidget {
         shape: shape,
         child: _buildContent(context),
       );
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<NotchedShape>('shape', shape));
-  }
 }

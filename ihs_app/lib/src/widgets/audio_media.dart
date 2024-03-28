@@ -7,40 +7,35 @@ import 'package:completer_ex/completer_ex.dart';
 import '../util/file_utils.dart';
 import '../util/log.dart';
 
-// ignore: constant_identifier_names
-enum RecordingStorage { URL, FILE, BUFFER }
+enum RecordingStorage { url, file, buffer }
 
-/// Takes a URL or a byte buffer and stores it into a temporary file so that
-/// it can be played back.
-/// YOU MUST call dispose on this object to ensure the temporary
-/// file is removed.
+/// Takes a URL or a byte buffer and stores it into a temporary file so that it can be played back.
+/// YOU MUST call dispose on this object to ensure the temporary file is removed.
 class AudioMedia {
   /// Creates an empty AudioMedia object that you can record into.
   AudioMedia.empty()
       : duration = Duration.zero,
-        storageType = RecordingStorage.FILE {
+        storageType = RecordingStorage.file {
     final file = _createTempFile();
     _tempStoragePath = file;
-
-    Log.d('AudioMedia.empty created file $_tempStoragePath')
-        .d('storage exists = ${FileUtils().exists(_tempStoragePath!)}');
-
+    Log.d('AudioMedia.empty created file $_tempStoragePath');
+    Log.d('storage exists = ${FileUtils().exists(_tempStoragePath)}');
     stored.complete();
   }
 
   AudioMedia.fromURL(this.url, {this.duration = Duration.zero})
-      : storageType = RecordingStorage.URL;
+      : storageType = RecordingStorage.url;
 
   AudioMedia.fromBuffer(this.buffer, {this.duration = Duration.zero})
-      : storageType = RecordingStorage.BUFFER {
+      : storageType = RecordingStorage.buffer {
     final file = _createTempFile();
     _tempStoragePath = file;
-    File(_tempStoragePath!).writeAsBytesSync(buffer!);
+    File(_tempStoragePath).writeAsBytesSync(buffer!.toList());
     stored.complete();
   }
   RecordingStorage storageType;
   // depending on the storageType one of the following two will contain a value.
-  String? _tempStoragePath;
+  late String _tempStoragePath;
   String? url;
 
   /// If [AudioMedia.fromBuffer] was called then this contains the buffered
@@ -74,7 +69,7 @@ class AudioMedia {
 
   String _createTempFile() {
     final tmpRecording =
-        FileUtils().createTempFile(TempFileLocations.RECORDINGS);
+        FileUtils().createTempFile(TempFileLocations.recordings);
 
     cleanupRequired = true;
 
@@ -85,10 +80,7 @@ class AudioMedia {
   Future<void> dispose() async {
     if (cleanupRequired) {
       cleanupRequired = false;
-      if (_tempStoragePath != null) {
-        await stored.future
-            .then<void>((_) => File(_tempStoragePath!).deleteSync());
-      }
+      await stored.future.then<void>((_) => File(_tempStoragePath).delete());
     }
   }
 
@@ -98,9 +90,9 @@ class AudioMedia {
   /// you can use the [load] method to read the file
   /// into the [buffer].
   void load() {
-    assert(buffer == null, 'The media is in memory');
-    assert(storageType == RecordingStorage.FILE, "The media isn't a File");
+    assert(buffer == null, 'bad');
+    assert(storageType == RecordingStorage.file, 'bad');
 
-    buffer = File(_tempStoragePath!).readAsBytesSync();
+    buffer = File(_tempStoragePath).readAsBytesSync();
   }
 }

@@ -30,6 +30,7 @@ environment:
 dependencies:
 
 
+  another_flushbar: ^1.12.30
   cloud_firestore: ^4.14.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -42,10 +43,15 @@ dependencies:
   equatable: ^2.0.5
   faker: ^2.1.0
   flip: ^2.0.0
+  flip_card: ^0.7.0
   flutter:
     sdk: flutter
   flutter_offline: ^3.0.1
+  flutter_svg: ^2.0.10+1
+  future_builder_ex: ^3.1.0
+  get_it: ^7.6.7
   http: ^1.2.0
+  json_annotation: ^4.8.1
   lint_hard: ^4.0.0
   logger: ^2.0.2+1
   money2: ^4.0.0
@@ -55,13 +61,16 @@ dependencies:
   settings_yaml: ^8.0.1
   shared_preferences: ^2.2.2
   shimmer: ^3.0.0
+  strings: ^3.1.1
   supabase_flutter: ^2.3.2
   timezone: ^0.9.2
   uuid: ^4.2.2
 
 dev_dependencies:
+  build_runner: ^2.4.8
   flutter_test:
     sdk: flutter
+  json_serializable: ^6.7.1
 
 
 # For information on the generic Dart part of this file, see the

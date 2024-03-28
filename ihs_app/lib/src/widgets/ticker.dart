@@ -16,25 +16,29 @@ typedef OnTick = void Function(int index);
 /// The build is called each [interval] period.
 ///
 class Ticker extends StatefulWidget {
+  const Ticker(
+      {required this.onTick,
+      required this.child,
+      required this.interval,
+      super.key,
+      this.limit = 100,
+      this.active = true});
   final OnTick onTick;
   final Widget child;
   final Duration interval;
   final int limit;
   final bool active;
 
-  Ticker({@required this.onTick, @required this.child, @required this.interval, this.limit = 100, this.active = true});
-
   @override
-  State<StatefulWidget> createState() {
-    return TickerState(active: active);
-  }
+  State<StatefulWidget> createState() => TickerState();
 }
 
 class TickerState extends State<Ticker> {
+  TickerState() {
+    active = widget.active;
+  }
   int tickCount = 0;
-  bool active;
-
-  TickerState({@required this.active});
+  late bool active;
 
   @override
   void initState() {

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/app_scaffold.dart';
@@ -20,7 +19,6 @@ class CrudEdit<T extends Entity<T>> extends StatefulWidget {
       required this.onSave,
       required this.children,
       super.key});
-
   final GlobalKey<FormState> formKey;
   final T entity;
   final EntityCallback<Future<T>> onSave;
@@ -28,15 +26,6 @@ class CrudEdit<T extends Entity<T>> extends StatefulWidget {
 
   @override
   CrudEditState<T> createState() => CrudEditState<T>();
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty<GlobalKey<FormState>>('formKey', formKey))
-      ..add(DiagnosticsProperty<T>('entity', entity))
-      ..add(
-          ObjectFlagProperty<EntityCallback<Future<T>>>.has('onSave', onSave));
-  }
 }
 
 class CrudEditState<T extends Entity<T>> extends State<CrudEdit<T>> {
@@ -46,13 +35,13 @@ class CrudEditState<T extends Entity<T>> extends State<CrudEdit<T>> {
     Navigator.of(context).pop<bool>(false);
   }
 
-  void _save() {
-    if (!widget.formKey.currentState!.validate()) {
+  Future<void> _save() async {
+    if (!(widget.formKey.currentState?.validate() ?? true)) {
       return;
     }
-    widget.formKey.currentState.save();
+    widget.formKey.currentState?.save();
 
-    BlockingUI().run<void>(() => widget.onSave().then((entity) {
+    await BlockingUI().run<void>(() => widget.onSave().then((entity) {
           repository.update(entity).then((result) {
             Bus().add<T>(BusAction.update,
                 instance: entity, oldInstance: widget.entity);
@@ -89,12 +78,5 @@ class CrudEditState<T extends Entity<T>> extends State<CrudEdit<T>> {
         ),
       ),
     );
-  }
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-        .add(DiagnosticsProperty<Repository<T>>('repository', repository));
   }
 }

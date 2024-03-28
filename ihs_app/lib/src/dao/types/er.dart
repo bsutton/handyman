@@ -3,23 +3,19 @@ import 'dart:async';
 import 'package:completer_ex/completer_ex.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../entities/activity.dart';
 import '../entities/address.dart';
-import '../entities/business_hours_for_day.dart';
+import '../entities/attachment.dart';
 import '../entities/check_list_item_type.dart';
 import '../entities/contact.dart';
+import '../entities/contact_role.dart';
 import '../entities/customer.dart';
-import '../entities/did_allocation.dart';
-import '../entities/did_forward.dart';
-import '../entities/did_pool.dart';
 import '../entities/entity.dart';
-import '../entities/ivr_option.dart';
-import '../entities/limit_options.dart';
-import '../entities/checklist_template.dart';
 import '../entities/organisation.dart';
-import '../entities/participant.dart';
-import '../entities/text_fragment.dart';
+import '../entities/role.dart';
+import '../entities/stage.dart';
+import '../entities/task.dart';
 import '../entities/tutorial.dart';
-import '../entities/voicemail_box.dart';
 import '../repository/repos.dart';
 import '../transaction/transaction.dart';
 
@@ -42,7 +38,7 @@ class ER<E extends Entity<E>> {
   /// or even just temporary entities.
   ER(E entity)
       : _resolvedEntity = entity,
-        guid = entity.guid!;
+        guid = entity.guid;
 
   /// Creates an ER from a guid.
   ///
@@ -50,9 +46,10 @@ class ER<E extends Entity<E>> {
   /// to resolve the entity (i.e. do the network call)
   ER.fromGUID(this.guid);
 
-  static ER<dynamic>? fromJson(Map<String, dynamic>? json) =>
+  static ER<E>? fromJson<E extends Entity<E>>(Map<String, dynamic>? json) =>
       json == null ? null : ER.fromGUID(GUID(json as String));
-  GUID guid;
+
+  GUID? guid;
 
   // Once the entity has been resolved we cache it here.
   E? _resolvedEntity;
@@ -80,9 +77,9 @@ class ER<E extends Entity<E>> {
   /// Log.d(dnd.callForwardTarget.entity.externalNo)
   ///
   /// ```
-  Future<E> get resolve => _resolve(null);
+  Future<E?> get resolve => _resolve(null);
 
-  Future<E> resolveWithinTransaction(Transaction transaction) =>
+  Future<E> resolveWithinTransaction(Transaction? transaction) =>
       _resolve(transaction);
 
   //
@@ -116,7 +113,7 @@ class ER<E extends Entity<E>> {
     }
 
     if (entity.guid != guid) {
-      throw InvalidReplaceEntityException(guid, entity.guid);
+      throw InvalidReplaceEntityException(guid!, entity.guid);
     }
 
     _resolvedEntity = entity;
@@ -156,12 +153,11 @@ class ER<E extends Entity<E>> {
   ///
   /// ```
   ///
-  Future<R> call<R>(R Function(E entity) fn) {
+  Future<R> call<R>(R Function(E? entity) fn) async {
     final completer = CompleterEx<R>();
 
-    resolve.then((entity) {
-      completer.complete(fn(entity));
-    });
+    final entity = await resolve;
+    completer.complete(fn(entity));
 
     return completer.future;
   }
@@ -182,7 +178,7 @@ class ER<E extends Entity<E>> {
   /// The returned future will only complete
   /// once the entity is resolved AND the
   /// function [fn] has completed.
-  Future<E> then(void Function(E) fn) {
+  Future<E> then(void Function(E?) fn) {
     final completer = CompleterEx<E>();
     resolve.then((entity) {
       fn(entity);
@@ -201,7 +197,7 @@ class ER<E extends Entity<E>> {
   /// a convenience.
   static Future<List<ER<T>>> resolveList<T extends Entity<T>>(
       List<ER<T>> entities) async {
-    final resolvers = <Future<T>>[];
+    final resolvers = <Future<T?>>[];
     for (final entity in entities) {
       resolvers.add(entity.resolve);
     }
@@ -218,7 +214,7 @@ class ER<E extends Entity<E>> {
     // Now build and resolve the list of children
     final children = <ER<C>>[];
 
-    final resolvers = <Future<C>>[];
+    final resolvers = <Future<C?>>[];
     for (final parent in parents) {
       final child = getChild(parent.entity);
       resolvers.add((await child).resolve);
@@ -229,11 +225,11 @@ class ER<E extends Entity<E>> {
     return Future.value(children);
   }
 
-  static Future<List<C>>
+  static Future<List<C?>>
       resolveListChild<P extends Entity<P>, C extends Entity<C>>(
           List<P> parents, Future<ER<C>> Function(P) getChild) async {
     // Now build and resolve the list of children
-    final children = <C>[];
+    final children = <C?>[];
 
     for (final parent in parents) {
       final child = getChild(parent);
@@ -261,7 +257,10 @@ class ER<E extends Entity<E>> {
       List<ER<E>> erEntities) async {
     final entities = <E>[];
     for (final erEntity in erEntities) {
-      entities.add(await erEntity.resolve);
+      final resolved = await erEntity.resolve;
+      if (resolved != null) {
+        entities.add(resolved);
+      }
     }
     return entities;
   }
@@ -273,92 +272,64 @@ class ER<E extends Entity<E>> {
   int get hashCode => guid.hashCode;
 }
 
-class ERDIDAllocationConverter extends ERConverter<DIDAllocation> {
-  const ERDIDAllocationConverter();
+class ERConverterAddress extends ERConverter<Address> {
+  const ERConverterAddress();
 }
 
-class ERCallForwardTargetConverter extends ERConverter<CallForwardTarget> {
-  const ERCallForwardTargetConverter();
+class ERConverterCustomer extends ERConverter<Customer> {
+  const ERConverterCustomer();
 }
 
-class ERAddressConverter extends ERConverter<Address> {
-  const ERAddressConverter();
+class ERConverterUser extends ERConverter<User> {
+  const ERConverterUser();
 }
 
-class ERCustomerConverter extends ERConverter<Customer> {
-  const ERCustomerConverter();
+class ERConverterAttachment extends ERConverter<Attachment> {
+  const ERConverterAttachment();
 }
 
-class ERDIDPoolConverter extends ERConverter<DIDPool> {
-  const ERDIDPoolConverter();
+class ERConverterActivity extends ERConverter<Activity> {
+  const ERConverterActivity();
 }
 
-class ERVoicemailBoxConverter extends ERConverter<VoicemailBox> {
-  const ERVoicemailBoxConverter();
+class ERConverterChecklistItem extends ERConverter<ChecklistItem> {
+  const ERConverterChecklistItem();
 }
 
-class ERConverterDIDForward extends ERConverter<DIDForward> {
-  const ERConverterDIDForward();
+class ERConverterStage extends ERConverter<Stage> {
+  const ERConverterStage();
 }
 
-class ERJobConverter extends ERConverter<Job> {
-  const ERJobConverter();
+class ERConverterTask extends ERConverter<Task> {
+  const ERConverterTask();
 }
 
-class EROverrideHours extends ERConverter<OverrideHours> {
-  const EROverrideHours();
+class ERConverterContactRole extends ERConverter<ContactRole> {
+  const ERConverterContactRole();
 }
 
-class ERBusinessHoursForDayConverter extends ERConverter<BusinessHoursForDay> {
-  const ERBusinessHoursForDayConverter();
+class ERConverterContact extends ERConverter<Contact> {
+  const ERConverterContact();
 }
 
-class ERUserConverter extends ERConverter<User> {
-  const ERUserConverter();
+class ERConverterRole extends ERConverter<Role> {
+  const ERConverterRole();
 }
 
-class ERLimitOptionConverter extends ERConverter<LimitOption> {
-  const ERLimitOptionConverter();
+class ERConverterOrganisation extends ERConverter<Organisation> {
+  const ERConverterOrganisation();
 }
 
-class ERConverterOficeHolidays extends ERConverter<OfficeHolidays> {
-  const ERConverterOficeHolidays();
+class ERConverterJob extends ERConverter<Job> {
+  const ERConverterJob();
 }
 
-class ERConvererVoicemailBox extends ERConverter<VoicemailBox> {
-  const ERConvererVoicemailBox();
-}
-
-class ERIVRConverter extends ERConverter<IVR> {
-  const ERIVRConverter();
-}
-
-class ERAudioFileConverter extends ERConverter<AudioFile> {
-  const ERAudioFileConverter();
-}
-
-class ERContactConverter extends ERConverter<Contact> {
-  const ERContactConverter();
-}
-
-class ERTextAttributesConverter extends ERConverter<TextAttributes> {
-  const ERTextAttributesConverter();
-}
-
-class ERTextFragmentConverter extends ERConverter<TextFragment> {
-  const ERTextFragmentConverter();
+class ERConverterChecklistItemType extends ERConverter<ChecklistItemType> {
+  const ERConverterChecklistItemType();
 }
 
 class ERTutorialConverter extends ERConverter<Tutorial> {
   const ERTutorialConverter();
-}
-
-class ERParticipantConverter extends ERConverter<Participant> {
-  const ERParticipantConverter();
-}
-
-class ERIVROptionConverter extends ERConverter<IVROption> {
-  const ERIVROptionConverter();
 }
 
 class ERConverter<T extends Entity<T>> implements JsonConverter<ER<T>, String> {

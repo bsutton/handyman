@@ -2,6 +2,9 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 
 class FlippingExpander extends StatefulWidget {
+
+  const FlippingExpander(
+      {required this.expanderKey, required this.header, required this.front, required this.back, required this.closedSize, required this.openSize, super.key});
   @override
   FlippingExpanderState createState() => FlippingExpanderState();
 
@@ -11,55 +14,54 @@ class FlippingExpander extends StatefulWidget {
   final double closedSize;
   final double openSize;
   final Key expanderKey;
-
-  FlippingExpander({this.expanderKey, this.header, this.front, this.back, this.closedSize, this.openSize});
 }
 
-enum ExpansionStatus { FRONT_CLOSED, FRONT_OPEN, BACK }
+enum ExpansionStatus { frontClosed, frontOpen, back }
 
-class FlippingExpanderState extends State<FlippingExpander> with SingleTickerProviderStateMixin {
-  ExpansionStatus expansionStatus = ExpansionStatus.FRONT_CLOSED;
+class FlippingExpanderState extends State<FlippingExpander>
+    with SingleTickerProviderStateMixin {
+  ExpansionStatus expansionStatus = ExpansionStatus.frontClosed;
   final _flipKey = GlobalKey<FlipCardState>();
 
   @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
+  Widget build(BuildContext context) => ClipRRect(
       borderRadius: BorderRadius.circular(2),
       child: AnimatedContainer(
-          duration: Duration(milliseconds: 250),
-          child: getLayout(),
-          height: expansionStatus == ExpansionStatus.FRONT_CLOSED ? widget.closedSize : widget.openSize),
+          duration: const Duration(milliseconds: 250),
+          height: expansionStatus == ExpansionStatus.frontClosed
+              ? widget.closedSize
+              : widget.openSize,
+          child: getLayout()),
     );
-  }
 
-  Widget getLayout() {
-    return FlipCard(
+  Widget getLayout() => FlipCard(
       direction: FlipDirection.VERTICAL,
       key: _flipKey,
       front: Column(
-        children: <Widget>[expansionStatus != ExpansionStatus.BACK ? widget.header : widget.back, widget.front],
+        children: <Widget>[
+          if (expansionStatus != ExpansionStatus.back) widget.header else widget.back,
+          widget.front
+        ],
       ),
       back: Center(child: widget.back),
       flipOnTouch: false,
     );
-  }
 
+  // ignore: avoid_positional_boolean_parameters
   void toggleOpen(void Function(bool open) callback) {
     setState(() {
-      if (expansionStatus == ExpansionStatus.FRONT_CLOSED) {
-        expansionStatus = ExpansionStatus.FRONT_OPEN;
-      } else if (expansionStatus == ExpansionStatus.FRONT_OPEN) {
-        expansionStatus = ExpansionStatus.FRONT_CLOSED;
+      if (expansionStatus == ExpansionStatus.frontClosed) {
+        expansionStatus = ExpansionStatus.frontOpen;
+      } else if (expansionStatus == ExpansionStatus.frontOpen) {
+        expansionStatus = ExpansionStatus.frontClosed;
       }
-      if (callback != null) {
-        callback(expansionStatus == ExpansionStatus.FRONT_OPEN);
-      }
+      callback(expansionStatus == ExpansionStatus.frontOpen);
     });
   }
 
   void flip() {
-    setState(() {
-      _flipKey.currentState.toggleCard();
+    setState(() async {
+      await _flipKey.currentState?.toggleCard();
     });
   }
 }

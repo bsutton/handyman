@@ -8,54 +8,52 @@ enum EmailVerificationType { RECOVERY, INVITE }
 
 @JsonSerializable()
 class EmailVerification extends Entity<EmailVerification> {
-  EmailVerificationType type;
-
-  GUID invitationGUID;
-
-  // The date time that this invite expires
-  DateTime created;
-
-  /// If type is INVITE we will have their email address
-  /// but not their GUID
-  String emailAddress;
-
-  // The date time that this invite expires
-  DateTime expires;
-
-  // True if this invite has been activated.
-  bool verified = false;
-
-  /// IP address of the device that requested the verification.
-  String ipAddress;
-
-  String location;
-
-  /// user agent/device.
-  String device;
-
   /// used for json
   EmailVerification();
 
-  EmailVerification.forInvitation(this.invitationGUID, this.emailAddress)
+  EmailVerification.forInvitation(
+      this.invitationGUID, this.emailAddress, DateTime? expires)
       : type = EmailVerificationType.INVITE,
         super.forInsert() {
     created = DateTime.now();
-    expires ??= DateTime.now().add(Duration(days: 2));
+    this.expires = expires ?? DateTime.now().add(const Duration(days: 2));
   }
 
-  EmailVerification.forRecovery(this.invitationGUID)
+  EmailVerification.forRecovery(this.invitationGUID, DateTime? expires)
       : type = EmailVerificationType.RECOVERY,
         super.forInsert() {
     created = DateTime.now();
-    expires ??= DateTime.now().add(Duration(days: 2));
-  }
-
-  bool hasExpired() {
-    return expires.isAfter(DateTime.now());
+    this.expires = expires ?? DateTime.now().add(const Duration(days: 2));
   }
 
   factory EmailVerification.fromJson(Map<String, dynamic> json) =>
       _$EmailVerificationFromJson(json);
+  late EmailVerificationType type;
+
+  late GUID invitationGUID;
+
+  // The date time that this invite expires
+  late DateTime created;
+
+  /// If type is INVITE we will have their email address
+  /// but not their GUID
+  late String emailAddress;
+
+  // The date time that this invite expires
+  late DateTime expires;
+
+  // True if this invite has been activated.
+  late bool verified = false;
+
+  /// IP address of the device that requested the verification.
+  String? ipAddress;
+
+  String? location;
+
+  /// user agent/device.
+  String? device;
+
+  bool hasExpired() => expires.isAfter(DateTime.now());
 
   @override
   Map<String, dynamic> toJson() => _$EmailVerificationToJson(this);

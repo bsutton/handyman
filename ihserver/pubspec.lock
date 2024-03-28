@@ -370,7 +370,7 @@ packages:
     source: hosted
     version: "1.0.4"
   jose:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: jose
       sha256: d9620ccff76c47b0c7c5318e663971c3ca046854e247e4b72af6213053554c0c
@@ -864,7 +864,7 @@ packages:
     source: hosted
     version: "4.1.4"
   x509:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: x509
       sha256: "8d4af3c1e184d5f8bec307b2c5c68ab03713dd3a3e063da9abfacc76402c172e"

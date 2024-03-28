@@ -1,5 +1,6 @@
 import 'dart:convert';
-import '../../../entities/entity.dart';
+
+import '../../entities/entity.dart';
 import '../../transaction/api/retry/retry_data.dart';
 import '../../transaction/query.dart';
 import '../../transaction/transaction.dart';
@@ -7,15 +8,16 @@ import '../repository.dart';
 import 'action.dart';
 
 class ActionQuery<E extends Entity<E>> extends Action<List<E>> {
+  ActionQuery(this.query, this.repository, RetryData retryData)
+      : super(retryData);
   final Query query;
   final Repository<E> repository;
-  ActionQuery(this.query, this.repository, RetryData retryData) : super(retryData);
 
   @override
   List<E> decodeResponse(ActionResponse data) {
-    var results = <E>[];
+    final results = <E>[];
 
-    for (var entity in data.entityList) {
+    for (final entity in data.entityList!) {
       results.add(repository.fromJson(entity as Map<String, Object>));
     }
 
@@ -24,11 +26,11 @@ class ActionQuery<E extends Entity<E>> extends Action<List<E>> {
 
   @override
   String encodeRequest() {
-    var map = <String, dynamic>{};
-    map[Action.ACTION] = 'selectFiltered';
-    map[Action.MUTATES] = causesMutation;
-    map[Action.ENTITY_TYPE] = repository.entity;
-    map[Action.QUERY] = query.toJson();
+    final map = <String, dynamic>{};
+    map[Action.action] = 'selectFiltered';
+    map[Action.mutatesKey] = causesMutation;
+    map[Action.entityTypeKey] = repository.entity;
+    map[Action.queryKey] = query.toJson();
 
     return json.encode(map);
   }

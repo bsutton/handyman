@@ -41,24 +41,24 @@ class AutoCommitManager {
     // choose the primary mechanism.
     if (_disableFrames) {
       Future<void>.delayed(
-          const Duration(milliseconds: 200), () => _commit(transaction));
+          const Duration(milliseconds: 200), () async => _commit(transaction));
     } else {
       flutter.WidgetsBinding.instance
-          .addPostFrameCallback((_) => _commit(transaction));
+          .addPostFrameCallback((_) async => _commit(transaction));
 
       // sometimes no frame needs to be draw so we need to force an autocommit
-      Future.delayed(const Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 500), () async {
         if (!transaction.sent) {
           Log().w('AutoCommit transaction was fired via a delay');
-          _commit(transaction);
+          await _commit(transaction);
         }
       });
     }
   }
 
-  void _commit(Transaction transaction) {
+  Future<void> _commit(Transaction transaction) async {
     if (!transaction.sent) {
-      transaction.commit();
+      await transaction.commit();
     }
   }
 }

@@ -1,16 +1,14 @@
 import 'dart:convert';
 
-import 'package:squarephone/src/dao/repository/actions/action_activate_first_user.dart';
-
-import '../../../../registration_wizard/invitation_state.dart';
-import '../../../../util/enum_helper.dart';
-import '../../../entities/entity.dart';
-import '../../../entities/user_invitation.dart';
+import '../../../util/enum_helper.dart';
+import '../../entities/entity.dart';
+import '../../entities/user_invitation.dart';
 import '../../transaction/api/retry/retry_data.dart';
 import '../../transaction/transaction.dart';
 import '../../types/firebase_user_uid.dart';
 import '../repository.dart';
 import 'action.dart';
+import 'action_activate_first_user.dart';
 
 /// Used to activate invitations to join an organisation.
 /// This could be new users or existing users.
@@ -18,26 +16,26 @@ import 'action.dart';
 /// process.
 class ActionActivateInvitation<E extends Entity<E>>
     extends Action<InvitationDetails> {
-  final FirebaseTempUserUid firebaseTempUserUid;
-  final GUID inviteGUID;
-  final Repository<E> repository;
   ActionActivateInvitation(this.firebaseTempUserUid, this.inviteGUID,
       this.repository, RetryData retryData)
       : super(retryData);
+  final FirebaseTempUserUid firebaseTempUserUid;
+  final GUID inviteGUID;
+  final Repository<E> repository;
 
   @override
-  InvitationDetails decodeResponse(ActionResponse response) {
-    var details = InvitationDetails.fromJson(response);
+  InvitationDetails decodeResponse(ActionResponse data) {
+    final details = InvitationDetails.fromJson(data);
     details.firebaseTempUserUid = firebaseTempUserUid;
     return details;
   }
 
   @override
   String encodeRequest() {
-    var map = <String, dynamic>{};
-    map[Action.ACTION] = 'actionActivateInvitation';
-    map[Action.MUTATES] = causesMutation;
-    map[Action.GUID] = inviteGUID.toString();
+    final map = <String, dynamic>{};
+    map[Action.action] = 'actionActivateInvitation';
+    map[Action.mutatesKey] = causesMutation;
+    map[Action.guidKey] = inviteGUID.toString();
 
     return json.encode(map);
   }
@@ -50,26 +48,25 @@ class ActionActivateInvitation<E extends Entity<E>>
 }
 
 class InvitationDetails {
-  bool success;
-  InvitationType type;
-  InvitationState state;
-  String apiKey;
-  FirebaseTempUserUid firebaseTempUserUid;
-  String fireStoreUserToken;
-  String userGUID;
-  String exception;
-
-  InvitationDetails({this.success, this.apiKey});
+  InvitationDetails({this.success = true, this.apiKey});
 
   InvitationDetails.fromJson(ActionResponse response) {
     type = EnumHelper.getEnum(
-        response.data['invitationType'] as String, InvitationType.values);
+        response.data!['invitationType'] as String, InvitationType.values);
 
     state = EnumHelper.getEnum(
-        response.data['invitationState'] as String, InvitationState.values);
-    apiKey = response.data['apiKey'] as String;
-    fireStoreUserToken = response.data['fireStoreUserToken'] as String;
-    userGUID = response.data['userGUID'] as String;
+        response.data!['invitationState'] as String, InvitationState.values);
+    apiKey = response.data!['apiKey'] as String;
+    fireStoreUserToken = response.data!['fireStoreUserToken'] as String;
+    userGUID = response.data!['userGUID'] as String;
     exception = response.exception;
   }
+  bool success = true;
+  late InvitationType type;
+  late InvitationState state;
+  String? apiKey;
+  late FirebaseTempUserUid firebaseTempUserUid;
+  late String fireStoreUserToken;
+  late String userGUID;
+  String? exception;
 }

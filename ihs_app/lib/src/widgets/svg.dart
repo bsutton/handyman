@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-enum LOCATION { VAADIN, ICONS }
+enum LOCATION { vaadin, icons }
 
 class Svg extends StatelessWidget {
-  final String filename;
-  final String label;
-  final double width;
-  final double height;
-  final LOCATION location;
-  final void Function() onTap;
-  final Color color;
-
-  static const VAADIN_ASSET = 'assets/vaadin-svg/';
-  static const ICON_ASSET = 'assets/icons/';
-
   ///
   /// We are having sizing problems.
   /// The aim is to have the SVG fill its parent if the width/height are not specified.
@@ -23,15 +12,28 @@ class Svg extends StatelessWidget {
   /// renders as expected).
   /// The default sizes here are a hack around the problem.
   ///
-  Svg(this.filename,
-      {this.label, this.width = 80, this.height = 80, this.location = LOCATION.ICONS, this.onTap, this.color});
+  const Svg(this.filename,
+      {super.key,
+      this.label,
+      this.width = 80,
+      this.height = 80,
+      this.location = LOCATION.icons,
+      this.onTap,
+      this.color});
+  final String filename;
+  final String? label;
+  final double width;
+  final double height;
+  final LOCATION location;
+  final void Function()? onTap;
+  final Color? color;
+
+  static const vaadinAsset = 'assets/vaadin-svg/';
+  static const iconAsset = 'assets/icons/';
 
   @override
-  Widget build(BuildContext context) {
-    return buildSvg();
-  }
+  Widget build(BuildContext context) => buildSvg();
 
-  Widget buildSvg() {
 /*
     return FittedBox(`
       fit: BoxFit.scaleDown,
@@ -39,34 +41,28 @@ class Svg extends StatelessWidget {
 
     );
     */
+  Widget buildSvg() =>
+      SizedBox(width: width, height: height, child: buildTree());
 
-    return SizedBox(width: width, height: height, child: buildTree());
-  }
-
-  Widget buildTree() {
-    Widget tree;
-
-    if (onTap != null) {
-      tree = GestureDetector(onTap: onTap, child: buildAsset());
-    } else {
-      tree = buildAsset();
-    }
-    return tree;
-  }
+  Widget buildTree() => GestureDetector(onTap: onTap, child: buildAsset());
 
   Widget buildAsset() {
-    var finalPath = getPath(filename);
-    return SvgPicture.asset(finalPath, semanticsLabel: label, width: width, height: height, color: color);
+    final finalPath = getPath(filename);
+    return SvgPicture.asset(finalPath,
+        semanticsLabel: label,
+        width: width,
+        height: height,
+        colorFilter: ColorFilter.mode(color!, BlendMode.src));
   }
 
   String getPath(String filename) {
     String path;
     switch (location) {
-      case LOCATION.VAADIN:
-        path = VAADIN_ASSET;
+      case LOCATION.vaadin:
+        path = vaadinAsset;
         break;
-      case LOCATION.ICONS:
-        path = ICON_ASSET;
+      case LOCATION.icons:
+        path = iconAsset;
         break;
     }
 

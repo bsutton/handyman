@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'theme/nj_theme.dart';
 
 enum TopOrTailPlacement { top, bottom }
@@ -8,9 +9,9 @@ enum TopOrTailPlacement { top, bottom }
 /// which is a child of a Stack at either
 /// the top or bottom of the page.
 class TopOrTail extends StatelessWidget {
+  const TopOrTail({required this.placement, required this.child, super.key});
   final Widget child;
   final TopOrTailPlacement placement;
-  TopOrTail({this.placement, this.child});
 
   @override
   Widget build(BuildContext context) {

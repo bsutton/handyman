@@ -1,27 +1,28 @@
 import 'dart:convert';
-import '../../../entities/entity.dart';
+
+import '../../entities/entity.dart';
 import '../../transaction/api/retry/retry_data.dart';
 import '../../transaction/transaction.dart';
 import '../repository.dart';
 import 'action.dart';
 
 class ActionGetById<E extends Entity<E>> extends Action<E> {
+  ActionGetById(this.id, this.repository, RetryData retryData)
+      : super(retryData);
   final int id;
   final Repository<E> repository;
-  ActionGetById(this.id, this.repository, RetryData retryData) : super(retryData);
 
   @override
-  E decodeResponse(ActionResponse data) {
-    return repository.fromJson(data.singleEntity);
-  }
+  E decodeResponse(ActionResponse data) =>
+      repository.fromJson(data.singleEntity!);
 
   @override
   String encodeRequest() {
-    var map = <String, Object>{};
-    map[Action.ACTION] = 'getById';
-    map[Action.MUTATES] = causesMutation;
-    map[Action.ENTITY_TYPE] = repository.entity;
-    map[Action.ID] = id.toString();
+    final map = <String, Object>{};
+    map[Action.action] = 'getById';
+    map[Action.mutatesKey] = causesMutation;
+    map[Action.entityTypeKey] = repository.entity;
+    map[Action.idKey] = id.toString();
 
     return json.encode(map);
   }

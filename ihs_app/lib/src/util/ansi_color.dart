@@ -1,5 +1,8 @@
 /// Returns a string wrapped with the selected ansi
 /// fg color codes.
+library;
+// ignore_for_file: prefer_constructors_over_static_methods
+
 String red(String text, {AnsiColor bgcolor = AnsiColor.none}) =>
     AnsiColor._apply(AnsiColor.red, text, bgcolor: bgcolor);
 

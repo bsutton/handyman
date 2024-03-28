@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 
 class SearchBar extends StatefulWidget {
+
+  const SearchBar({required this.label, required this.onChange, super.key, this.hint = ''});
   final String label;
-  final String hint;
+  final String? hint;
   final ValueChanged<String> onChange;
 
-  SearchBar({@required this.label, @required this.onChange, this.hint = ''});
-
   @override
-  State<StatefulWidget> createState() {
-    return SearchBarState();
-  }
+  State<StatefulWidget> createState() => SearchBarState();
 }
+
 
 class SearchBarState extends State<SearchBar> {
   TextEditingController textController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    return Row(children: [
+  Widget build(BuildContext context) => Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
       // Text(widget.label),
       Expanded(
           child: TextField(
@@ -26,9 +24,8 @@ class SearchBarState extends State<SearchBar> {
               controller: textController,
               decoration: InputDecoration(
                   labelText: widget.label, hintText: widget.hint))),
-      SmallButton(child: Text('X'), onPressed: clear)
-    ], crossAxisAlignment: CrossAxisAlignment.end);
-  }
+      SmallButton(onPressed: clear, child: const Text('X'))
+    ]);
 
   void clear() {
     textController.clear();
@@ -37,18 +34,18 @@ class SearchBarState extends State<SearchBar> {
 }
 
 class SmallButton extends StatelessWidget {
+
+  const SmallButton({required this.onPressed, required this.child, super.key});
   final VoidCallback onPressed;
   final Widget child;
-
-  SmallButton({@required this.onPressed, this.child});
 
   @override
   Widget build(BuildContext context) {
     final buttonTheme = ButtonTheme.of(context)
-        .copyWith(minWidth: 30.0, height: 30, padding: EdgeInsets.all(0));
+        .copyWith(minWidth: 30, height: 30, padding: EdgeInsets.zero);
 
     return ButtonTheme.fromButtonThemeData(
         data: buttonTheme,
-        child: ElevatedButton(child: child, onPressed: onPressed));
+        child: ElevatedButton(onPressed: onPressed, child: child));
   }
 }

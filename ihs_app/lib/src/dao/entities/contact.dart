@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../types/email_address.dart';
+import '../types/er.dart';
 import '../types/phone_number.dart';
 import 'address.dart';
 import 'customer.dart';
@@ -26,12 +27,12 @@ class Contact extends Entity<Contact> {
   late Address address;
 
   @ERConverterCustomer()
-  late Customer Customer;
+  late Customer customer;
 
-  @EmailAddressConverter()
+  @ConverterEmailAddress()
   String? email;
 
-  @PhoneNumberConverter()
+  @ConverterPhoneNumber()
   PhoneNumber? mobile;
 
   String get name => '$firstname  surname';

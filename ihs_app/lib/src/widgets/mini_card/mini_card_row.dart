@@ -3,12 +3,10 @@ import 'mini_card.dart';
 import 'mini_row_state.dart';
 
 class MiniCardRow<T, S extends MiniRowState<T, S>> extends StatelessWidget {
-  final List<MiniCard<T, S>> miniCards;
 
-  MiniCardRow(this.miniCards);
+  const MiniCardRow(this.miniCards, {super.key});
+  final List<MiniCard<T, S>> miniCards;
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
+  Widget build(BuildContext context) => SingleChildScrollView(
         scrollDirection: Axis.horizontal, child: Row(mainAxisSize: MainAxisSize.min, children: miniCards));
-  }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
-import '../../../entities/entity.dart';
-import '../../../entities/user_invitation.dart';
+
+import '../../entities/entity.dart';
+import '../../entities/user_invitation.dart';
 import '../../transaction/api/retry/retry_data.dart';
 import '../../transaction/transaction.dart';
 import '../../types/firebase_user_uid.dart';
@@ -12,25 +13,28 @@ import 'action.dart';
 /// We have validated their mobile number (as proved vy the [FirebaseTempUserUid])
 /// and we now need to find their user details.
 /// This may fail if the user has changed their mobile no.
-class ActionUserInvitationByMobile<E extends Entity<E>> extends Action<UserInvitation> {
+class ActionUserInvitationByMobile<E extends Entity<E>>
+    extends Action<UserInvitation> {
+  ActionUserInvitationByMobile(
+      this.mobileNumber, this.repository, RetryData retryData)
+      : super(retryData);
   final PhoneNumber mobileNumber;
   final Repository<E> repository;
-  ActionUserInvitationByMobile(this.mobileNumber, this.repository, RetryData retryData) : super(retryData);
 
   @override
-  UserInvitation decodeResponse(ActionResponse response) {
-    var invite = UserInvitation.fromJson(response.singleEntity);
+  UserInvitation decodeResponse(ActionResponse data) {
+    final invite = UserInvitation.fromJson(data.singleEntity!);
     return invite;
   }
 
   @override
   String encodeRequest() {
-    var map = <String, dynamic>{};
+    final map = <String, dynamic>{};
 
-    map[Action.ENTITY_TYPE] = 'UserInvite';
-    map[Action.ACTION] = 'userInvitationByMobile';
-    map[Action.MUTATES] = causesMutation;
-    map[Action.MOBILE_NUMBER] = mobileNumber.toString();
+    map[Action.entityTypeKey] = 'UserInvite';
+    map[Action.action] = 'userInvitationByMobile';
+    map[Action.mutatesKey] = causesMutation;
+    map[Action.mobileNumberKey] = mobileNumber.toString();
 
     return json.encode(map);
   }

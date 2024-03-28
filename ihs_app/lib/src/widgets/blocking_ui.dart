@@ -3,14 +3,15 @@ import 'dart:async';
 import 'package:completer_ex/completer_ex.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:provider/provider.dart';
 import 'package:stacktrace_impl/stacktrace_impl.dart';
 
 import '../app/app_scaffold.dart';
 import '../util/log.dart';
 import '../util/stack_list.dart';
-import 'future_builder_ex.dart';
 import 'position.dart';
+import 'theme/nj_text_themes.dart';
 import 'theme/nj_theme.dart';
 import 'tick_builder.dart';
 
@@ -44,15 +45,18 @@ import 'tick_builder.dart';
 ///
 
 class BlockingUI extends ChangeNotifier {
-  factory BlockingUI() => _self ??= BlockingUI._internal();
+  factory BlockingUI() {
+    _self ??= BlockingUI._internal();
+    return _self!;
+  }
 
   BlockingUI._internal();
   static BlockingUI? _self;
-  DateTime startTime = DateTime.now();
+  DateTime? startTime;
   int count = 0;
 
   /// manages a possible nested set of calls to [run]
-  StackList<_RunCallPoint> actions = StackList();
+  StackList<RunCallPoint> actions = StackList();
 
   /// Executes a long running function asking the user to wait
   /// if necessary.
@@ -73,7 +77,7 @@ class BlockingUI extends ChangeNotifier {
   /// If [func] needs to return a null it must still return a future by using:
   /// Future.value(null);
   /// ```
-  Future<T> run<T>(Future<T> Function() func, {required String label}) {
+  Future<T> run<T>(Future<T> Function() func, {String? label}) {
     final completer = CompleterEx<T>();
     begin(label);
     // Now call the long running function.
@@ -90,26 +94,26 @@ class BlockingUI extends ChangeNotifier {
   /// If the [future] completes successfully then [onDone]
   /// is called otherwise [onError] is called.
   Future<void> blockUntilFuture<T>(Future<T> Function() future,
-      {required void Function(T) onDone,
-      required void Function(Object) onError,
-      required String label}) async {
+      {void Function(T)? onDone,
+      void Function(Object)? onError,
+      String? label}) async {
     // Call run and await for the passed future to complete
     await run<T>(
         () async => future().then((t) {
-              onDone(t);
+              onDone?.call(t);
               return t;
             },
                 // ignore: avoid_types_on_closure_parameters
                 onError: (Object e, StackTrace st) {
-              onError(e);
+              onError?.call(e);
               Log().e(
                   'blockUntilFuture returned an error $e st: ${StackTraceImpl.fromStackTrace(st).formatStackTrace()}');
             }),
         label: label);
   }
 
-  void begin(String label) {
-    actions.push(_RunCallPoint(label));
+  void begin(String? label) {
+    actions.push(RunCallPoint(label));
     count++;
     // Log.e('begin count=$count');
     // Log.d(green('UI is blocked'));
@@ -123,7 +127,7 @@ class BlockingUI extends ChangeNotifier {
 
   void end() {
     count--;
-    assert(count >= 0);
+    assert(count >= 0, 'bad');
 
     actions.pop();
 
@@ -131,12 +135,12 @@ class BlockingUI extends ChangeNotifier {
     // Log.d(green('unblocked for: ${callPoint.stackTrace.formatStackTrace()}'));
 
     if (count == 0) {
-      startTime = DateTime.now();
+      startTime = null;
       notifyListeners();
     }
   }
 
-  _RunCallPoint get action => actions.peek();
+  RunCallPoint get action => actions.peek();
 
   bool get blocked => count > 0;
 }
@@ -165,24 +169,22 @@ class BlockingUIBuilder<T> extends StatelessWidget {
       required this.builder,
       required this.stacktrace,
       super.key});
-  final Future<T> future;
+  final Future<T> Function() future;
   final CompletedBuilder<T> builder;
   final StackTrace stacktrace;
 
   @override
   Widget build(BuildContext context) => FutureBuilderEx<T>(
-        future: () => future,
+        future: future,
         waitingBuilder: (context) => const BlockingUIWidget(),
         builder: builder,
-        stackTrace: stacktrace,
       );
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-      ..add(DiagnosticsProperty<Future<T>>('future', future))
-      ..add(ObjectFlagProperty<CompletedBuilder<T>>.has('builder', builder))
-      ..add(DiagnosticsProperty<StackTrace>('stacktrace', stacktrace));
+        .add(ObjectFlagProperty<CompletedBuilder<T>>.has('builder', builder));
+    properties.add(DiagnosticsProperty<StackTrace>('stacktrace', stacktrace));
   }
 }
 
@@ -235,15 +237,16 @@ class BlockingUIWidgetState extends State<BlockingUIWidget> {
         // make it transparent for the first 500ms.
 
         return TickBuilder(
+            limit: 100,
             interval: const Duration(milliseconds: 100),
             builder: (context, index) {
               final showProgress =
-                  DateTime.now().difference(blockingUI.startTime) >
+                  DateTime.now().difference(blockingUI.startTime!) >
                       const Duration(milliseconds: 500);
 
               // show label if we have been here more than 1 second.
               final showLabel =
-                  DateTime.now().difference(blockingUI.startTime) >
+                  DateTime.now().difference(blockingUI.startTime!) >
                       const Duration(milliseconds: 1000);
 
               return SizedBox(
@@ -279,8 +282,7 @@ class BlockingUIWidgetState extends State<BlockingUIWidget> {
 
                     if (showLabel)
                       Positioned(
-                          bottom:
-                              AppScaffold.BOTTOM_BAR_HEIGHT + NJTheme.padding,
+                          bottom: AppScaffold.bottomBarHeight + NJTheme.padding,
                           left: 0,
                           width: width,
                           // height: 20,
@@ -315,9 +317,9 @@ class BlockingUIWidgetState extends State<BlockingUIWidget> {
 /// We also maintaine a list of [StackTraceImpl] in [stackTrace]
 /// so that we can dump call point stack traces for debugging
 /// purposes.
-class _RunCallPoint {
-  _RunCallPoint(this.label) : stackTrace = StackTraceImpl(skipFrames: 2);
-  String label;
+class RunCallPoint {
+  RunCallPoint(this.label) : stackTrace = StackTraceImpl(skipFrames: 2);
+  String? label;
 
   /// The stack trace of where the [BlockingUI.run] method was called from.
   StackTraceImpl stackTrace;

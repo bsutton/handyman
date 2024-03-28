@@ -7,7 +7,6 @@ import '../types/guid.dart';
 import '../types/phone_number.dart';
 import '../types/user_role.dart';
 import 'actions/action_user_clear_email_addresses.dart';
-import 'repos.dart';
 import 'repository.dart';
 import 'repository_search.dart';
 
@@ -31,21 +30,19 @@ class UserRepository extends Repository<User>
   // get the user that we are acting on behalf of.
   GUID? get loggedInUserGUID => _loggedInUser;
 
-  Future<User> get loggedInUser => getByGUID(loggedInUserGUID);
+  Future<User> get loggedInUser => getByGUID(loggedInUserGUID!);
 
-  Future<User> getByApiKey(String apiKey) => super.getFirst('apiKey', apiKey);
+  Future<User?> getByApiKey(String apiKey) => super.getFirst('apiKey', apiKey);
 
-  Future<User> getByMobile(PhoneNumber mobile) =>
+  Future<User?> getByMobile(PhoneNumber mobile) =>
       super.getFirst('mobilePhone', mobile.toE164());
 
-  Future<User> getByEmailAddress(String emailAddress) =>
+  Future<User?> getByEmailAddress(String emailAddress) =>
       super.getFirst('emailAddress', emailAddress);
 
   Future<void> login(GUID userGuid) async {
     _loggedInUser = userGuid;
     _viewAsUser = userGuid;
-
-    await Repos().team.onLogin();
   }
 
   GUID? get viewAsUser => _viewAsUser;
@@ -54,18 +51,18 @@ class UserRepository extends Repository<User>
   Query searchQuery(String filter, {int offset = 0, int limit = 100}) {
     final query = Query(
       entity,
-      filterMode: FilterMode.OR,
+      filterMode: FilterMode.or,
       offset: offset,
       limit: limit,
     );
-    query.addFilter(Match('username', filter, matchMode: MatchMode.WILD));
-    query.addFilter(Match('firstname', filter, matchMode: MatchMode.WILD));
-    query.addFilter(Match('surname', filter, matchMode: MatchMode.WILD));
-    query.addFilter(Match('description', filter, matchMode: MatchMode.WILD));
-    query.addFilter(Match('emailAddress', filter, matchMode: MatchMode.WILD));
-    query.addFilter(Match('landline', filter, matchMode: MatchMode.WILD));
-    query.addFilter(Match('mobilePhone', filter, matchMode: MatchMode.WILD));
-    query.addFilter(Match('extensionNo', filter, matchMode: MatchMode.WILD));
+    query.addFilter(Match('username', filter, matchMode: MatchMode.wild));
+    query.addFilter(Match('firstname', filter, matchMode: MatchMode.wild));
+    query.addFilter(Match('surname', filter, matchMode: MatchMode.wild));
+    query.addFilter(Match('description', filter, matchMode: MatchMode.wild));
+    query.addFilter(Match('emailAddress', filter, matchMode: MatchMode.wild));
+    query.addFilter(Match('landline', filter, matchMode: MatchMode.wild));
+    query.addFilter(Match('mobilePhone', filter, matchMode: MatchMode.wild));
+    query.addFilter(Match('extensionNo', filter, matchMode: MatchMode.wild));
     return query;
   }
 
@@ -80,9 +77,9 @@ class UserRepository extends Repository<User>
       limit: 1,
     );
     query.addFilter(
-        Match('userRole', UserRole.CustomerAdministrator.toString()));
+        Match('userRole', UserRole.customerAdministrator.toString()));
     query.addFilter(
-        Match('guid', user.guid.toString(), matchMode: MatchMode.NOT_EQ));
+        Match('guid', user.guid.toString(), matchMode: MatchMode.notEq));
     return (await select(query)).isEmpty;
   }
 
@@ -91,10 +88,10 @@ class UserRepository extends Repository<User>
   /// email address. Other accounts with the same email address
   /// now loose their email address.
   Future<void> clearEmails(String emailAddress,
-      {Transaction transaction,
+      {Transaction? transaction,
       bool force = false,
       RetryData retryData = RetryData.defaultRetry,
-      User exclude}) {
+      User? exclude}) {
     final action = ActionUserClearEmailAddress(emailAddress, retryData);
 
     Repository.findTransaction(transaction).addAction(action);

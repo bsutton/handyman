@@ -6,8 +6,8 @@ const _kScrollDuration = Duration(milliseconds: 200);
 
 /// Determines the shape of the [ContextHelp] highlight.
 enum ContextHelpShape {
-  Circle,
-  Rectangle,
+  circle,
+  rectangle,
 }
 
 /// Wrapping a [Widget] with this widget will register contextual help with the
@@ -18,7 +18,7 @@ class ContextHelp extends StatefulWidget {
     required this.title,
     required this.body,
     super.key,
-    this.shape = ContextHelpShape.Circle,
+    this.shape = ContextHelpShape.circle,
     this.highlight = true,
   });
   final Widget child;
@@ -31,11 +31,10 @@ class ContextHelp extends StatefulWidget {
 
   @override
   ContextHelpState createState() => ContextHelpState();
- 
 }
 
 class ContextHelpState extends State<ContextHelp> {
-  late ContextHelpControllerState _controller;
+  late final ContextHelpControllerState _controller;
 
   @override
   void initState() {

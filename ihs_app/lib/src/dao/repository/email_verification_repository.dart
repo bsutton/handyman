@@ -1,20 +1,18 @@
-import '../../entities/email_verification.dart';
+import '../entities/email_verification.dart';
 import '../types/phone_number.dart';
 import 'repository.dart';
 
 /// Used to initiate and track email verifications.
 class EmailVerificationRepository extends Repository<EmailVerification> {
-  EmailVerificationRepository() : super(Duration(minutes: 5));
+  EmailVerificationRepository() : super(const Duration(minutes: 5));
 
   @override
-  EmailVerification fromJson(Map<String, dynamic> json) {
-    return EmailVerification.fromJson(json);
-  }
+  EmailVerification fromJson(Map<String, dynamic> json) =>
+      EmailVerification.fromJson(json);
 
   /// Gets the current email verification for the given mobile no.
-  Future<EmailVerification> getByMobile(PhoneNumber mobileNumber) async {
-    return getFirst('mobile', mobileNumber.toE164());
-  }
+  Future<EmailVerification?> getByMobile(PhoneNumber mobileNumber) async =>
+      getFirst('mobile', mobileNumber.toE164());
 
   // Future<bool> sendRecoveryEmailVerification(
   //   BuildContext context,

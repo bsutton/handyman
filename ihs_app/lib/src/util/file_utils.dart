@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 
 import '../dao/types/guid.dart';
 
-enum TempFileLocations { RECORDINGS }
+enum TempFileLocations { recordings }
 
 class FileUtils {
   factory FileUtils() {
@@ -16,7 +16,7 @@ class FileUtils {
     // _mfs = MemoryFileSystem(style: FileSystemStyle.posix);
   }
   static FileUtils? _self;
-  static const String _ROOT_DIR = 'square_phone';
+  static const String _rootDir = 'square_phone';
 
   ///
   /// Creates a temporary file in the systems temp directory.
@@ -33,7 +33,7 @@ class FileUtils {
   String createTempFile(TempFileLocations location, [String prefix = '']) {
     final derivedPath = join(
       Directory.systemTemp.path,
-      _ROOT_DIR,
+      _rootDir,
       location.toString().split('.').last,
     );
 

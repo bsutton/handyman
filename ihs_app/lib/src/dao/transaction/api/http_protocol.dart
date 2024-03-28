@@ -1,1 +1,1 @@
-enum HttpProtocol { HTTP, HTTPS }
+enum HttpProtocol { http, https }

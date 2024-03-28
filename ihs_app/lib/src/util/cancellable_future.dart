@@ -1,5 +1,4 @@
 class CancelableFuture {
-  bool cancelled = false;
   CancelableFuture(Duration duration, void Function() callback) {
     Future<void>.delayed(duration, () {
       if (!cancelled) {
@@ -7,6 +6,7 @@ class CancelableFuture {
       }
     });
   }
+  bool cancelled = false;
 
   void cancel() {
     cancelled = true;

@@ -22,7 +22,7 @@ class Dashboard extends StatefulWidget {
 
 class DashboardState extends State<Dashboard> {
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) => ColoredBox(
       color: Colors.black,
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +38,7 @@ class DashboardState extends State<Dashboard> {
             Padding(
                 padding: const EdgeInsets.only(
                     top: NJTheme.padding,
-                    bottom: AppScaffold.BOTTOM_BAR_EXTENSION),
+                    bottom: AppScaffold.bottomBarExtension),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: widget.rows,

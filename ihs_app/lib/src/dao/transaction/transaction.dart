@@ -5,10 +5,10 @@ import 'package:completer_ex/completer_ex.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:stacktrace_impl/stacktrace_impl.dart';
 
-import '../../../app/service_locator.dart';
-import '../../../util/enum_helper.dart';
-import '../../../util/log.dart';
-import '../../../util/ref.dart';
+import '../../app/service_locator.dart';
+import '../../util/enum_helper.dart';
+import '../../util/log.dart';
+import '../../util/ref.dart';
 import '../repository/actions/action.dart';
 import 'api/retry/retry_data.dart';
 import 'api/retry/retry_helper.dart';
@@ -40,14 +40,6 @@ import 'transport2.dart';
 /// ```
 ///
 class Transaction {
-  static int actionIdSeed = 1000;
-
-  CompleterEx<void> transactionCompleter = CompleterEx<void>();
-
-  bool sent = false;
-
-  String serviceURL = 'transaction';
-
   /// If [autoCommit] is true then the transaction
   /// will wait for the next flutter frame or
   /// 200ms before committing the transactions.
@@ -58,6 +50,14 @@ class Transaction {
       AutoCommitManager().scheduleCommit(this);
     }
   }
+
+  static int actionIdSeed = 1000;
+
+  CompleterEx<void> transactionCompleter = CompleterEx<void>();
+
+  bool sent = false;
+
+  String serviceURL = 'transaction';
 
   Map<String, List<Action<dynamic>>> mapRequestIdActionList = {};
 
@@ -75,7 +75,7 @@ class Transaction {
     });
 
     if (!added) {
-      var id = actionIdSeed++;
+      final id = actionIdSeed++;
       mapRequestIdActionList['$id'] = [];
       mapRequestIdActionList['$id']!.add(action);
     }
@@ -90,17 +90,17 @@ class Transaction {
       sent = true;
 
       try {
-        var mostCritical =
+        final mostCritical =
             Ref<RetryData>(const RetryData(RetryOption.NONE, null));
 
-        var params = <String, String>{};
-        params['apiKey'] = ServiceLocator.getPersistentKeyStore().getApiKey();
-        params[Action.FIREBASE_TEMP_USER_UID] =
+        final params = <String, String>{};
+        params['apiKey'] = ServiceLocator.getPersistentKeyStore().getApiKey()!;
+        params[Action.firebaseTempUserUidKey] =
             ServiceLocator.getPersistentKeyStore()
                 .getFirebaseTempUserUid()
                 .toString();
 
-        var body = _buildBody(mapRequestIdActionList, mostCritical);
+        final body = _buildBody(mapRequestIdActionList, mostCritical);
 
         await _executeSend(params, body, mostCritical, mapRequestIdActionList);
       }
@@ -132,7 +132,8 @@ class Transaction {
       Map<String, List<Action<dynamic>>> actions) async {
     await RetryHelper.exec(() async {
       await executeRequest(params, body);
-    }, mostCritical.obj)
+    }, mostCritical.obj!)
+        // ignore: avoid_types_on_closure_parameters
         .catchError((Object error) {
       // notify actions of failure
       actions.forEach((key, value) {
@@ -152,8 +153,8 @@ class Transaction {
         body += ',\n';
       }
       final action = actions[0];
-      body += '\"$key\": ${action.encodeRequest()}';
-      for (var action in actions) {
+      body += '"$key": ${action.encodeRequest()}';
+      for (final action in actions) {
         getRetryData(mostCritical, action.retryData);
       }
     });
@@ -169,13 +170,13 @@ class Transaction {
       current!.obj = next;
     }
     if (next == null && current != null) {
-      current.obj = next!;
+      current.obj = next;
     }
     assert(current != null && next != null,
         'current and next cannot both be null');
-    var currentOption =
-        EnumHelper.getIndexOf(RetryOption.values, current!.obj.option);
-    var nextOption = EnumHelper.getIndexOf(RetryOption.values, next!.option);
+    final currentOption =
+        EnumHelper.getIndexOf(RetryOption.values, current!.obj!.option);
+    final nextOption = EnumHelper.getIndexOf(RetryOption.values, next!.option);
     if (currentOption >= nextOption) {
       return;
     }
@@ -183,11 +184,11 @@ class Transaction {
   }
 
   Future<void> executeRequest(Map<String, String> params, String body) async {
-    await useTransport(TransportOption.STANDARD, serviceURL, params, body)
+    await useTransport(TransportOption.standard, serviceURL, params, body)
         .then((responses) {
       try {
-        for (var response in responses) {
-          var actionList = mapRequestIdActionList[response.actionId];
+        for (final response in responses) {
+          final actionList = mapRequestIdActionList[response.actionId];
           assert(actionList != null,
               'failed to map action id ${response.actionId} to an action');
           // Log.d("relaying single result to ${actionList.length} listeners");
@@ -203,7 +204,7 @@ class Transaction {
                   Log.e(e.toString(), stackTrace: s);
                 }
               } else {
-                var s = StackTraceImpl();
+                final s = StackTraceImpl();
                 Log.e(response.exception!, stackTrace: s);
                 if (response.exceptionType == 'AuthException') {
                   // The router will ignore this request if the rereg page is
@@ -238,36 +239,35 @@ class Transaction {
 }
 
 class ActionFailedException implements Exception {
-  String message;
   ActionFailedException(this.message);
+  String message;
 
   @override
   String toString() => message;
 }
 
 enum AuthExceptionType {
-  InvalidAPIKey,
-  UserDeleted,
-  UserDisabled,
-  InactiveCustomer
+  invalidAPIKey,
+  userDeleted,
+  userDisabled,
+  inactiveCustomer
 }
 
 class AuthException implements Exception {
-  late AuthExceptionType type;
-  late String message;
-
   AuthException(String message) {
-    var parts = message.split(':');
+    final parts = message.split(':');
 
     if (parts.length == 2) {
       type = EnumHelper.getEnum(parts[0], AuthExceptionType.values);
       this.message = parts[1].trim();
     } else {
       Log.e('Unknown AuthExceptionType');
-      type = AuthExceptionType.InvalidAPIKey;
+      type = AuthExceptionType.invalidAPIKey;
       this.message = message;
     }
   }
+  late AuthExceptionType type;
+  late String message;
 
   @override
   String toString() => message;
@@ -275,47 +275,45 @@ class AuthException implements Exception {
 
 Future<List<ActionResponse>> useTransport(TransportOption option,
     String serviceURL, Map<String, String> params, String body) async {
-  if (option == TransportOption.ISOLATE) {
-    return await useIsolateTransport(serviceURL, params, body);
+  if (option == TransportOption.isolate) {
+    return useIsolateTransport(serviceURL, params, body);
   }
-  return await useStandardTransport(serviceURL, params, body);
+  return useStandardTransport(serviceURL, params, body);
 }
 
 Future<List<ActionResponse>> useIsolateTransport(
-    String serviceURL, Map<String, String> params, String body) async {
-  return await TransportIsolate()
-      .isolateSend(RequestSenderData(serviceURL, params, body));
-}
+        String serviceURL, Map<String, String> params, String body) async =>
+    TransportIsolate().isolateSend(RequestSenderData(serviceURL, params, body));
 
 Future<List<ActionResponse>> useStandardTransport(
     String serviceURL, Map<String, String> params, String body) async {
-  var transport = Transport2(
-      ServiceLocator.getPersistentKeyStore().getMpbxApiHost(),
-      ServiceLocator.micropbxHttpProtocol,
+  final transport = Transport2(
+      ServiceLocator.getPersistentKeyStore().getServerAPIFQDN()!,
+      ServiceLocator.serverHttpProtocol,
       basePath: '/micropbx/rest/flutterService2/');
 
-  var rawResponse = await transport.request(serviceURL, params, body);
-  var decodedData = decodeActionResponses(rawResponse);
+  final rawResponse = await transport.request(serviceURL, params, body);
+  final decodedData = decodeActionResponses(rawResponse);
   return decodedData;
 }
 
 List<ActionResponse> decodeActionResponses(String data) {
-  var responses = json.decode(data) as List<dynamic>;
+  final responses = json.decode(data) as List<Map>;
 
-  var results = <ActionResponse>[];
+  final results = <ActionResponse>[];
 
-  for (var raw in responses) {
-    var ret = ActionResponse();
-    ret.actionId = '${raw['actionId']}';
-    ret.action = raw['action'] as String;
-    ret.success = raw['success'] as bool;
-    ret.entityType = raw['entityType'] as String;
-    ret.data = raw['data'] as Map<String, dynamic>;
-    ret.singleEntity = raw['singleEntity'] as Map<String, dynamic>;
-    ret.entityList = raw['entityList'] as List<dynamic>;
-    ret.exception = raw['exception'] as String;
-    ret.userExceptionMessage = raw['userExceptionMessage'] as String;
-    ret.exceptionType = raw['exceptionType'] as String;
+  for (final raw in responses) {
+    final ret = ActionResponse()
+      ..actionId = '${raw['actionId']}'
+      ..action = raw['action'] as String
+      ..success = raw['success'] as bool
+      ..entityType = raw['entityType'] as String
+      ..data = raw['data'] as Map<String, dynamic>
+      ..singleEntity = raw['singleEntity'] as Map<String, dynamic>
+      ..entityList = raw['entityList'] as List<dynamic>
+      ..exception = raw['exception'] as String
+      ..userExceptionMessage = raw['userExceptionMessage'] as String
+      ..exceptionType = raw['exceptionType'] as String;
 
     results.add(ret);
   }
@@ -342,9 +340,7 @@ class ActionResponse {
   String? exceptionType;
   String? userExceptionMessage;
 
-  bool wasSuccessful() {
-    return success ?? false;
-  }
+  bool wasSuccessful() => success ?? false;
 }
 
-enum TransportOption { STANDARD, ISOLATE }
+enum TransportOption { standard, isolate }

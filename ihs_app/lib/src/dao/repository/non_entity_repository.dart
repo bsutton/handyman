@@ -15,7 +15,9 @@ class NonEntityRepository {
   /// The action results are not cached.
   /// This is intended for simple actions like sending an email.
   Future<R> taskAction<R>(Action<R> taskAction,
-      {Transaction transaction, bool force = false, RetryData retryData = RetryData.defaultRetry}) {
+      {Transaction? transaction,
+      bool force = false,
+      RetryData retryData = RetryData.defaultRetry}) {
     Repository.findTransaction(transaction).addAction<R>(taskAction);
 
     return taskAction.future;

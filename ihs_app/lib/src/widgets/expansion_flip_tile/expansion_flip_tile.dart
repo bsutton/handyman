@@ -1,47 +1,31 @@
 import 'dart:math';
 
 import 'package:flip/flip.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-const Duration _kFlip = Duration(milliseconds: 300);
 const EdgeInsets _defaultContentPadding = EdgeInsets.all(16);
 const double _flipControlWidth = 50;
 
 class _ExpansionFlipTilePageState {
-  _ExpansionFlipTilePageState({
-    this.hasExpanded = false,
-    this.hasFlipped = false,
-  });
-  bool hasExpanded;
-  bool hasFlipped;
+  _ExpansionFlipTilePageState();
+  bool hasExpanded = false;
+  bool hasFlipped = false;
 }
 
 class ExpansionFlipTile extends StatefulWidget {
-  const ExpansionFlipTile({
-    required this.title,
-    super.key,
-    this.swatch,
-    this.bodyBuilder,
-    this.actionBuilder,
-  });
+  const ExpansionFlipTile(
+      {required this.title,
+      required this.bodyBuilder,
+      required this.actionBuilder,
+      super.key,
+      this.swatch});
   final Widget title;
   final MaterialColor? swatch;
-  final WidgetBuilder? bodyBuilder;
-  final WidgetBuilder? actionBuilder;
+  final WidgetBuilder bodyBuilder;
+  final WidgetBuilder actionBuilder;
 
   @override
   ExpansionFlipTileState createState() => ExpansionFlipTileState();
-
-  @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(ColorProperty('swatch', swatch))
-      ..add(ObjectFlagProperty<WidgetBuilder?>.has('bodyBuilder', bodyBuilder))
-      ..add(ObjectFlagProperty<WidgetBuilder?>.has(
-          'actionBuilder', actionBuilder));
-  }
 }
 
 class ExpansionFlipTileState extends State<ExpansionFlipTile> {
@@ -52,7 +36,7 @@ class ExpansionFlipTileState extends State<ExpansionFlipTile> {
   void initState() {
     super.initState();
     _pageState = PageStorage.of(context).readState(context)
-            as _ExpansionFlipTilePageState ??
+            as _ExpansionFlipTilePageState? ??
         _pageState;
     _flipController.addListener(_handleFlip);
   }
@@ -80,15 +64,13 @@ class ExpansionFlipTileState extends State<ExpansionFlipTile> {
     const empty = SizedBox(height: 0, width: double.infinity);
     Widget body = empty;
     Widget actions = empty;
-    if (_pageState.hasExpanded && widget.bodyBuilder != null) {
+    if (_pageState.hasExpanded) {
       body = Align(
         alignment: Alignment.centerLeft,
-        child: widget.bodyBuilder!(context),
+        child: widget.bodyBuilder(context),
       );
     }
-    if (widget.actionBuilder != null) {
-      actions = widget.actionBuilder!(context);
-    }
+    actions = widget.actionBuilder(context);
     /*
     TODO: Work out this race condition
     if (_pageState.hasFlipped && widget.actionBuilder != null) {
@@ -120,8 +102,8 @@ class ExpansionFlipTileState extends State<ExpansionFlipTile> {
           ),
           Padding(
             padding: const EdgeInsets.only(left: _flipControlWidth),
-            child: Container(
-              color: widget.swatch?.shade700,
+            child: ColoredBox(
+              color: widget.swatch!.shade700,
               child: Padding(
                 padding: _defaultContentPadding,
                 child: Flip(
@@ -139,7 +121,7 @@ class ExpansionFlipTileState extends State<ExpansionFlipTile> {
   }
 
   Widget _buildTile(BuildContext context) => ExpansionTile(
-        backgroundColor: widget.swatch?.shade800,
+        backgroundColor: widget.swatch!.shade800,
         onExpansionChanged: _handleExpansion,
         title: widget.title,
         children: _buildChildren(context),
