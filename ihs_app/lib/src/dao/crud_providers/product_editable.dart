@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '../entities/organisation.dart';
-import '../product_dao.dart';
+import '../customer_dao.dart';
 
 /// The current product being edited by the crud
 ///
 class OrganisationEditable with ChangeNotifier {
   String? _name;
-  String? _organisationId;
+  int? _organisationId;
   Uuid uuid = const Uuid();
 
   //Getters
@@ -27,13 +27,12 @@ class OrganisationEditable with ChangeNotifier {
 
   Future<void> saveProduct() async {
     if (_organisationId == null) {
-      final newProduct =
-          Organisation(name: name, organisationId: uuid.v4());
-      await OrganisationDao().saveProduct(newProduct);
+      final newOrganisation = Organisation.forInsert(name: name!);
+      await OrganisationDao().saveProduct(newOrganisation);
     } else {
       //Update
-      final updatedProduct =
-          Organisation(name: name, price: _price, organisationId: _organisationId);
+      final updatedProduct = Organisation(
+          name: name, price: _price, organisationId: _organisationId);
       await OrganisationDao().saveProduct(updatedProduct);
     }
   }

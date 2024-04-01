@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../dao/crud_providers/product_editable.dart';
-import '../dao/product_dao.dart';
+import '../dao/customer_dao.dart';
 import '../dao/models/product.dart';
 
 class EditProduct extends StatefulWidget {

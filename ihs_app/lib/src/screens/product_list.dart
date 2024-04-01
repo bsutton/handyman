@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../dao/crud_providers/product_editable.dart';
-import '../dao/product_dao.dart';
+import '../dao/customer_dao.dart';
 import '../dao/models/product.dart';
 import 'crud_holder.dart';
 import 'product_edit.dart';

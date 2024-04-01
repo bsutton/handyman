@@ -6,7 +6,7 @@ export '../types/guid.dart';
 abstract class Entity<T extends Entity<T>> {
   /// Use this version to deserialise a json
   /// object into that sets the id and guid.
-  Entity(); //  : _guid = GUID.generate();
+  Entity();
 
   Entity.known(this.id, this.guid);
 

@@ -13,6 +13,8 @@ part 'organisation.g.dart';
 class Organisation extends Entity<Organisation> {
   Organisation();
 
+  Organisation.forInsert({required this.name}) : super.forInsert();
+
   factory Organisation.fromJson(Map<String, dynamic> json) =>
       _$OrganisationFromJson(json);
 

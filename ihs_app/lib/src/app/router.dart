@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 
-import '../dao/entities/call_forward_target.dart';
-import '../dao/entities/did_forward.dart';
 import '../dao/types/er.dart';
 import '../dao/types/phone_number.dart';
 import '../pages/account_status/payment_failed_page.dart';
@@ -36,18 +33,8 @@ import '../pages/error_page.dart';
 import '../pages/tutorial/tutorial_index_page.dart';
 import '../pages/user/user_index_page.dart';
 import '../pages/voicemail/voicemail_index_page.dart';
-import '../registration_wizard/accept_invitation/expired_invite_page.dart';
-import '../registration_wizard/ask_for_invite_page.dart';
-import '../registration_wizard/new_organisation/reminder_page.dart';
-import '../registration_wizard/new_organisation/see_you_soon.dart';
-import '../registration_wizard/re_registration.dart';
-import '../registration_wizard/registration_type_page.dart';
-import '../registration_wizard/registration_wizard.dart';
 import '../util/log.dart';
-import '../widgets/call_forward/call_forward_panel_v2.dart';
-import '../widgets/mini_card/maxi_card_page.dart';
 import '../widgets/mini_card/mini_card.dart';
-import 'home_page.dart';
 
 class RouteName {
   const RouteName(String routeName) : _routeName = routeName;
@@ -85,7 +72,7 @@ class SQRouter {
     DNDPage.routeName: RouteBuilderNoArgs(DNDPage.new),
 
     HolidaysPage.routeName: RouteBuilderNoArgs(HolidaysPage.new),
-    HomePage.routeName: RouteBuilderNoArgs(HomePage.new),
+    // HomePage.routeName: RouteBuilderNoArgs(HomePage.new),
 
     LimitsPage.routeName: RouteBuilderNoArgs(LimitsPage.new),
 
@@ -111,18 +98,18 @@ class SQRouter {
     VoicemailIndexPage.routeName: RouteBuilderNoArgs(VoicemailIndexPage.new),
 
     /// Routes with args
-    AskForInvitationPage.routeName: RouteBuilderWithArgs<PhoneNumber>(
-        (arg) => AskForInvitationPage(mobile: arg)),
-    ExpiredInvitationPage.routeName: RouteBuilderWithArgs<PhoneNumber>(
-        (arg) => ExpiredInvitationPage(mobile: arg)),
-    ReminderPage.routeName: RouteBuilderWithArgs<ReminderPageSettings>(
-        (setting) => ReminderPage(settings: setting)),
-    RegistrationWizard.routeName: RouteBuilderWithArgs<RegistrationType>(
-        (type) => RegistrationWizard(type: type)),
+    // AskForInvitationPage.routeName: RouteBuilderWithArgs<PhoneNumber>(
+    //     (arg) => AskForInvitationPage(mobile: arg)),
+    // ExpiredInvitationPage.routeName: RouteBuilderWithArgs<PhoneNumber>(
+    //     (arg) => ExpiredInvitationPage(mobile: arg)),
+    // ReminderPage.routeName: RouteBuilderWithArgs<ReminderPageSettings>(
+    //     (setting) => ReminderPage(settings: setting)),
+    // RegistrationWizard.routeName: RouteBuilderWithArgs<RegistrationType>(
+    //     (type) => RegistrationWizard(type: type)),
 
-    ReRegistrationPage.routeName:
-        RouteBuilderWithArgs<ReRegistrationPageSettings>(
-            (setting) => ReRegistrationPage(settings: setting)),
+    // ReRegistrationPage.routeName:
+    //     RouteBuilderWithArgs<ReRegistrationPageSettings>(
+    //         (setting) => ReRegistrationPage(settings: setting)),
 
     TrialExpiredPage.routeName: RouteBuilderWithArgs<TrialExpiredPageSettings>(
         (setting) => TrialExpiredPage(settings: setting)),
@@ -139,8 +126,8 @@ class SQRouter {
         RouteBuilderWithArgs<TrialExpiringPageSettings>(
             (setting) => TrialExpiringPage(settings: setting)),
 
-    SeeYouSoon.routeName: RouteBuilderWithArgs<ReminderPageSettings>(
-        (reg) => SeeYouSoon(reminder: reg)),
+    // SeeYouSoon.routeName: RouteBuilderWithArgs<ReminderPageSettings>(
+    //     (reg) => SeeYouSoon(reminder: reg)),
     PhoneNoEditPage.routeName: RouteBuilderWithArgs<ER<DIDForward>>(
         (arg) => PhoneNoEditPage(forwardTo: arg)),
 
@@ -148,10 +135,11 @@ class SQRouter {
         RouteBuilderWithArgs<String>((cause) => ErrorPage(cause: cause)),
 
     /// Routes with custom transitions and args
-    MaxiCardPage.routeName: TransitionRouteBuilder<MaxiCardRouteArgs<dynamic, dynamic>>((arg) =>
-        MaxiCardPage<ER<CallForwardTarget>, CallForwardMiniRowState>(
-            args: arg as MaxiCardRouteArgs<ER<CallForwardTarget>,
-                CallForwardMiniRowState>))
+    // MaxiCardPage.routeName:
+    //     TransitionRouteBuilder<MaxiCardRouteArgs<dynamic, dynamic>>((arg) =>
+    //         MaxiCardPage<ER<CallForwardTarget>, CallForwardMiniRowState>(
+    //             args: arg as MaxiCardRouteArgs<ER<CallForwardTarget>,
+    //                 CallForwardMiniRowState>))
   };
 
   bool isCurrentRoute(RouteName routeName) {
@@ -322,7 +310,7 @@ class TransitionRouteBuilder<T> extends RouteBuilder<T> {
 
   @override
   PageRoute<Widget> build(BuildContext context, RouteSettings routeSettings) =>
-      PageTransition<MaxiCardPage<T,dynamic>>(
+      PageTransition<MaxiCardPage<T, dynamic>>(
           type: PageTransitionType.fade,
           child: pageBuilder(routeSettings.arguments
               as T), // MaxiCardPage.withActive(activeMiniCard, this.widget),
