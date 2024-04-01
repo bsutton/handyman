@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'add_edit_customer_screen.dart';
 import 'dao/dao_customer.dart';
-import 'entity/customer.dart';
+import 'entity/entities.dart';
 
 class CustomerListScreen extends StatefulWidget {
   const CustomerListScreen({super.key});
@@ -66,6 +66,12 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                 return ListTile(
                   title: Text(customer.name),
                   subtitle: Text(customer.siteLocation),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      _deleteCustomer(customer);
+                    },
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -82,5 +88,10 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
         },
       ),
     );
+  }
+
+  Future<void> _deleteCustomer(Customer customer) async {
+    await DaoCustomer().delete(customer.id);
+    await _refreshCustomerList();
   }
 }
