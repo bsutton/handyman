@@ -1,9 +1,6 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 
 import 'add_edit_customer_screen.dart';
-import 'customer_detail_screen.dart';
 import 'dao/dao_customer.dart';
 import 'entity/customer.dart';
 
@@ -42,7 +39,8 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => const AddEditCustomerScreen()),
-              ).then((_) => _refreshCustomerList());
+              ).then((_) =>
+                  _refreshCustomerList()); // Refresh list after adding/editing
             },
           )
         ],
@@ -72,8 +70,10 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => CustomerDetailScreen(customer)),
-                    );
+                          builder: (context) =>
+                              AddEditCustomerScreen(customer: customer)),
+                    ).then((_) =>
+                        _refreshCustomerList()); // Refresh list after editing
                   },
                 );
               },
