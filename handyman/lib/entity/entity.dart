@@ -1,4 +1,9 @@
 class Entity {
+
+  Entity(
+      {required this.id,
+      required this.createdDate,
+      required this.modifiedDate});
   Entity.forInsert()
       : id = -1,
         createdDate = DateTime.now(),
@@ -8,11 +13,6 @@ class Entity {
       : id = entity.id,
         createdDate = entity.createdDate,
         modifiedDate = DateTime.now();
-
-  Entity(
-      {required this.id,
-      required this.createdDate,
-      required this.modifiedDate});
 
   int id;
   DateTime createdDate;

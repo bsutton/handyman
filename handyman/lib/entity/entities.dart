@@ -1,3 +1,2 @@
-export 'entity.dart';
-
 export 'customer.dart';
+export 'entity.dart';

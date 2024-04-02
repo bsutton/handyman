@@ -2,22 +2,27 @@
 import 'dart:io';
 
 import 'package:direct_caller_sim_choice/direct_caller_sim_choice.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mailto/mailto.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import 'dao/dao.dart';
-import 'entity/customer.dart';
+import '../dao/dao.dart';
+import '../entity/customer.dart';
 
 class AddEditCustomerScreen extends StatefulWidget {
-  final Customer? customer;
-
   const AddEditCustomerScreen({super.key, this.customer});
+  final Customer? customer;
 
   @override
   _AddEditCustomerScreenState createState() => _AddEditCustomerScreenState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Customer?>('customer', customer));
+  }
 }
 
 class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
@@ -131,209 +136,208 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.customer != null ? 'Edit Customer' : 'Add Customer'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: onEnterKey(
-          onPressed: (context) => onSave(),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  TextFormField(
-                    autofocus: true,
-                    controller: _nameController,
-                    decoration: const InputDecoration(labelText: 'Name'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a name';
-                      }
-                      return null;
-                    },
-                  ),
-                  // Add other form fields for the new fields
-                  TextFormField(
-                    controller: _primaryFirstNameController,
-                    decoration:
-                        const InputDecoration(labelText: 'Primary First Name'),
-                  ),
-                  TextFormField(
-                    controller: _primarySurnameController,
-                    decoration:
-                        const InputDecoration(labelText: 'Primary Surname'),
-                  ),
-                  TextFormField(
-                    controller: _primaryAddressLine1Controller,
-                    decoration: const InputDecoration(
-                        labelText: 'Primary Address Line 1'),
-                  ),
-                  TextFormField(
-                    controller: _primaryAddressLine2Controller,
-                    decoration: const InputDecoration(
-                        labelText: 'Primary Address Line 2'),
-                  ),
-                  TextFormField(
-                    controller: _primarySuburbController,
-                    decoration:
-                        const InputDecoration(labelText: 'Primary Suburb'),
-                  ),
-                  TextFormField(
-                    controller: _primaryStateController,
-                    decoration:
-                        const InputDecoration(labelText: 'Primary State'),
-                  ),
-                  TextFormField(
-                    controller: _primaryPostcodeController,
-                    decoration:
-                        const InputDecoration(labelText: 'Primary Postcode'),
-                  ),
-                  TextFormField(
-                    controller: _primaryMobileNumberController,
-                    decoration: InputDecoration(
-                      labelText: 'Primary Mobile Number',
-                      suffixIcon: IconButton(
-                          icon: const Icon(Icons.call),
-                          onPressed: () =>
-                              _call(_primaryMobileNumberController.text)),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title:
+              Text(widget.customer != null ? 'Edit Customer' : 'Add Customer'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: onEnterKey(
+            onPressed: (context) async => onSave(),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TextFormField(
+                      autofocus: true,
+                      controller: _nameController,
+                      decoration: const InputDecoration(labelText: 'Name'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a name';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  TextFormField(
-                    controller: _primaryLandlineController,
-                    decoration: InputDecoration(
-                      labelText: 'Primary Landline',
-                      suffixIcon: IconButton(
-                          icon: const Icon(Icons.call),
-                          onPressed: () =>
-                              _call(_primaryLandlineController.text)),
+                    // Add other form fields for the new fields
+                    TextFormField(
+                      controller: _primaryFirstNameController,
+                      decoration: const InputDecoration(
+                          labelText: 'Primary First Name'),
                     ),
-                  ),
-                  TextFormField(
-                    controller: _primaryOfficeNumberController,
-                    decoration: InputDecoration(
-                      labelText: 'Primary Office Number',
-                      suffixIcon: IconButton(
-                          icon: const Icon(Icons.phone),
-                          onPressed: () =>
-                              _call(_primaryOfficeNumberController.text)),
+                    TextFormField(
+                      controller: _primarySurnameController,
+                      decoration:
+                          const InputDecoration(labelText: 'Primary Surname'),
                     ),
-                  ),
-                  TextFormField(
-                    controller: _primaryEmailAddressController,
-                    decoration: InputDecoration(
-                      labelText: 'Primary Email Address',
-                      suffixIcon: IconButton(
-                          icon: const Icon(Icons.email),
-                          onPressed: () =>
-                              _sendEmail(_primaryEmailAddressController.text)),
+                    TextFormField(
+                      controller: _primaryAddressLine1Controller,
+                      decoration: const InputDecoration(
+                          labelText: 'Primary Address Line 1'),
                     ),
-                  ),
-                  TextFormField(
-                    controller: _secondaryFirstNameController,
-                    decoration: const InputDecoration(
-                        labelText: 'Secondary First Name'),
-                  ),
-                  TextFormField(
-                    controller: _secondarySurnameController,
-                    decoration:
-                        const InputDecoration(labelText: 'Secondary Surname'),
-                  ),
-                  TextFormField(
-                    controller: _secondaryAddressLine1Controller,
-                    decoration: const InputDecoration(
-                        labelText: 'Secondary Address Line 1'),
-                  ),
-                  TextFormField(
-                    controller: _secondaryAddressLine2Controller,
-                    decoration: const InputDecoration(
-                        labelText: 'Secondary Address Line 2'),
-                  ),
-                  TextFormField(
-                    controller: _secondarySuburbController,
-                    decoration:
-                        const InputDecoration(labelText: 'Secondary Suburb'),
-                  ),
-                  TextFormField(
-                    controller: _secondaryStateController,
-                    decoration:
-                        const InputDecoration(labelText: 'Secondary State'),
-                  ),
-                  TextFormField(
-                    controller: _secondaryPostcodeController,
-                    decoration:
-                        const InputDecoration(labelText: 'Secondary Postcode'),
-                  ),
-                  TextFormField(
-                    controller: _secondaryMobileNumberController,
-                    decoration: InputDecoration(
-                        labelText: 'Secondary Mobile Number',
+                    TextFormField(
+                      controller: _primaryAddressLine2Controller,
+                      decoration: const InputDecoration(
+                          labelText: 'Primary Address Line 2'),
+                    ),
+                    TextFormField(
+                      controller: _primarySuburbController,
+                      decoration:
+                          const InputDecoration(labelText: 'Primary Suburb'),
+                    ),
+                    TextFormField(
+                      controller: _primaryStateController,
+                      decoration:
+                          const InputDecoration(labelText: 'Primary State'),
+                    ),
+                    TextFormField(
+                      controller: _primaryPostcodeController,
+                      decoration:
+                          const InputDecoration(labelText: 'Primary Postcode'),
+                    ),
+                    TextFormField(
+                      controller: _primaryMobileNumberController,
+                      decoration: InputDecoration(
+                        labelText: 'Primary Mobile Number',
                         suffixIcon: IconButton(
                             icon: const Icon(Icons.call),
                             onPressed: () =>
-                                _call(_secondaryMobileNumberController.text))),
-                  ),
-                  TextFormField(
-                    controller: _secondaryLandlineController,
-                    decoration: InputDecoration(
-                        labelText: 'Secondary Landline',
-                        suffixIcon: IconButton(
-                            icon: const Icon(Icons.phone),
-                            onPressed: () =>
-                                _call(_secondaryLandlineController.text))),
-                  ),
-                  TextFormField(
-                    controller: _secondaryOfficeNumberController,
-                    decoration: InputDecoration(
-                        labelText: 'Secondary Office Number',
-                        suffixIcon: IconButton(
-                            icon: const Icon(Icons.phone),
-                            onPressed: () =>
-                                _call(_secondaryOfficeNumberController.text))),
-                  ),
-                  TextFormField(
-                      controller: _secondaryEmailAddressController,
+                                _call(_primaryMobileNumberController.text)),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _primaryLandlineController,
                       decoration: InputDecoration(
-                          labelText: 'Secondary Email Address',
+                        labelText: 'Primary Landline',
+                        suffixIcon: IconButton(
+                            icon: const Icon(Icons.call),
+                            onPressed: () =>
+                                _call(_primaryLandlineController.text)),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _primaryOfficeNumberController,
+                      decoration: InputDecoration(
+                        labelText: 'Primary Office Number',
+                        suffixIcon: IconButton(
+                            icon: const Icon(Icons.phone),
+                            onPressed: () =>
+                                _call(_primaryOfficeNumberController.text)),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _primaryEmailAddressController,
+                      decoration: InputDecoration(
+                        labelText: 'Primary Email Address',
+                        suffixIcon: IconButton(
+                            icon: const Icon(Icons.email),
+                            onPressed: () async => _sendEmail(
+                                _primaryEmailAddressController.text)),
+                      ),
+                    ),
+                    TextFormField(
+                      controller: _secondaryFirstNameController,
+                      decoration: const InputDecoration(
+                          labelText: 'Secondary First Name'),
+                    ),
+                    TextFormField(
+                      controller: _secondarySurnameController,
+                      decoration:
+                          const InputDecoration(labelText: 'Secondary Surname'),
+                    ),
+                    TextFormField(
+                      controller: _secondaryAddressLine1Controller,
+                      decoration: const InputDecoration(
+                          labelText: 'Secondary Address Line 1'),
+                    ),
+                    TextFormField(
+                      controller: _secondaryAddressLine2Controller,
+                      decoration: const InputDecoration(
+                          labelText: 'Secondary Address Line 2'),
+                    ),
+                    TextFormField(
+                      controller: _secondarySuburbController,
+                      decoration:
+                          const InputDecoration(labelText: 'Secondary Suburb'),
+                    ),
+                    TextFormField(
+                      controller: _secondaryStateController,
+                      decoration:
+                          const InputDecoration(labelText: 'Secondary State'),
+                    ),
+                    TextFormField(
+                      controller: _secondaryPostcodeController,
+                      decoration: const InputDecoration(
+                          labelText: 'Secondary Postcode'),
+                    ),
+                    TextFormField(
+                      controller: _secondaryMobileNumberController,
+                      decoration: InputDecoration(
+                          labelText: 'Secondary Mobile Number',
                           suffixIcon: IconButton(
-                              icon: const Icon(Icons.email),
-                              onPressed: () => _sendEmail(
-                                  _secondaryEmailAddressController.text)))),
-                  TextFormField(
-                    controller: _disbarredController,
-                    decoration: const InputDecoration(labelText: 'Disbarred'),
-                  ),
-                  TextFormField(
-                    controller: _customerTypeController,
-                    decoration:
-                        const InputDecoration(labelText: 'Customer Type'),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                          child: const Text('Cancel'),
-                          onPressed: () async => onCancel()),
-                      const SizedBox(width: 16),
-                      ElevatedButton(
-                          child: const Text('Save'),
-                          onPressed: () async => onSave()),
-                    ],
-                  )
-                ],
+                              icon: const Icon(Icons.call),
+                              onPressed: () => _call(
+                                  _secondaryMobileNumberController.text))),
+                    ),
+                    TextFormField(
+                      controller: _secondaryLandlineController,
+                      decoration: InputDecoration(
+                          labelText: 'Secondary Landline',
+                          suffixIcon: IconButton(
+                              icon: const Icon(Icons.phone),
+                              onPressed: () =>
+                                  _call(_secondaryLandlineController.text))),
+                    ),
+                    TextFormField(
+                      controller: _secondaryOfficeNumberController,
+                      decoration: InputDecoration(
+                          labelText: 'Secondary Office Number',
+                          suffixIcon: IconButton(
+                              icon: const Icon(Icons.phone),
+                              onPressed: () => _call(
+                                  _secondaryOfficeNumberController.text))),
+                    ),
+                    TextFormField(
+                        controller: _secondaryEmailAddressController,
+                        decoration: InputDecoration(
+                            labelText: 'Secondary Email Address',
+                            suffixIcon: IconButton(
+                                icon: const Icon(Icons.email),
+                                onPressed: () async => _sendEmail(
+                                    _secondaryEmailAddressController.text)))),
+                    TextFormField(
+                      controller: _disbarredController,
+                      decoration: const InputDecoration(labelText: 'Disbarred'),
+                    ),
+                    TextFormField(
+                      controller: _customerTypeController,
+                      decoration:
+                          const InputDecoration(labelText: 'Customer Type'),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        ElevatedButton(
+                            child: const Text('Cancel'),
+                            onPressed: () async => onCancel()),
+                        const SizedBox(width: 16),
+                        ElevatedButton(
+                            child: const Text('Save'),
+                            onPressed: () async => onSave()),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  void _sendEmail(String email) async {
+  Future<void> _sendEmail(String email) async {
     final mailtoLink = Mailto(
       to: [email],
     );
@@ -346,11 +350,11 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
     }
   }
 
-  void onSave() async {
+  Future<void> onSave() async {
     if (_formKey.currentState!.validate()) {
       if (widget.customer != null) {
         // Editing existing customer
-        Customer customer = Customer.forUpdate(
+        final customer = Customer.forUpdate(
             entity: widget.customer!,
             name: _nameController.text,
             primaryFirstName: _primaryFirstNameController.text,
@@ -381,7 +385,7 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
         await DaoCustomer().update(customer);
       } else {
         // Adding new customer
-        Customer customer = Customer.forInsert(
+        final customer = Customer.forInsert(
             name: _nameController.text,
             primaryFirstName: _primaryFirstNameController.text,
             primarySurname: _primarySurnameController.text,
@@ -417,31 +421,30 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
   }
 
   Widget onEnterKey(
-      {required Widget child,
-      required Function(BuildContext context) onPressed}) {
-    return KeyboardListener(
-      focusNode:
-          FocusNode(), // Ensure that the RawKeyboardListener receives key events
-      onKeyEvent: (KeyEvent event) {
-        if (event is KeyDownEvent &&
-            event.logicalKey == LogicalKeyboardKey.enter) {
-          // Handle Enter key press here
-          // For example, call onPressed for the RaisedButton
-          onPressed(context);
-        }
-      },
-      child: child,
-    );
-  }
+          {required Widget child,
+          required void Function(BuildContext context) onPressed}) =>
+      KeyboardListener(
+        focusNode: FocusNode(), // Ensure that the RawKeyboardListener
+        // receives key events
+        onKeyEvent: (event) {
+          if (event is KeyDownEvent &&
+              event.logicalKey == LogicalKeyboardKey.enter) {
+            // Handle Enter key press here
+            // For example, call onPressed for the RaisedButton
+            onPressed(context);
+          }
+        },
+        child: child,
+      );
 
-  _call(String phoneNo) {
-    final DirectCaller directCaller = DirectCaller();
+  void _call(String phoneNo) {
+    final directCaller = DirectCaller();
     if (!Platform.isAndroid) {
       FToast().init(context);
       FToast().showToast(
           child: const Text('Dialoing is only available on Android'));
     } else {
-      directCaller.makePhoneCall(phoneNo, simSlot: 1);
+      directCaller.makePhoneCall(phoneNo);
     }
   }
 }

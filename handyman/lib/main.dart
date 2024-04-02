@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'customer_list_screen.dart';
+import 'crud/customer_list_screen.dart';
 import 'dao/database_helper.dart';
 
 void main() async {
@@ -20,8 +20,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context) => MaterialApp(
       title: 'Handyman',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -29,5 +28,4 @@ class MyApp extends StatelessWidget {
       ),
       home: const CustomerListScreen(),
     );
-  }
 }

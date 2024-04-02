@@ -1,10 +1,10 @@
-import 'package:handyman/dao/dao.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/customer.dart';
+import 'dao.dart';
 
-class DaoCustomer {
-  void createTable(Database db, int version) async {
+class DaoCustomer extends Dao {
+  Future<void> createTable(Database db, int version) async {
     await db.execute('''
       CREATE TABLE customers(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,38 +39,41 @@ class DaoCustomer {
     ''');
   }
 
-  Future<int> insert(Customer customer, [Transaction? transaction]) async {
+  @override
+  Future<int> insert(covariant Customer entity,
+      [Transaction? transaction]) async {
     final db = _db(transaction);
-    final id = await db.insert('customers', customer.toMap()..remove('id'));
-    customer.id = id;
+    final id = await db.insert('customers', entity.toMap()..remove('id'));
+    entity.id = id;
     return id;
   }
 
-  DatabaseExecutor _db([Transaction? transaction]) {
-    return (transaction ?? DatabaseHelper.instance.database);
-  }
+  DatabaseExecutor _db([Transaction? transaction]) =>
+      transaction ?? DatabaseHelper.instance.database;
 
+  @override
   Future<List<Customer>> getAll([Transaction? transaction]) async {
     final db = _db(transaction);
     final List<Map<String, dynamic>> maps = await db.query('customers');
-    return List.generate(maps.length, (i) {
-      return Customer.fromMap(maps[i]);
-    });
+    return List.generate(maps.length, (i) => Customer.fromMap(maps[i]));
   }
 
-  Future<int> update(Customer customer, [Transaction? transaction]) async {
+  @override
+  Future<int> update(covariant Customer entity,
+      [Transaction? transaction]) async {
     final db = _db(transaction);
-    return await db.update(
+    return db.update(
       'customers',
-      customer.toMap(),
+      entity.toMap(),
       where: 'id = ?',
-      whereArgs: [customer.id],
+      whereArgs: [entity.id],
     );
   }
 
+  @override
   Future<int> delete(int id, [Transaction? transaction]) async {
     final db = _db(transaction);
-    return await db.delete(
+    return db.delete(
       'customers',
       where: 'id = ?',
       whereArgs: [id],

@@ -3,32 +3,6 @@ import 'entity.dart';
 enum CustomerType { residential, realestate, tradePartner, community }
 
 class Customer extends Entity {
-  String name;
-  String primaryFirstName;
-  String primarySurname;
-  String primaryAddressLine1;
-  String primaryAddressLine2;
-  String primarySuburb;
-  String primaryState;
-  String primaryPostcode;
-  String primaryMobileNumber;
-  String primaryLandLine;
-  String primaryOfficeNumber;
-  String primaryEmailAddress;
-  String secondaryFirstName;
-  String secondarySurname;
-  String secondaryAddressLine1;
-  String secondaryAddressLine2;
-  String secondarySuburb;
-  String secondaryState;
-  String secondaryPostcode;
-  String secondaryMobileNumber;
-  String secondaryLandLine;
-  String secondaryOfficeNumber;
-  String secondaryEmailAddress;
-  bool disbarred;
-  CustomerType customerType;
-
   Customer({
     required super.id,
     required this.name,
@@ -117,69 +91,90 @@ class Customer extends Entity {
     required this.customerType,
   }) : super.forUpdate();
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'primaryFirstName': primaryFirstName,
-      'primarySurname': primarySurname,
-      'primaryAddressLine1': primaryAddressLine1,
-      'primaryAddressLine2': primaryAddressLine2,
-      'primarySuburb': primarySuburb,
-      'primaryState': primaryState,
-      'primaryPostcode': primaryPostcode,
-      'primaryMobileNumber': primaryMobileNumber,
-      'primaryLandLine': primaryLandLine,
-      'primaryOfficeNumber': primaryOfficeNumber,
-      'primaryEmailAddress': primaryEmailAddress,
-      'secondaryFirstName': secondaryFirstName,
-      'secondarySurname': secondarySurname,
-      'secondaryAddressLine1': secondaryAddressLine1,
-      'secondaryAddressLine2': secondaryAddressLine2,
-      'secondarySuburb': secondarySuburb,
-      'secondaryState': secondaryState,
-      'secondaryPostcode': secondaryPostcode,
-      'secondaryMobileNumber': secondaryMobileNumber,
-      'secondaryLandLine': secondaryLandLine,
-      'secondaryOfficeNumber': secondaryOfficeNumber,
-      'secondaryEmailAddress': secondaryEmailAddress,
-      'createdDate': createdDate.toIso8601String(),
-      'modifiedDate': modifiedDate.toIso8601String(),
-      'disbarred': disbarred ? 1 : 0,
-      'customerType': customerType.index,
-    };
-  }
+  factory Customer.fromMap(Map<String, dynamic> map) => Customer(
+        id: map['id'] as int,
+        name: map['name'] as String,
+        primaryFirstName: map['primaryFirstName'] as String,
+        primarySurname: map['primarySurname'] as String,
+        primaryAddressLine1: map['primaryAddressLine1'] as String,
+        primaryAddressLine2: map['primaryAddressLine2'] as String,
+        primarySuburb: map['primarySuburb'] as String,
+        primaryState: map['primaryState'] as String,
+        primaryPostcode: map['primaryPostcode'] as String,
+        primaryMobileNumber: map['primaryMobileNumber'] as String,
+        primaryLandLine: map['primaryLandLine'] as String,
+        primaryOfficeNumber: map['primaryOfficeNumber'] as String,
+        primaryEmailAddress: map['primaryEmailAddress'] as String,
+        secondaryFirstName: map['secondaryFirstName'] as String,
+        secondarySurname: map['secondarySurname'] as String,
+        secondaryAddressLine1: map['secondaryAddressLine1'] as String,
+        secondaryAddressLine2: map['secondaryAddressLine2'] as String,
+        secondarySuburb: map['secondarySuburb'] as String,
+        secondaryState: map['secondaryState'] as String,
+        secondaryPostcode: map['secondaryPostcode'] as String,
+        secondaryMobileNumber: map['secondaryMobileNumber'] as String,
+        secondaryLandLine: map['secondaryLandLine'] as String,
+        secondaryOfficeNumber: map['secondaryOfficeNumber'] as String,
+        secondaryEmailAddress: map['secondaryEmailAddress'] as String,
+        createdDate: DateTime.parse(map['createdDate'] as String),
+        modifiedDate: DateTime.parse(map['modifiedDate'] as String),
+        disbarred: map['disbarred'] as int == 1,
+        customerType: CustomerType.values[map['customerType'] as int],
+      );
+  String name;
+  String primaryFirstName;
+  String primarySurname;
+  String primaryAddressLine1;
+  String primaryAddressLine2;
+  String primarySuburb;
+  String primaryState;
+  String primaryPostcode;
+  String primaryMobileNumber;
+  String primaryLandLine;
+  String primaryOfficeNumber;
+  String primaryEmailAddress;
+  String secondaryFirstName;
+  String secondarySurname;
+  String secondaryAddressLine1;
+  String secondaryAddressLine2;
+  String secondarySuburb;
+  String secondaryState;
+  String secondaryPostcode;
+  String secondaryMobileNumber;
+  String secondaryLandLine;
+  String secondaryOfficeNumber;
+  String secondaryEmailAddress;
+  bool disbarred;
+  CustomerType customerType;
 
-  factory Customer.fromMap(Map<String, dynamic> map) {
-    return Customer(
-      id: map['id'],
-      name: map['name'],
-      primaryFirstName: map['primaryFirstName'],
-      primarySurname: map['primarySurname'],
-      primaryAddressLine1: map['primaryAddressLine1'],
-      primaryAddressLine2: map['primaryAddressLine2'],
-      primarySuburb: map['primarySuburb'],
-      primaryState: map['primaryState'],
-      primaryPostcode: map['primaryPostcode'],
-      primaryMobileNumber: map['primaryMobileNumber'],
-      primaryLandLine: map['primaryLandLine'],
-      primaryOfficeNumber: map['primaryOfficeNumber'],
-      primaryEmailAddress: map['primaryEmailAddress'],
-      secondaryFirstName: map['secondaryFirstName'],
-      secondarySurname: map['secondarySurname'],
-      secondaryAddressLine1: map['secondaryAddressLine1'],
-      secondaryAddressLine2: map['secondaryAddressLine2'],
-      secondarySuburb: map['secondarySuburb'],
-      secondaryState: map['secondaryState'],
-      secondaryPostcode: map['secondaryPostcode'],
-      secondaryMobileNumber: map['secondaryMobileNumber'],
-      secondaryLandLine: map['secondaryLandLine'],
-      secondaryOfficeNumber: map['secondaryOfficeNumber'],
-      secondaryEmailAddress: map['secondaryEmailAddress'],
-      createdDate: DateTime.parse(map['createdDate']),
-      modifiedDate: DateTime.parse(map['modifiedDate']),
-      disbarred: map['disbarred'] == 1 ? true : false,
-      customerType: CustomerType.values[map['customerType']],
-    );
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'name': name,
+        'primaryFirstName': primaryFirstName,
+        'primarySurname': primarySurname,
+        'primaryAddressLine1': primaryAddressLine1,
+        'primaryAddressLine2': primaryAddressLine2,
+        'primarySuburb': primarySuburb,
+        'primaryState': primaryState,
+        'primaryPostcode': primaryPostcode,
+        'primaryMobileNumber': primaryMobileNumber,
+        'primaryLandLine': primaryLandLine,
+        'primaryOfficeNumber': primaryOfficeNumber,
+        'primaryEmailAddress': primaryEmailAddress,
+        'secondaryFirstName': secondaryFirstName,
+        'secondarySurname': secondarySurname,
+        'secondaryAddressLine1': secondaryAddressLine1,
+        'secondaryAddressLine2': secondaryAddressLine2,
+        'secondarySuburb': secondarySuburb,
+        'secondaryState': secondaryState,
+        'secondaryPostcode': secondaryPostcode,
+        'secondaryMobileNumber': secondaryMobileNumber,
+        'secondaryLandLine': secondaryLandLine,
+        'secondaryOfficeNumber': secondaryOfficeNumber,
+        'secondaryEmailAddress': secondaryEmailAddress,
+        'createdDate': createdDate.toIso8601String(),
+        'modifiedDate': modifiedDate.toIso8601String(),
+        'disbarred': disbarred ? 1 : 0,
+        'customerType': customerType.index,
+      };
 }
