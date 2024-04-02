@@ -1,4 +1,4 @@
-import 'package:handyman/dao/database_helper.dart';
+import 'package:handyman/dao/dao.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/customer.dart';
@@ -9,8 +9,32 @@ class DaoCustomer {
       CREATE TABLE customers(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
-        siteLocation TEXT,
-        contactDetails TEXT
+        primaryFirstName TEXT,
+        primarySurname TEXT,
+        primaryAddressLine1 TEXT,
+        primaryAddressLine2 TEXT,
+        primarySuburb TEXT,
+        primaryState TEXT,
+        primaryPostcode TEXT,
+        primaryMobileNumber TEXT,
+        primaryLandLine TEXT,
+        primaryOfficeNumber TEXT,
+        primaryEmailAddress TEXT,
+        secondaryFirstName TEXT,
+        secondarySurname TEXT,
+        secondaryAddressLine1 TEXT,
+        secondaryAddressLine2 TEXT,
+        secondarySuburb TEXT,
+        secondaryState TEXT,
+        secondaryPostcode TEXT,
+        secondaryMobileNumber TEXT,
+        secondaryLandLine TEXT,
+        secondaryOfficeNumber TEXT,
+        secondaryEmailAddress TEXT,
+        createdDate TEXT,
+        modifiedDate TEXT,
+        disbarred INTEGER,
+        customerType INTEGER
       )
     ''');
   }

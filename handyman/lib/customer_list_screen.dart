@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 
 import 'add_edit_customer_screen.dart';
@@ -65,7 +67,18 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                 Customer customer = customerList[index];
                 return ListTile(
                   title: Text(customer.name),
-                  subtitle: Text(customer.siteLocation),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Business Name: ${customer.name}"),
+                      Text(
+                          "Primary Contact: ${customer.primaryFirstName} ${customer.primarySurname}"),
+                      Text("Mobile: ${customer.primaryMobileNumber}"),
+                      Text("Email: ${customer.primaryEmailAddress}"),
+                      Text(
+                          "Address: ${customer.primaryAddressLine1}, ${customer.primaryAddressLine2}, ${customer.primarySuburb}, ${customer.primaryState}, ${customer.primaryPostcode}"),
+                    ],
+                  ),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
