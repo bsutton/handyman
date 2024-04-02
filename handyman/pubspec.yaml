@@ -38,6 +38,8 @@ dependencies:
   strings: ^3.1.1
   path: ^1.9.0
   sqflite_common_ffi: ^2.3.3
+  mailto: ^2.0.0
+  url_launcher: ^6.2.5
 
 dev_dependencies:
   flutter_test:
