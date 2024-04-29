@@ -51,7 +51,9 @@ void _restart() {
   killProcess('dart:ihserver');
 
   // on first time install the bin directory won't exist.
-  createDir(pathToHandymanBin, recursive: true);
+  if (!exists(pathToHandymanBin)) {
+    createDir(pathToHandymanBin, recursive: true);
+  }
 
   copyTree(pathToHandymanAltBin, pathToHandymanBin, overwrite: true);
 
