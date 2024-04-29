@@ -26,13 +26,15 @@ create the config file under the project:
 
 # Build/Deploy
 
-To build and deploy the content run:
+## Target system
 On the target system create:
 `/opt/handyman`
 
 Change the permissions so that you have access:
 
 `sudo chown <me>:<me> /opt/handyman`
+
+## Dev system
 
 The build/deploy process is controlled by tool/build.yaml
 

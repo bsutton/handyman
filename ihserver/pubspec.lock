@@ -604,9 +604,10 @@ packages:
   shelf_letsencrypt:
     dependency: "direct main"
     description:
-      path: "../../shelf_letsencrypt"
-      relative: true
-    source: path
+      name: shelf_letsencrypt
+      sha256: "684e9d7203cfde851b45fa0ec09b947fb6402d5c7df08f3b74faa8fe093d68a6"
+      url: "https://onepub.dev/api/jbbxpsdavu/"
+    source: hosted
     version: "2.0.3"
   shelf_multipart:
     dependency: "direct main"
@@ -659,10 +660,11 @@ packages:
   simple_mysql_orm:
     dependency: "direct main"
     description:
-      path: "../../simple_mysql_orm"
-      relative: true
-    source: path
-    version: "4.1.0-alpha.2"
+      name: simple_mysql_orm
+      sha256: a2a0042d583ea86e83093a0fe05325aeb0fda5de73b22cbda3346c392674b203
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0-alpha.1"
   source_map_stack_trace:
     dependency: transitive
     description:
