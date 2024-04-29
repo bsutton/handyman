@@ -15,3 +15,4 @@ ihserver/test/letsencrypt/live/account/pubkey.pem
 ihserver/test/letsencrypt/live/squarephone.biz/fullchain.pem
 ihserver/test/letsencrypt/live/squarephone.biz/privkey.pem
 ihserver/test/letsencrypt/live/squarephone.biz/pubkey.pem
+grpc/.dart_tool
