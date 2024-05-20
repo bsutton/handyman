@@ -11,7 +11,7 @@ import 'package:path/path.dart';
 final pathToHandyman = join(rootPath, 'opt', 'handyman');
 final pathToHandymanBin = join(rootPath, 'opt', 'handyman', 'bin');
 
-/// when deploying we copy the executabler to an alternate location as the
+/// when deploying we copy the executable to an alternate location as the
 /// existing execs will be running and therefore locked.
 final pathToHandymanAltBin = join(rootPath, 'opt', 'handyman', 'altbin');
 final pathToWwwRoot = join(pathToHandyman, 'www_root');
