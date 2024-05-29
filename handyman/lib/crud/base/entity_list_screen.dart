@@ -8,7 +8,7 @@ import 'package:future_builder_ex/future_builder_ex.dart';
 import '../../dao/dao.dart';
 import '../../entity/entities.dart';
 
-class EntityListScreen<T extends Entity> extends StatefulWidget {
+class EntityListScreen<T extends Entity<T>> extends StatefulWidget {
   const EntityListScreen({
     required this.dao,
     required this.onEdit,
@@ -28,7 +28,7 @@ class EntityListScreen<T extends Entity> extends StatefulWidget {
   EntityListScreenState createState() => EntityListScreenState<T>();
 }
 
-class EntityListScreenState<T extends Entity>
+class EntityListScreenState<T extends Entity<T>>
     extends State<EntityListScreen<T>> {
   late Future<List<T>> entities;
 
@@ -113,7 +113,7 @@ class EntityListScreenState<T extends Entity>
         },
       );
 
-  Future<void> _delete(Entity entity) async {
+  Future<void> _delete(Entity<T> entity) async {
     await widget.dao.delete(entity.id);
     await _refreshEntityList();
   }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:future_builder_ex/future_builder_ex.dart';
 
+import '../dao/dao_customer.dart';
 import '../dao/dao_job.dart';
+import '../entity/customer.dart';
 import '../entity/job.dart';
 
 class AddEditJobScreen extends StatefulWidget {
@@ -16,6 +19,8 @@ class AddEditJobScreenState extends State<AddEditJobScreen> {
   late TextEditingController _descriptionController;
   late TextEditingController _addressController;
   late DateTime _selectedDate;
+
+  Customer? selectedCustomer;
 
   @override
   void initState() {
@@ -37,6 +42,27 @@ class AddEditJobScreenState extends State<AddEditJobScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              FutureBuilderEx<List<Customer>>(
+                  // ignore: discarded_futures
+                  future: DaoCustomer().getAll(),
+                  builder: (context, data) => DropdownButtonFormField<Customer>(
+                        value: selectedCustomer,
+                        hint: const Text('Select a customer'),
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedCustomer = newValue;
+                          });
+                        },
+                        items: data!
+                            .map((customer) => DropdownMenuItem<Customer>(
+                                  value: customer,
+                                  child: Text(customer.name),
+                                ))
+                            .toList(),
+                        decoration: const InputDecoration(labelText: 'Client'),
+                        validator: (value) =>
+                            value == null ? 'Please select a client' : null,
+                      )),
               TextButton(
                 onPressed: _selectDate,
                 child: Text(
@@ -83,7 +109,7 @@ class AddEditJobScreenState extends State<AddEditJobScreen> {
     if (widget.job != null) {
       final job = Job.forUpdate(
         entity: widget.job!,
-        customerId: null,
+        customerId: selectedCustomer?.id,
         startDate: _selectedDate,
         summary: _summaryController.text,
         description: _descriptionController.text,
@@ -93,7 +119,7 @@ class AddEditJobScreenState extends State<AddEditJobScreen> {
       await DaoJob().update(job);
     } else {
       final job = Job.forInsert(
-        customerId: null,
+        customerId: selectedCustomer?.id,
         startDate: _selectedDate,
         summary: _summaryController.text,
         description: _descriptionController.text,
