@@ -1,0 +1,3 @@
+dependency_overrides:
+  future_builder_ex:
+    path: ../../future_builder_ex

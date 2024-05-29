@@ -9,13 +9,13 @@ class CustomerListScreen extends StatelessWidget {
   const CustomerListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => EntityListScreen<Entity>(
+  Widget build(BuildContext context) => EntityListScreen<Customer>(
+      pageTitle: 'Customers',
       dao: DaoCustomer(),
-      title: (entity) => const Text('Customer List') as Widget,
-      onEdit: (customer) =>
-          AddEditCustomerScreen(customer: customer as Customer?),
+      title: (entity) => Text(entity.name) as Widget,
+      onEdit: (customer) => AddEditCustomerScreen(customer: customer),
       subTitle: (entity) {
-        final customer = entity as Customer;
+        final customer = entity;
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('Business Name: ${customer.name}'),
           Text('''

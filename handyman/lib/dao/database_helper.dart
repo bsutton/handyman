@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'dao_customer.dart';
+import 'db_upgrade.dart';
 
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
@@ -17,11 +17,12 @@ class DatabaseHelper {
     sqfliteFfiInit();
 
     databaseFactory = databaseFactoryFfi;
-    final path = join(await getDatabasesPath(), 'customer_database.db');
-    _database = await openDatabase(path, version: 1, onCreate: _createDatabase);
+    final path = join(await getDatabasesPath(), 'handyman.db');
+    _database = await openDatabase(path,
+        version: 2, onCreate: _createDatabase, onUpgrade: upgradeDb);
   }
 
   static Future<void> _createDatabase(Database db, int version) async {
-    await DaoCustomer().createTable(db, version);
+    await upgradeDb(db, 1, version);
   }
 }

@@ -3,41 +3,8 @@ import 'package:sqflite/sqflite.dart';
 import '../entity/customer.dart';
 import 'dao.dart';
 
-class DaoCustomer extends Dao {
-  Future<void> createTable(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE customers(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        primaryFirstName TEXT,
-        primarySurname TEXT,
-        primaryAddressLine1 TEXT,
-        primaryAddressLine2 TEXT,
-        primarySuburb TEXT,
-        primaryState TEXT,
-        primaryPostcode TEXT,
-        primaryMobileNumber TEXT,
-        primaryLandLine TEXT,
-        primaryOfficeNumber TEXT,
-        primaryEmailAddress TEXT,
-        secondaryFirstName TEXT,
-        secondarySurname TEXT,
-        secondaryAddressLine1 TEXT,
-        secondaryAddressLine2 TEXT,
-        secondarySuburb TEXT,
-        secondaryState TEXT,
-        secondaryPostcode TEXT,
-        secondaryMobileNumber TEXT,
-        secondaryLandLine TEXT,
-        secondaryOfficeNumber TEXT,
-        secondaryEmailAddress TEXT,
-        createdDate TEXT,
-        modifiedDate TEXT,
-        disbarred INTEGER,
-        customerType INTEGER
-      )
-    ''');
-  }
+class DaoCustomer extends Dao<Customer> {
+  Future<void> createTable(Database db, int version) async {}
 
   @override
   Future<int> insert(covariant Customer entity,

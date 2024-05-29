@@ -9,7 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mailto/mailto.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../dao/dao.dart';
+import '../dao/dao_customer.dart';
 import '../entity/customer.dart';
 
 class AddEditCustomerScreen extends StatefulWidget {

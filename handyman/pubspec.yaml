@@ -36,6 +36,7 @@ dependencies:
   flutter_bloc: ^7.2.0
   fluttertoast: ^8.2.4
   ftoast: ^2.0.0
+  future_builder_ex: ^3.1.0
   mailto: ^2.0.0
   path: ^1.9.0
   path_provider: ^2.0.0

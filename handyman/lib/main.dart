@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: const HomeWithDrawer(child: CustomerListScreen()),
+        home: const HomeWithDrawer(child: JobListScreen()),
       );
 }
 
@@ -39,10 +39,8 @@ class MyDrawer extends StatelessWidget {
   MyDrawer({super.key});
 
   final List<DrawerItem> drawerItems = [
+    DrawerItem(title: 'Job', screen: const JobListScreen()),
     DrawerItem(title: 'Customer', screen: const CustomerListScreen()),
-    DrawerItem(
-        title: 'Job',
-        screen: const JobListScreen()), // Add JobListScreen to drawerItems
   ];
 
   @override
