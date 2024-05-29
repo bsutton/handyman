@@ -1,3 +1,4 @@
+import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 
@@ -16,7 +17,12 @@ class AddEditJobScreen extends StatefulWidget {
 
 class AddEditJobScreenState extends State<AddEditJobScreen> {
   late TextEditingController _summaryController;
-  late TextEditingController _descriptionController;
+  // late TextEditingController _descriptionController;
+
+  late FleatherController _descriptionController;
+
+  late ParchmentDocument _descriptionDocument;
+
   late TextEditingController _addressController;
   late DateTime _selectedDate;
 
@@ -27,8 +33,13 @@ class AddEditJobScreenState extends State<AddEditJobScreen> {
     super.initState();
     _selectedDate = widget.job?.startDate ?? DateTime.now();
     _summaryController = TextEditingController(text: widget.job?.summary ?? '');
-    _descriptionController =
-        TextEditingController(text: widget.job?.description ?? '');
+    // _descriptionController =
+    //     TextEditingController(text: widget.job?.description ?? '');
+
+    _descriptionDocument =
+        ParchmentDocument.fromJson([widget.job?.description ?? '']);
+    _descriptionController = FleatherController(document: _descriptionDocument);
+
     _addressController = TextEditingController(text: widget.job?.address ?? '');
   }
 
