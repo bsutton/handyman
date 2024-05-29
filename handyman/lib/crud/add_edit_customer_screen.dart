@@ -1,16 +1,12 @@
 // ignore_for_file: library_private_types_in_public_api
-import 'dart:io';
-
-import 'package:direct_caller_sim_choice/direct_caller_sim_choice.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mailto/mailto.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 import '../dao/dao_customer.dart';
 import '../entity/customer.dart';
+import '../widgets/dial_widget.dart';
+import '../widgets/mail_to.dart';
 
 class AddEditCustomerScreen extends StatefulWidget {
   const AddEditCustomerScreen({super.key, this.customer});
@@ -202,40 +198,31 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
                       controller: _primaryMobileNumberController,
                       decoration: InputDecoration(
                         labelText: 'Primary Mobile Number',
-                        suffixIcon: IconButton(
-                            icon: const Icon(Icons.call),
-                            onPressed: () =>
-                                _call(_primaryMobileNumberController.text)),
+                        suffixIcon:
+                            DialWidget(_primaryMobileNumberController.text),
                       ),
                     ),
                     TextFormField(
                       controller: _primaryLandlineController,
                       decoration: InputDecoration(
                         labelText: 'Primary Landline',
-                        suffixIcon: IconButton(
-                            icon: const Icon(Icons.call),
-                            onPressed: () =>
-                                _call(_primaryLandlineController.text)),
+                        suffixIcon: DialWidget(_primaryLandlineController.text),
                       ),
                     ),
                     TextFormField(
                       controller: _primaryOfficeNumberController,
                       decoration: InputDecoration(
                         labelText: 'Primary Office Number',
-                        suffixIcon: IconButton(
-                            icon: const Icon(Icons.phone),
-                            onPressed: () =>
-                                _call(_primaryOfficeNumberController.text)),
+                        suffixIcon:
+                            DialWidget(_primaryOfficeNumberController.text),
                       ),
                     ),
                     TextFormField(
                       controller: _primaryEmailAddressController,
                       decoration: InputDecoration(
                         labelText: 'Primary Email Address',
-                        suffixIcon: IconButton(
-                            icon: const Icon(Icons.email),
-                            onPressed: () async => _sendEmail(
-                                _primaryEmailAddressController.text)),
+                        suffixIcon:
+                            MailToWidget(_primaryEmailAddressController.text),
                       ),
                     ),
                     TextFormField(
@@ -277,37 +264,29 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
                       controller: _secondaryMobileNumberController,
                       decoration: InputDecoration(
                           labelText: 'Secondary Mobile Number',
-                          suffixIcon: IconButton(
-                              icon: const Icon(Icons.call),
-                              onPressed: () => _call(
-                                  _secondaryMobileNumberController.text))),
+                          suffixIcon: DialWidget(
+                              _secondaryMobileNumberController.text)),
                     ),
                     TextFormField(
                       controller: _secondaryLandlineController,
                       decoration: InputDecoration(
                           labelText: 'Secondary Landline',
-                          suffixIcon: IconButton(
-                              icon: const Icon(Icons.phone),
-                              onPressed: () =>
-                                  _call(_secondaryLandlineController.text))),
+                          suffixIcon:
+                              DialWidget(_secondaryLandlineController.text)),
                     ),
                     TextFormField(
                       controller: _secondaryOfficeNumberController,
                       decoration: InputDecoration(
                           labelText: 'Secondary Office Number',
-                          suffixIcon: IconButton(
-                              icon: const Icon(Icons.phone),
-                              onPressed: () => _call(
-                                  _secondaryOfficeNumberController.text))),
+                          suffixIcon: DialWidget(
+                              _secondaryOfficeNumberController.text)),
                     ),
                     TextFormField(
                         controller: _secondaryEmailAddressController,
                         decoration: InputDecoration(
                             labelText: 'Secondary Email Address',
-                            suffixIcon: IconButton(
-                                icon: const Icon(Icons.email),
-                                onPressed: () async => _sendEmail(
-                                    _secondaryEmailAddressController.text)))),
+                            suffixIcon: MailToWidget(
+                                _secondaryEmailAddressController.text))),
                     TextFormField(
                       controller: _disbarredController,
                       decoration: const InputDecoration(labelText: 'Disbarred'),
@@ -336,13 +315,6 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
           ),
         ),
       );
-
-  Future<void> _sendEmail(String email) async {
-    final mailtoLink = Mailto(
-      to: [email],
-    );
-    await launchUrlString(mailtoLink.toString());
-  }
 
   void onCancel() {
     if (mounted) {
@@ -436,15 +408,4 @@ class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
         },
         child: child,
       );
-
-  void _call(String phoneNo) {
-    final directCaller = DirectCaller();
-    if (!Platform.isAndroid) {
-      FToast().init(context);
-      FToast().showToast(
-          child: const Text('Dialoing is only available on Android'));
-    } else {
-      directCaller.makePhoneCall(phoneNo);
-    }
-  }
 }
