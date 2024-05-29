@@ -22,9 +22,9 @@ abstract class Dao<T extends Entity<T>> {
     return List.generate(maps.length, (i) => fromMap(maps[i]));
   }
 
-  Future<T?> getById(int? customerId) {
+  Future<T?> getById(int? entityId) {
     final db = getDb();
-    return db.query(tableName, where: 'id =?', whereArgs: [customerId]).then(
+    return db.query(tableName, where: 'id =?', whereArgs: [entityId]).then(
         (value) {
       if (value.isEmpty) {
         return null;
