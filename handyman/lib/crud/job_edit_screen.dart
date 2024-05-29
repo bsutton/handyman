@@ -8,10 +8,10 @@ class AddEditJobScreen extends StatefulWidget {
   final Job? job;
 
   @override
-  _AddEditJobScreenState createState() => _AddEditJobScreenState();
+  AddEditJobScreenState createState() => AddEditJobScreenState();
 }
 
-class _AddEditJobScreenState extends State<AddEditJobScreen> {
+class AddEditJobScreenState extends State<AddEditJobScreen> {
   late TextEditingController _summaryController;
   late TextEditingController _descriptionController;
   late TextEditingController _addressController;
