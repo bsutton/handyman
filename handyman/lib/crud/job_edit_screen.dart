@@ -42,27 +42,36 @@ class AddEditJobScreenState extends State<AddEditJobScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              FutureBuilderEx<List<Customer>>(
-                  // ignore: discarded_futures
-                  future: DaoCustomer().getAll(),
-                  builder: (context, data) => DropdownButtonFormField<Customer>(
-                        value: selectedCustomer,
-                        hint: const Text('Select a customer'),
-                        onChanged: (newValue) {
-                          setState(() {
-                            selectedCustomer = newValue;
-                          });
-                        },
-                        items: data!
-                            .map((customer) => DropdownMenuItem<Customer>(
-                                  value: customer,
-                                  child: Text(customer.name),
-                                ))
-                            .toList(),
-                        decoration: const InputDecoration(labelText: 'Client'),
-                        validator: (value) =>
-                            value == null ? 'Please select a client' : null,
-                      )),
+              FutureBuilderEx(
+                // ignore: discarded_futures
+                future: DaoCustomer().getById(widget.job?.customerId),
+                builder: (context, initialCustomer) {
+                  selectedCustomer ??= initialCustomer;
+                  return FutureBuilderEx<List<Customer>>(
+                      // ignore: discarded_futures
+                      future: DaoCustomer().getAll(),
+                      builder: (context, data) =>
+                          DropdownButtonFormField<Customer>(
+                            value: selectedCustomer,
+                            hint: const Text('Select a customer'),
+                            onChanged: (newValue) {
+                              setState(() {
+                                selectedCustomer = newValue;
+                              });
+                            },
+                            items: data!
+                                .map((customer) => DropdownMenuItem<Customer>(
+                                      value: customer,
+                                      child: Text(customer.name),
+                                    ))
+                                .toList(),
+                            decoration:
+                                const InputDecoration(labelText: 'Client'),
+                            validator: (value) =>
+                                value == null ? 'Please select a client' : null,
+                          ));
+                },
+              ),
               TextButton(
                 onPressed: _selectDate,
                 child: Text(
