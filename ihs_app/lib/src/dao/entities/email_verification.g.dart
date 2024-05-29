@@ -25,7 +25,7 @@ Map<String, dynamic> _$EmailVerificationToJson(EmailVerification instance) =>
       'id': instance.id,
       'guid': _$JsonConverterToJson<dynamic, GUID>(
           instance.guid, const GUIDConverter().toJson),
-      'type': _$EmailVerificationTypeEnumMap[instance.type]!,
+      'type': _$EmailVerificationTypeEnumMap[instance.type],
       'invitationGUID': instance.invitationGUID,
       'created': instance.created.toIso8601String(),
       'emailAddress': instance.emailAddress,
@@ -37,8 +37,8 @@ Map<String, dynamic> _$EmailVerificationToJson(EmailVerification instance) =>
     };
 
 const _$EmailVerificationTypeEnumMap = {
-  EmailVerificationType.RECOVERY: 'RECOVERY',
-  EmailVerificationType.INVITE: 'INVITE',
+  EmailVerificationType.recovery: 'RECOVERY',
+  EmailVerificationType.invite: 'INVITE',
 };
 
 Json? _$JsonConverterToJson<Json, Value>(

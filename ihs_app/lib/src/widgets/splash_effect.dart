@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SplashEffect extends StatelessWidget {
@@ -17,5 +18,10 @@ class SplashEffect extends StatelessWidget {
 
   void onPressed() {
     onTap();
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ObjectFlagProperty<void Function()>.has('onTap', onTap));
   }
 }

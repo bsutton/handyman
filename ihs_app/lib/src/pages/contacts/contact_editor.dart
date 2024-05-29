@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/router.dart';
@@ -11,6 +12,11 @@ class ContactEditor extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => ContactEditorState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Contact>('contact', contact));
+  }
 }
 
 class ContactEditorState extends State<ContactEditor> {

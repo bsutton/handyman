@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:completer_ex/completer_ex.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 
@@ -27,6 +28,13 @@ class AudioPlayer extends StatefulWidget {
   final Duration initial;
   @override
   State<StatefulWidget> createState() => AudioPlayerState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty<Future<AudioMedia>>('media', media))
+    ..add(DiagnosticsProperty<bool>('enabled', enabled))
+    ..add(DiagnosticsProperty<Duration>('initial', initial));
+  }
 }
 
 class AudioPlayerState extends State<AudioPlayer> {
@@ -239,6 +247,15 @@ class AudioPlayerState extends State<AudioPlayer> {
   void stop() {
     //   audioApi.stop();
   }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty<Future<AudioMedia>>('media', media))
+    ..add(DiagnosticsProperty<CompleterEx<bool>>('loaded', loaded))
+    ..add(IntProperty('bufferingCounter', bufferingCounter))
+    ..add(DiagnosticsProperty<Duration>('position', position));
+  }
+ 
 }
 
 class ProgressLabel extends StatelessWidget {
@@ -266,4 +283,12 @@ class ProgressLabel extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.only(right: 15), width: 110, child: label);
   }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(IntProperty('index', index))
+    ..add(DiagnosticsProperty<Duration>('position', position))
+    ..add(DiagnosticsProperty<AudioMedia>('media', media));
+  }
+ 
 }

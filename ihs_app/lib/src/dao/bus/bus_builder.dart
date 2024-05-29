@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../widgets/empty.dart';
@@ -26,6 +27,14 @@ class BusBuilder<T> extends StatefulWidget {
 
   @override
   BusBuilderState<T> createState() => BusBuilderState<T>();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty<BusFilter<T>?>.has('filter', filter))
+      ..add(ObjectFlagProperty<BusWidgetBuilder<T>?>.has('builder', builder))
+      ..add(DiagnosticsProperty<Duration?>('debounce', debounce));
+  }
 }
 
 class BusBuilderState<T> extends State<BusBuilder<T>> {
@@ -66,5 +75,13 @@ class BusBuilderState<T> extends State<BusBuilder<T>> {
   // else
   // {
   Widget build(BuildContext context) =>
-      widget.builder?.call(context, event) ??  Empty();
+      widget.builder?.call(context, event) ?? const Empty();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<BusEvent<T>>('event', event))
+      ..add(DiagnosticsProperty<StreamSubscription<BusEvent<T>>>(
+          'subscription', subscription));
+  }
 }

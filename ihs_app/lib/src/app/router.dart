@@ -1,40 +1,26 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
-import '../dao/types/er.dart';
-import '../dao/types/phone_number.dart';
 import '../pages/account_status/payment_failed_page.dart';
 import '../pages/account_status/pending_suspension_page.dart';
 import '../pages/account_status/suspended_page.dart';
 import '../pages/account_status/trail_expiring_page.dart';
 import '../pages/account_status/trial_expired_page.dart';
 import '../pages/contacts/contact_list.dart';
+import '../pages/contacts/contacts.dart';
 import '../pages/dashboards/office_dashboard/dashboard/office_dashboard.dart';
 import '../pages/dashboards/office_dashboard/pages/about_page.dart';
-import '../pages/dashboards/office_dashboard/pages/acquire_did_wizard/acquire_did_wizard.dart';
-import '../pages/dashboards/office_dashboard/pages/office_holidays_page.dart';
-import '../pages/dashboards/office_dashboard/pages/phone_no_edit_page.dart';
-import '../pages/dashboards/office_dashboard/pages/phone_no_list_page.dart';
-import '../pages/dashboards/office_dashboard/pages/user_invite/user_invite_page.dart';
-import '../pages/dashboards/team_dashboard/dashboard/team_dashboard.dart';
-import '../pages/dashboards/team_dashboard/pages/create_team_page.dart';
-import '../pages/dashboards/team_dashboard/pages/override_hours_page.dart';
-import '../pages/dashboards/team_dashboard/pages/team_business_hours_page.dart';
-import '../pages/dashboards/team_dashboard/pages/team_members_page.dart';
 import '../pages/dashboards/user_dashboard/dashboard/user_dashboard.dart';
 import '../pages/dashboards/user_dashboard/pages/conference_page.dart';
-import '../pages/dashboards/user_dashboard/pages/dnd_page.dart';
-import '../pages/dashboards/user_dashboard/pages/holidays_page.dart';
 import '../pages/dashboards/user_dashboard/pages/limits_page.dart';
 import '../pages/dashboards/user_dashboard/pages/support_page.dart';
 import '../pages/dashboards/user_dashboard/pages/user_deleted_page.dart';
 import '../pages/error_page.dart';
-import '../pages/tutorial/tutorial_index_page.dart';
 import '../pages/user/user_index_page.dart';
-import '../pages/voicemail/voicemail_index_page.dart';
 import '../util/log.dart';
-import '../widgets/mini_card/mini_card.dart';
+import '../widgets/mini_card/maxi_card_page.dart';
 
 class RouteName {
   const RouteName(String routeName) : _routeName = routeName;
@@ -63,39 +49,21 @@ class SQRouter {
 // Standard navigation routes.
   static Map<RouteName, RouteBuilder<dynamic>> routes = {
     AboutPage.routeName: RouteBuilderNoArgs(AboutPage.new),
-    AcquireDIDWizard.routeName: RouteBuilderNoArgs(AcquireDIDWizard.new),
 
-    CreateTeamPage.routeName: RouteBuilderNoArgs(CreateTeamPage.new),
     ContactList.routeName: RouteBuilderNoArgs(ContactList.new),
     ConferencePage.routeName: RouteBuilderNoArgs(ConferencePage.new),
 
-    DNDPage.routeName: RouteBuilderNoArgs(DNDPage.new),
-
-    HolidaysPage.routeName: RouteBuilderNoArgs(HolidaysPage.new),
     // HomePage.routeName: RouteBuilderNoArgs(HomePage.new),
 
     LimitsPage.routeName: RouteBuilderNoArgs(LimitsPage.new),
 
     OfficeDashboard.routeName: RouteBuilderNoArgs(OfficeDashboard.new),
-    OfficeHolidaysPage.routeName: RouteBuilderNoArgs(OfficeHolidaysPage.new),
-    OverrideHoursPage.routeName: RouteBuilderNoArgs(OverrideHoursPage.new),
-
-    PhoneNoListPage.routeName: RouteBuilderNoArgs(PhoneNoListPage.new),
 
     SupportPage.routeName: RouteBuilderNoArgs(SupportPage.new),
-
-    TeamBusinessHoursPage.routeName:
-        RouteBuilderNoArgs(TeamBusinessHoursPage.new),
-    TeamDashboard.routeName: RouteBuilderNoArgs(TeamDashboard.new),
-    TeamMembersPage.routeName: RouteBuilderNoArgs(TeamMembersPage.new),
-    TutorialIndexPage.routeName: RouteBuilderNoArgs(TutorialIndexPage.new),
 
     UserDashboard.routeName: RouteBuilderNoArgs(UserDashboard.new),
     UserDeletedPage.routeName: RouteBuilderNoArgs(UserDeletedPage.new),
     UserIndexPage.routeName: RouteBuilderNoArgs(UserIndexPage.new),
-    UserInvitePage.routeName: RouteBuilderNoArgs(UserInvitePage.new),
-
-    VoicemailIndexPage.routeName: RouteBuilderNoArgs(VoicemailIndexPage.new),
 
     /// Routes with args
     // AskForInvitationPage.routeName: RouteBuilderWithArgs<PhoneNumber>(
@@ -128,8 +96,6 @@ class SQRouter {
 
     // SeeYouSoon.routeName: RouteBuilderWithArgs<ReminderPageSettings>(
     //     (reg) => SeeYouSoon(reminder: reg)),
-    PhoneNoEditPage.routeName: RouteBuilderWithArgs<ER<DIDForward>>(
-        (arg) => PhoneNoEditPage(forwardTo: arg)),
 
     ErrorPage.routeName:
         RouteBuilderWithArgs<String>((cause) => ErrorPage(cause: cause)),
@@ -174,9 +140,11 @@ class SQRouter {
 
   /// [T] is the type of the returned data (if any)
   /// [A] is the type of the passed argument.
-  /// The type checking here is busted, it will happily accept an incorrect type for argument.
+  /// The type checking here is busted, it will happily accept an incorrect
+  /// type for argument.
   /// Maybe one day they'll fix Dart
-  /// https://stackoverflow.com/questions/58616328/type-checking-for-generic-methods-in-dart-seems-to-be-broken
+  /// https://stackoverflow.com/questions/58616328/type-checking-
+  /// for-generic-methods-in-dart-seems-to-be-broken
   Future<T> pushNamedWithArg<T extends Object, A>(
       RouteName routeName, A argument) async {
     final r = await getNav().pushNamed<T>(routeName.name, arguments: argument);
@@ -199,8 +167,8 @@ class SQRouter {
     if (!isCurrentRoute(routeName)) {
       await getNav().pushReplacementNamed(routeName.name);
     } else {
-      Log.d(
-          'Ignored replaceWithName ${routeName.name} as the route is already on top');
+      Log.d('''
+Ignored replaceWithName ${routeName.name} as the route is already on top''');
     }
   }
 
@@ -209,8 +177,8 @@ class SQRouter {
     if (!isCurrentRoute(defaultRoute)) {
       await getNav().pushReplacementNamed(defaultRoute.name);
     } else {
-      Log.d(
-          'Ignored replaceWithName  ${defaultRoute.name}as the route is already on top');
+      Log.d('''
+Ignored replaceWithName  ${defaultRoute.name}as the route is already on top''');
     }
   }
 
@@ -240,7 +208,7 @@ class SQRouter {
     getNav().popUntil(predicate);
   }
 
-  RouteName get defaultRoute => HomePage.routeName;
+  RouteName get defaultRoute => Contacts.routeName;
 
   RouteBuilder<dynamic>? getRoute(String routeName) {
     RouteBuilder<dynamic>? builder;

@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/router.dart';
-import '../../dao/entities/mobile_registration.dart';
+import '../../dao/entities/registration.dart';
 import '../../widgets/no_app_bar_scaffold.dart';
 import '../dashboards/dashboard_page.dart';
 
@@ -19,13 +20,20 @@ class TrialExpiredPage extends StatefulWidget {
 
   @override
   TrialExpiredPageState createState() => TrialExpiredPageState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty<TrialExpiredPageSettings>('settings', settings));
+  }
 }
 
 class TrialExpiredPageState extends State<TrialExpiredPage> {
   TrialExpiredPageState() {
     settings = widget.settings;
     // mobile = settings.progress.mobile;
-    // validMobile = PhoneNumber.isMobile(settings.progress.mobile.toNational());
+    // validMobile = PhoneNumber
+    // .isMobile(settings.progress.mobile.toNational());
   }
   late final TrialExpiredPageSettings settings;
 
@@ -46,4 +54,10 @@ class TrialExpiredPageState extends State<TrialExpiredPage> {
   // the DIDs etc once the trial expires.
   Widget buildBody() =>
       const SingleChildScrollView(child: Text('Trial has expired.'));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty<TrialExpiredPageSettings>('settings', settings));
+  }
 }

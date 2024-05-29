@@ -8,12 +8,11 @@ class ByteBufferConverter implements JsonConverter<ByteBuffer, String> {
 
   @override
   ByteBuffer fromJson(String json) {
-    var ints = Base64Decoder().convert(json);
+    final ints = const Base64Decoder().convert(json);
     return ints.buffer;
   }
 
   @override
-  String toJson(ByteBuffer byteBuffer) {
-    return Base64Encoder().convert(byteBuffer.asUint8List());
-  }
+  String toJson(ByteBuffer byteBuffer) =>
+      const Base64Encoder().convert(byteBuffer.asUint8List());
 }

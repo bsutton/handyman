@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'theme/nj_text_themes.dart';
@@ -22,4 +23,11 @@ class DialogHeading extends StatelessWidget {
           ),
         ),
       );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('heading', heading))
+    ..add(ColorProperty('textColor', textColor))
+    ..add(ColorProperty('backgroundColor', backgroundColor));
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,15 @@ class ThumbMenuOverlay extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => ThumbMenuOverlayState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('title', title))
+      ..add(IterableProperty<MenuItem>('menuItems', menuItems))
+      ..add(DiagnosticsProperty<GlobalKey<ExpansionBottomAppBarState>?>(
+          'expansionMenuKey', expansionMenuKey));
+  }
 }
 
 class ThumbMenuOverlayState extends State<ThumbMenuOverlay>
@@ -84,7 +94,8 @@ class ThumbMenuOverlayState extends State<ThumbMenuOverlay>
                                   buildTitle(0.65, screenWidth),
                                 ],
 
-                                /// overflow: Overflow.visible, defaults to Clip.none which should be the same.
+                                /// overflow: Overflow.visible, defaults
+                                /// to Clip.none which should be the same.
                               )))))
             ])
             // )
@@ -177,9 +188,11 @@ class ThumbMenuOverlayState extends State<ThumbMenuOverlay>
   List<Widget> getTitleComponents(double opacity) {
     final widgets = <Widget>[];
 
-    widgets.add(ThumbMenuTitle(title: widget.title, opacity: opacity));
-    widgets.add(buildNoticeChip());
-    widgets.add(buildTodoChip());
+    // ignore: cascade_invocations
+    widgets
+      ..add(ThumbMenuTitle(title: widget.title, opacity: opacity))
+      ..add(buildNoticeChip())
+      ..add(buildTodoChip());
 
     return widgets;
   }
@@ -219,5 +232,18 @@ class ThumbMenuOverlayState extends State<ThumbMenuOverlay>
 
   void onTodo() {
     Log.d('TODO clicked');
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<GlobalKey<ThumbMenuState>>(
+          'circleKey', circleKey))
+      ..add(DiagnosticsProperty<bool>('menuOpen', menuOpen))
+      ..add(DiagnosticsProperty<AnimationController>(
+          'circleAnimator', circleAnimator))
+      ..add(DiagnosticsProperty<Animation<double>>('growCircle', growCircle))
+      ..add(DiagnosticsProperty<Tween<double>>('diameterTween', diameterTween));
   }
 }

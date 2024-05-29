@@ -51,7 +51,8 @@ class ThumbMenuScaffoldState extends State<ThumbMenuScaffold> {
           builder: (context) =>
               Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Text(
-                    "The ThumbMenu Navigator reported that the selected route '${routeSettings.name}' is unknown"),
+                    """
+The ThumbMenu Navigator reported that the selected route '${routeSettings.name}' is unknown"""),
                 ElevatedButton(
                     child: const Text('Home'),
                     onPressed: () async => r.SQRouter().home())

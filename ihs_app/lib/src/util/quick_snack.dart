@@ -10,7 +10,8 @@ import 'local_ticker_provider.dart';
 /// QuickSnack().error(context, "Something bad happend");
 /// QuickSnack().info(context, "Did you know that...", duration: Duration(5))
 /// QuickSnack().warn(context, "Look out");
-/// QuickSnack().undo(context,   duration: Duration(5), 'Undo delete', () => something.undoit());
+/// QuickSnack().undo(context,   duration: Duration(5), 'Undo delete'
+/// , () => something.undoit());
 /// ```
 class QuickSnack {
   factory QuickSnack() => _self;
@@ -100,7 +101,8 @@ class QuickSnack {
       duration: duration,
       icon: const Icon(Icons.delete, color: color),
       // https://github.com/AndreHaueisen/flushbar/issues/110
-      // bug in flushbar 1.10 so had to revert back to flusbar 1.6 margin: MediaQuery.of(context).padding,
+      // bug in flushbar 1.10 so had to revert back to flusbar 1.6 margin:
+      // MediaQuery.of(context).padding,
       shouldIconPulse: false,
       showProgressIndicator: true,
       progressIndicatorValueColor: const AlwaysStoppedAnimation<Color>(color),

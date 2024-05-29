@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/router.dart';
-import '../../dao/entities/mobile_registration.dart';
+import '../../dao/entities/registration.dart';
 import '../../dao/types/phone_number.dart';
 import '../../util/local_time.dart';
 import '../../widgets/grayed_out.dart';
@@ -24,13 +25,20 @@ class PaymentFailedPage extends StatefulWidget {
 
   @override
   PaymentFailedPageState createState() => PaymentFailedPageState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty<PaymentFailedPageSettings>('settings', settings));
+  }
 }
 
 class PaymentFailedPageState extends State<PaymentFailedPage> {
   PaymentFailedPageState() {
     settings = widget.settings;
     // mobile = settings.progress.mobile;
-    // validMobile = PhoneNumber.isMobile(settings.progress.mobile.toNational());
+    // validMobile = PhoneNumber
+    //  .isMobile(settings.progress.mobile.toNational());
   }
   late final PaymentFailedPageSettings settings;
 
@@ -58,7 +66,8 @@ class PaymentFailedPageState extends State<PaymentFailedPage> {
 
     final endTime = LocalTime.fromDateTime(now.add(const Duration(hours: 2)));
 
-    // round minutes to nearest 5 minutes so the TimePicker shows a selected minute button.
+    // round minutes to nearest 5 minutes so the TimePicker
+    //shows a selected minute button.
     final minute = endTime.minute ~/ 5 * 5;
     return LocalTime(hour: endTime.hour, minute: minute);
   }
@@ -82,5 +91,12 @@ class PaymentFailedPageState extends State<PaymentFailedPage> {
 
   void resumeWizard() {
     SQRouter().pop<void>();
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty<PaymentFailedPageSettings>('settings', settings));
   }
 }

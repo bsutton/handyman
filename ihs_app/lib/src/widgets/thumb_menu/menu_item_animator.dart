@@ -10,15 +10,15 @@ class MenuItemAnimator extends ChangeNotifier {
         degreesTween = Tween<double>(begin: min, end: max)
             .chain(CurveTween(curve: Curves.easeInOutBack)) {
     itemRotator = degreesTween.animate(animationController);
-    itemRotator.addListener(() {
+    itemRotator..addListener(() {
       // notify the menu items to update their rotational position.
       if (itemRotator.value == max) {
         Log.d('Notify called ${itemRotator.value}');
       }
       notifyListeners();
-    });
+    })
 
-    itemRotator.addStatusListener((state) {
+    ..addStatusListener((state) {
       if (itemRotator.isDismissed) {
         closedCallback?.call();
       }

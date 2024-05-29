@@ -20,14 +20,17 @@ class FileUtils {
 
   ///
   /// Creates a temporary file in the systems temp directory.
-  /// [location] is the directory (under the temp file system) to place the file in.
-  /// [prefix] is an optional prefix to prepend to the randomly generated filename.
+  /// [location] is the directory (under the temp file system) to place
+  /// the file in.
+  /// [prefix] is an optional prefix to prepend to the randomly generated
+  /// filename.
   ///
   /// You are responsible for deleting the file once you have finished with it.
   ///
   /// Example:
   /// ```dart
-  /// File tmpRecording = await TempFiles().create(TempFileLocations.RECORDINGS);
+  /// File tmpRecording = await TempFiles().
+  /// create(TempFileLocations.RECORDINGS);
   /// ```
   ///
   String createTempFile(TempFileLocations location, [String prefix = '']) {

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'theme/nj_text_themes.dart';
@@ -24,6 +25,16 @@ class SelectablePanel extends StatefulWidget {
   final void Function(bool selected) onSelected;
   @override
   State<StatefulWidget> createState() => SelectablePanelState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        ..add(DiagnosticsProperty<bool>('initiallySelected', initiallySelected))
+    ..add(StringProperty('title', title))
+    // ignore: avoid_positional_boolean_parameters
+    ..add(ObjectFlagProperty<void Function(bool selected)>.has(
+        'onSelected', onSelected));
+  }
 }
 
 class SelectablePanelState extends State<SelectablePanel> {
@@ -57,6 +68,11 @@ class SelectablePanelState extends State<SelectablePanel> {
           children: <Widget>[
             NJTextListItem(widget.title),
           ]));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('selected', selected));
+  }
 }
 
 class Selected extends StatelessWidget {
@@ -69,4 +85,9 @@ class Selected extends StatelessWidget {
 
   Color getColor({required bool selected}) =>
       (selected ? Colors.purple : Colors.green);
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('selected', selected));
+  }
 }

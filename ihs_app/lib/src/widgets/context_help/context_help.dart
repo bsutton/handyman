@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'context_help_controller.dart';
@@ -26,11 +27,18 @@ class ContextHelp extends StatefulWidget {
   final Widget body;
   final ContextHelpShape shape;
 
-  /// Set to false to disable highlighting of the [child] when this help topic is displayed.
+  /// Set to false to disable highlighting of the [child] when 
+  /// this help topic is displayed.
   final bool highlight;
 
   @override
   ContextHelpState createState() => ContextHelpState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty<bool>('highlight', highlight))
+    ..add(EnumProperty<ContextHelpShape>('shape', shape));
+  }
 }
 
 class ContextHelpState extends State<ContextHelp> {

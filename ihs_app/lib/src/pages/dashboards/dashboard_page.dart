@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacktrace_impl/stacktrace_impl.dart';
 
@@ -31,6 +32,19 @@ class DashboardPage<M extends CustomThumbMenu> extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => DashboardPageState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('title', title))
+      ..add(ObjectFlagProperty<WidgetBuilder>.has('builder', builder))
+      ..add(DiagnosticsProperty<M?>('thumbMenu', thumbMenu))
+      ..add(
+          DiagnosticsProperty<RouteName>('currentRouteName', currentRouteName))
+      ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(ObjectFlagProperty<Future<void> Function(BuildContext p1)?>.has(
+          'loadData', loadData));
+  }
 }
 
 class DashboardPageState extends State<DashboardPage> {

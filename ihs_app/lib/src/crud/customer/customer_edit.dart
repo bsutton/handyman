@@ -4,24 +4,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../dao/crud_providers/product_editable.dart';
-import '../dao/customer_dao.dart';
-import '../dao/models/product.dart';
+import '../../dao/customer_dao.dart';
+import '../../dao/entities/customer.dart';
+import 'customer_editable.dart';
 
-class EditProduct extends StatefulWidget {
-  const EditProduct({this.product, super.key});
-  final Product? product;
+class EditCustomer extends StatefulWidget {
+  const EditCustomer({this.customer, super.key});
+  final Customer? customer;
 
   @override
-  EditProductState createState() => EditProductState();
+  EditCustomerState createState() => EditCustomerState();
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<Product?>('product', product));
+    properties.add(DiagnosticsProperty<Customer?>('product', customer));
   }
 }
 
-class EditProductState extends State<EditProduct> {
+class EditCustomerState extends State<EditCustomer> {
   final nameController = TextEditingController();
   final priceController = TextEditingController();
 
@@ -34,22 +34,21 @@ class EditProductState extends State<EditProduct> {
 
   @override
   void initState() {
-    if (widget.product == null) {
+    if (widget.customer == null) {
       //New Record
       nameController.text = '';
       priceController.text = '';
       Future.delayed(Duration.zero, () {
-        Provider.of<ProductEditable>(context, listen: false)
-            .loadValues(Product());
+        Provider.of<CustomerEditable>(context, listen: false)
+            .loadValues(Customer.forInsert());
       });
     } else {
       //Controller Update
-      nameController.text = widget.product!.name!;
-      priceController.text = widget.product!.price.toString();
+      nameController.text = widget.customer!.name;
       //State Update
       Future.delayed(Duration.zero, () {
-        Provider.of<ProductEditable>(context, listen: false)
-            .loadValues(widget.product!);
+        Provider.of<CustomerEditable>(context, listen: false)
+            .loadValues(widget.customer!);
       });
     }
 
@@ -58,24 +57,19 @@ class EditProductState extends State<EditProduct> {
 
   @override
   Widget build(BuildContext context) {
-    final productProvider = Provider.of<ProductEditable>(context);
-    final dao = ProductDao();
+    final productProvider = Provider.of<CustomerEditable>(context);
+    final dao = CustomerDao();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Product')),
+      appBar: AppBar(title: const Text('Edit Customer')),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: ListView(
           children: <Widget>[
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(hintText: 'Product Name'),
+              decoration: const InputDecoration(hintText: 'Customer Name'),
               onChanged: productProvider.changeName,
-            ),
-            TextField(
-              controller: priceController,
-              decoration: const InputDecoration(hintText: 'Product Price'),
-              onChanged: productProvider.changePrice,
             ),
             const SizedBox(
               height: 20,
@@ -84,7 +78,7 @@ class EditProductState extends State<EditProduct> {
               child: const Text('Save'),
               onPressed: () async {
                 try {
-                  await productProvider.saveProduct();
+                  await productProvider.save();
                   if (context.mounted) {
                     Navigator.of(context).pop();
                   }
@@ -93,7 +87,7 @@ class EditProductState extends State<EditProduct> {
                 }
               },
             ),
-            if (widget.product != null)
+            if (widget.customer != null)
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     backgroundColor:
@@ -101,7 +95,7 @@ class EditProductState extends State<EditProduct> {
                     foregroundColor: Colors.white),
                 child: const Text('Delete'),
                 onPressed: () async {
-                  await dao.removeProduct(widget.product!.productId!);
+                  await dao.removeCustomer(widget.customer!.id!);
                   if (context.mounted) {
                     Navigator.of(context).pop();
                   }

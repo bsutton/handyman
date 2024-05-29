@@ -39,7 +39,8 @@ class EmailVerificationRepository extends Repository<EmailVerification> {
   //       toEmailAddress: toEmailAddress,
   //       emailVerificationUrl:
   //           emailVerification.getAcceptInviteVerificationUrl(),
-  //       emailTroubleShootUrl: SquarePhoneApp.acceptInviteEmailTroubleShootUrl,
+  //       emailTroubleShootUrl: SquarePhoneApp
+  // .acceptInviteEmailTroubleShootUrl,
   //       templateAssetPath: 'assets/html/email_templates/accept_invite.html');
   // }
 

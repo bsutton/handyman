@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -6,12 +7,19 @@ const double _minFlingVelocity = 700;
 const double _gestureProgressThreshold = 0.5;
 
 class _InheritedExpansionBottomAppBar extends InheritedWidget {
-  const _InheritedExpansionBottomAppBar({required super.child, required this.state});
+  const _InheritedExpansionBottomAppBar(
+      {required super.child, required this.state});
 
   final ExpansionBottomAppBarState state;
 
   @override
   bool updateShouldNotify(_InheritedExpansionBottomAppBar oldWidget) => true;
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty<ExpansionBottomAppBarState>('state', state));
+  }
 }
 
 class ExpansionBottomAppBar extends StatefulWidget {
@@ -21,9 +29,9 @@ class ExpansionBottomAppBar extends StatefulWidget {
   final Widget bottomAppBar;
   final Widget menu;
 
-  static ExpansionBottomAppBarState of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<
-            _InheritedExpansionBottomAppBar>()!
-        .state;
+  static ExpansionBottomAppBarState of(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<_InheritedExpansionBottomAppBar>()!
+      .state;
 
   @override
   ExpansionBottomAppBarState createState() => ExpansionBottomAppBarState();
@@ -43,7 +51,8 @@ class ExpansionBottomAppBarState extends State<ExpansionBottomAppBar>
   bool _toggleUnderway = false;
 
   double get _childHeight {
-    final renderBox = _childKey.currentContext!.findRenderObject()! as RenderBox;
+    final renderBox =
+        _childKey.currentContext!.findRenderObject()! as RenderBox;
     return renderBox.size.height;
   }
 
@@ -126,17 +135,17 @@ class ExpansionBottomAppBarState extends State<ExpansionBottomAppBar>
   }
 
   Widget _buildChildren(BuildContext context, Widget? child) => Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        widget.bottomAppBar,
-        ClipRect(
-          child: Align(
-            heightFactor: _heightFactor.value,
-            child: child,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          widget.bottomAppBar,
+          ClipRect(
+            child: Align(
+              heightFactor: _heightFactor.value,
+              child: child,
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
 
   @override
   void initState() {
@@ -157,15 +166,15 @@ class ExpansionBottomAppBarState extends State<ExpansionBottomAppBar>
 
   @override
   Widget build(BuildContext context) => _InheritedExpansionBottomAppBar(
-      state: this,
-      child: GestureDetector(
-        onVerticalDragUpdate: _handleDragUpdate,
-        onVerticalDragEnd: _handleDragEnd,
-        excludeFromSemantics: true,
-        child: AnimatedBuilder(
-          animation: _controller.view,
-          builder: _buildChildren,
-          /*
+        state: this,
+        child: GestureDetector(
+          onVerticalDragUpdate: _handleDragUpdate,
+          onVerticalDragEnd: _handleDragEnd,
+          excludeFromSemantics: true,
+          child: AnimatedBuilder(
+            animation: _controller.view,
+            builder: _buildChildren,
+            /*
         child: Material(
           key: _childKey,
           child: Column(
@@ -174,11 +183,11 @@ class ExpansionBottomAppBarState extends State<ExpansionBottomAppBar>
           ),
         ),
         */
-          child: Container(
-            key: _childKey,
-            child: widget.menu,
+            child: Container(
+              key: _childKey,
+              child: widget.menu,
+            ),
           ),
         ),
-      ),
-    );
+      );
 }

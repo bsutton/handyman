@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 typedef TickerBuilder = Widget Function(BuildContext context, int index);
@@ -14,7 +15,6 @@ typedef OnTick = void Function(int index);
 
 ///
 class TickBuilder extends StatefulWidget {
-
   /// Create a TickBuilder
   /// [interval] is the time between each tick. We could the [builder]
   ///  for each tick.
@@ -23,7 +23,10 @@ class TickBuilder extends StatefulWidget {
   /// If [active] is false the tick builder will stop ticking.
   /// The build is called each [interval] period.
   const TickBuilder(
-      {required TickerBuilder builder, required Duration interval, required int limit, super.key,
+      {required TickerBuilder builder,
+      required Duration interval,
+      required int limit,
+      super.key,
       bool active = true})
       : _builder = builder,
         _interval = interval,
@@ -62,5 +65,11 @@ class _TickBuilderState extends State<TickBuilder> {
         queueTicker();
       }
     });
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('tickCount', tickCount));
   }
 }

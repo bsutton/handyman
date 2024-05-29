@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Hidden extends StatelessWidget {
@@ -14,4 +15,9 @@ class Hidden extends StatelessWidget {
       visible: !hidden,
       child: child,
     );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('hidden', hidden));
+  }
 }

@@ -111,9 +111,9 @@ class User extends Entity<User> {
       firstname: firstname ?? this.firstname,
       surname: surname ?? this.surname,
       mobilePhone: mobilePhone ?? this.mobilePhone,
-    );
-    newUser.id = id;
-    newUser.guid = guid;
+    )
+      ..id = id
+      ..guid = guid;
 
     assert(newUser.guid != null, 'bad');
     return newUser;

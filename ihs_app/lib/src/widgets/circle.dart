@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Circle extends StatelessWidget {
@@ -38,5 +39,12 @@ class Circle extends StatelessWidget {
         child: Center(child: child),
       );
     }
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DoubleProperty('diameter', diameter))
+    ..add(DiagnosticsProperty<bool>('shadow', shadow))
+    ..add(ColorProperty('color', color));
   }
 }

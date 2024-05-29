@@ -354,7 +354,8 @@ class IllegalEntityForER implements Exception {
 
   @override
   String toString() =>
-      'The passed entity was null. You must have a valid entity to create an ER';
+      '''
+The passed entity was null. You must have a valid entity to create an ER''';
 }
 
 class InvalidGUIDException implements Exception {

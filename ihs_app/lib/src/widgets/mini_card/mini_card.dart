@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:completer_ex/completer_ex.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/router.dart';
@@ -70,6 +71,26 @@ class MiniCard<T, S extends MiniRowState<T, S>> extends StatefulWidget {
   MiniCardState<T, S> createState() => MiniCardState<T, S>();
 
   bool equals(MiniCard<T, S> other) => title == other.title;
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('title', title))
+      ..add(DiagnosticsProperty<GlobalKey<MiniCardState<T, S>>>(
+          'miniCardState', miniCardState))
+      ..add(ObjectFlagProperty<MiniCardContentBuilder>.has(
+          'contentBuilder', contentBuilder))
+      ..add(ObjectFlagProperty<MiniCardValidator Function()>.has(
+          'validator', validator))
+      ..add(ObjectFlagProperty<Future<MaxiContent<T>> Function()?>.has(
+          'maxiBuilder', maxiBuilder))
+      ..add(ObjectFlagProperty<void Function(T p1)?>.has(
+          'onActivate', onActivate))
+      ..add(DiagnosticsProperty<T?>('data', data))
+      ..add(DoubleProperty('widthFactor', widthFactor))
+      ..add(DoubleProperty('heightFactor', heightFactor))
+      ..add(ColorProperty('barColor', barColor));
+  }
 }
 
 class MiniCardState<T, S extends MiniRowState<T, S>>
@@ -162,7 +183,8 @@ class MiniCardState<T, S extends MiniRowState<T, S>>
         ),
       );
 
-  // if the active mini-card changes we must redraw to reflect our new activation status.
+  // if the active mini-card changes we must redraw to reflect our new 
+  //activation status.
   Widget buildActivation(BuildContext context) => NamedConsumer<S>(
         builder: (context, state, _) {
           final activated = state.isActive(widget);
@@ -193,8 +215,9 @@ class MiniCardState<T, S extends MiniRowState<T, S>>
   Future<void> showMaxiCard() async {
     final state = NamedProvider.of<S>();
 
-    await SQRouter().pushNamedWithArg<MaxiCardPage<T,S>, MaxiCardRouteArgs<T,S>>(
-        MaxiCardPage.routeName, MaxiCardRouteArgs<T, S>(state!, widget));
+    await SQRouter()
+        .pushNamedWithArg<MaxiCardPage<T, S>, MaxiCardRouteArgs<T, S>>(
+            MaxiCardPage.routeName, MaxiCardRouteArgs<T, S>(state!, widget));
   }
 
   Widget buildSwitch({required bool activated}) => Container(
@@ -244,11 +267,20 @@ class MiniCardState<T, S extends MiniRowState<T, S>>
     }
     return complete.future;
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty<MiniCardContent?>(
+        'currentContent', currentContent))
+    ..add(DiagnosticsProperty<GlobalKey<ToggleSwitchState>>(
+        'toggleSwitchKey', toggleSwitchKey));
+  }
 }
 
 class MaxiCardRouteArgs<T, S extends MiniRowState<T, S>> {
   MaxiCardRouteArgs(this.state, this.miniCard);
   // The MiniCard which the user is currently editing.
   MiniCard<T, S> miniCard;
-  MiniRowState<T,S> state;
+  MiniRowState<T, S> state;
 }

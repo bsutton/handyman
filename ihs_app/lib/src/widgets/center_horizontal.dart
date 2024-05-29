@@ -5,5 +5,6 @@ class CenterHorizontal extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) => Row(mainAxisAlignment: MainAxisAlignment.center, children: [child]);
+  Widget build(BuildContext context) =>
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [child]);
 }

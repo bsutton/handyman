@@ -4,7 +4,7 @@ import 'entity.dart';
 
 part 'email_verification.g.dart';
 
-enum EmailVerificationType { RECOVERY, INVITE }
+enum EmailVerificationType { recovery, invite }
 
 @JsonSerializable()
 class EmailVerification extends Entity<EmailVerification> {
@@ -13,14 +13,14 @@ class EmailVerification extends Entity<EmailVerification> {
 
   EmailVerification.forInvitation(
       this.invitationGUID, this.emailAddress, DateTime? expires)
-      : type = EmailVerificationType.INVITE,
+      : type = EmailVerificationType.invite,
         super.forInsert() {
     created = DateTime.now();
     this.expires = expires ?? DateTime.now().add(const Duration(days: 2));
   }
 
   EmailVerification.forRecovery(this.invitationGUID, DateTime? expires)
-      : type = EmailVerificationType.RECOVERY,
+      : type = EmailVerificationType.recovery,
         super.forInsert() {
     created = DateTime.now();
     this.expires = expires ?? DateTime.now().add(const Duration(days: 2));

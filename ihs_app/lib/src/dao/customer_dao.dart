@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 import 'entities/customer.dart';
-import 'models/Customer.dart';
 
 class CustomerDao with ChangeNotifier {
   factory CustomerDao() {
@@ -22,7 +21,7 @@ class CustomerDao with ChangeNotifier {
 
   Stream<List<Customer>> getCustomers() =>
       _db.collection('Customers').snapshots().map((snapshot) => snapshot.docs
-          .map((document) => Customer.fromFirestore(document.data()))
+          .map((document) => Customer.fromJson(document.data()))
           .toList());
 
   /// create or update a Customer.
@@ -31,12 +30,13 @@ class CustomerDao with ChangeNotifier {
     try {
       await _db
           .collection('Customers')
-          .doc(customer.id)
-          .set(customer.toMap())
+          .doc('${customer.id}')
+          .set(customer.toJson())
           .then((value) {
         print('Customer saved: $Customer');
         completer.complete();
-      }, onError: (e) {
+        // ignore: avoid_types_on_closure_parameters
+      }, onError: (Object e) {
         completer.complete();
         print('Error updating appointment: $e');
       });
@@ -48,6 +48,6 @@ class CustomerDao with ChangeNotifier {
     print('finished saving');
   }
 
-  Future<void> removeCustomer(String customerId) async =>
-      _db.collection('Customers').doc(customerId).delete();
+  Future<void> removeCustomer(int customerId) async =>
+      _db.collection('Customers').doc('$customerId').delete();
 }

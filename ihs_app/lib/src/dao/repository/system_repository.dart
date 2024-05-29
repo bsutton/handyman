@@ -148,9 +148,9 @@ class InboundCallData {
   static InboundCallData fromJson(Map<String, dynamic> json) {
     final clid = json['clid'] as String;
     final hasCall = json['hasCall'] as bool;
-    final inboundCallData = InboundCallData();
-    inboundCallData.clid = clid;
-    inboundCallData.hasCall = hasCall;
+    final inboundCallData = InboundCallData()
+      ..clid = clid
+      ..hasCall = hasCall;
     return inboundCallData;
   }
 }
@@ -163,9 +163,9 @@ class SnapShot {
   static SnapShot fromJson(Map<String, dynamic> json) {
     final snapShot = SnapShot();
     final state = json['state'] as String;
-    snapShot.state = EnumHelper.getEnum(state, MpbxCallStatusEnum.values);
-
-    snapShot.sequenceNumber = json['sequenceNumber'] as int;
+    snapShot
+      ..state = EnumHelper.getEnum(state, MpbxCallStatusEnum.values)
+      ..sequenceNumber = json['sequenceNumber'] as int;
     return snapShot;
   }
 }
@@ -190,8 +190,10 @@ class CallConfig {
   // ignore: prefer_constructors_over_static_methods
   static CallConfig fromJson(Map<String, dynamic> json) {
     final callConfig = CallConfig();
-    callConfig.did = json['did'] as String;
-    callConfig.challengeDtmf = json['challengeDtmf'] as String;
+    // ignore: cascade_invocations
+    callConfig
+      ..did = json['did'] as String
+      ..challengeDtmf = json['challengeDtmf'] as String;
     return callConfig;
   }
 }
@@ -210,22 +212,23 @@ class SipConfig {
   static SipConfig fromJson(Map<String, dynamic> json) {
     final config = SipConfig();
     final json2 = json['serverPort'] as String;
-    config.serverPort = int.parse(json2);
-    config.serverHost = json['serverHost'] as String;
-    config.stunSettings = json['stunSettings'] as String;
-    config.exten = json['exten'] as String;
-    config.password = json['password'] as String;
-    config.protocol = json['protocol'] as String;
-    config.proxyHost = json['proxyHost'] as String;
-    config.proxyPort = json['proxyPort'] as String;
+    config
+      ..serverPort = int.parse(json2)
+      ..serverHost = json['serverHost'] as String
+      ..stunSettings = json['stunSettings'] as String
+      ..exten = json['exten'] as String
+      ..password = json['password'] as String
+      ..protocol = json['protocol'] as String
+      ..proxyHost = json['proxyHost'] as String
+      ..proxyPort = json['proxyPort'] as String;
     return config;
   }
 
   @override
   String toString() {
-    final desc =
-        'serverHost $serverHost\n serverPort $serverPort\n stunSettings $stunSettings\n '
-        ' exten $exten\n password $password\n protocol $protocol\n proxyHost $proxyHost\n proxyPort $proxyPort';
+    final desc = '''
+serverHost $serverHost\n serverPort $serverPort\n stunSettings $stunSettings
+exten $exten\n password $password\n protocol $protocol\n proxyHost $proxyHost\n proxyPort $proxyPort''';
     return desc;
   }
 }

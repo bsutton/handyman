@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../util/log.dart';
@@ -13,7 +14,8 @@ class ThumbMenu extends StatefulWidget {
       this.expansionMenuKey}) {
     Log.d('ThumbMenu');
   }
-  // const which should be used by widget that display just above the thumb menu.
+  // const which should be used by widget that display just above the
+  // thumb menu.
   // The widget should uses this value as bottom padding to ensure it is clear
   // of the thumb menu's 'Circle' that peeks above the bottom title bar.
   static const double bottomInset = 20;
@@ -25,6 +27,14 @@ class ThumbMenu extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => ThumbMenuState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('title', title))
+    ..add(IterableProperty<MenuItem>('menuItems', menuItems))
+    ..add(DiagnosticsProperty<GlobalKey<ExpansionBottomAppBarState>?>(
+        'expansionMenuKey', expansionMenuKey));
+  }
 }
 
 class ThumbMenuState extends State<ThumbMenu> {

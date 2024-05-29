@@ -1,5 +1,6 @@
 // --- Copied and slightly modified version of the ExpansionTile.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 const Duration _kExpand = Duration(milliseconds: 200);
@@ -26,6 +27,16 @@ class ExpansionTileEx extends StatefulWidget {
 
   @override
   ExpansionTileExState createState() => ExpansionTileExState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<bool>('scrollIntoView', scrollIntoView))
+      ..add(ObjectFlagProperty<ValueChanged<bool>>.has(
+          'onExpansionChanged', onExpansionChanged))
+      ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(DiagnosticsProperty<bool>('initiallyExpanded', initiallyExpanded));
+  }
 }
 
 class ExpansionTileExState extends State<ExpansionTileEx>

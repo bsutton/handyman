@@ -22,4 +22,6 @@ class Activity extends Entity<Activity> {
 
   @override
   Map<String, dynamic> toJson() => _$ActivityToJson(this);
+  
+
 }

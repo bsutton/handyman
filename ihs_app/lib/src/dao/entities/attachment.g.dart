@@ -21,7 +21,7 @@ Map<String, dynamic> _$AttachmentToJson(Attachment instance) =>
           instance.guid, const GUIDConverter().toJson),
       'name': instance.name,
       'description': instance.description,
-      'storageType': _$AttachmentStorageEnumMap[instance.storageType]!,
+      'storageType': _$AttachmentStorageEnumMap[instance.storageType],
       'url': instance.url,
     };
 

@@ -4,7 +4,6 @@ import 'theme/nj_text_themes.dart';
 import 'wizard.dart';
 
 abstract class WizardStep {
-
   WizardStep({required String title}) : _title = title;
   final String _title;
   bool buildRequired = false;
@@ -73,7 +72,8 @@ abstract class WizardStep {
     self.confirm();
   }
 
-  /// Called against the current step as the wizard is about to transitions forward to a new step.
+  /// Called against the current step as the wizard is about
+  /// to transitions forward to a new step.
   /// [intendedStep] is the step the wizard is transitioning to.
   /// You can veto the transition by calling [intendedStep].cancel or call
   /// [intendedStep].redirect to set an alternate step to move to.
@@ -82,7 +82,8 @@ abstract class WizardStep {
     intendedStep.confirm();
   }
 
-  /// Called against the current as the wizard is about to transitions backwards to a new step.
+  /// Called against the current as the wizard is about to transitions
+  ///  backwards to a new step.
   /// [intendedStep] is the step the wizard is transitioning to.
   /// You can veto the transition by calling [intendedStep].cancel or call
   /// [intendedStep].redirect to set an alternate step to move to.

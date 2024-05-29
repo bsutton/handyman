@@ -10,7 +10,8 @@ import '../repository.dart';
 import 'action.dart';
 
 /// Used when a user is attempting to recover their account.
-/// We have validated their mobile number (as proved vy the [FirebaseTempUserUid])
+/// We have validated their mobile number (as proved vy the 
+/// [FirebaseTempUserUid])
 /// and we now need to find their user details.
 /// This may fail if the user has changed their mobile no.
 class ActionUserInvitationByMobile<E extends Entity<E>>

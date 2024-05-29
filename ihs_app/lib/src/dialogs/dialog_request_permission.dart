@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../app/router.dart';
@@ -27,6 +28,16 @@ class DialogRequestPermission extends StatefulWidget {
         builder: (context) => DialogRequestPermission(reason));
 
     return result ?? false;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<TextStyle>('headingStyle', headingStyle))
+      ..add(DiagnosticsProperty<TextStyle>('buttonHeaddings', buttonHeaddings))
+      ..add(DiagnosticsProperty<TextStyle>('timeLabel', timeLabel))
+      ..add(StringProperty('reason', reason));
   }
 }
 

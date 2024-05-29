@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'svg.dart';
@@ -39,5 +40,16 @@ class SvgText extends StatelessWidget {
             color: color)
       ]);
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('path', path))
+      ..add(StringProperty('text', text))
+      ..add(EnumProperty<Side>('side', side))
+      ..add(EnumProperty<LOCATION>('location', location))
+      ..add(ColorProperty('color', color));
   }
 }

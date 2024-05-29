@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/router.dart';
@@ -25,7 +26,7 @@ class SliverScaffold extends StatelessWidget {
       );
 
   Widget _buildHeader(BuildContext context) => SliverAppBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         leading: Container(),
         expandedHeight: 200,
@@ -44,4 +45,14 @@ class SliverScaffold extends StatelessWidget {
         },
         child: _buildScrollView(context),
       );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+          DiagnosticsProperty<RouteName>('currentRouteName', currentRouteName))
+      ..add(StringProperty('title', title))
+      ..add(ObjectFlagProperty<VoidCallback?>.has(
+          'refreshCallback', refreshCallback));
+  }
 }

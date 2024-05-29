@@ -1,12 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'theme/nj_text_themes.dart';
 
 class MultiSelect<T extends Selectable> extends StatefulWidget {
-
   const MultiSelect(
-      {required this.items, required this.nonSelectedIcon, required this.selectedIcon, required this.selectedBackGroundColor, super.key,
-       this.onChanged});
+      {required this.items,
+      required this.nonSelectedIcon,
+      required this.selectedIcon,
+      required this.selectedBackGroundColor,
+      super.key,
+      this.onChanged});
   final List<T> items;
   final Icon selectedIcon;
   final Icon nonSelectedIcon;
@@ -15,6 +19,14 @@ class MultiSelect<T extends Selectable> extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => MultiSelectState<T>();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ColorProperty('selectedBackGroundColor', selectedBackGroundColor))
+      ..add(ObjectFlagProperty<void Function()?>.has('onChanged', onChanged))
+      ..add(IterableProperty<T>('items', items));
+  }
 }
 
 abstract class Selectable {
@@ -24,7 +36,6 @@ abstract class Selectable {
 }
 
 class MultiSelectState<T extends Selectable> extends State<MultiSelect> {
-
   MultiSelectState();
 
   final List<T> selected = [];
@@ -56,5 +67,11 @@ class MultiSelectState<T extends Selectable> extends State<MultiSelect> {
     }
 
     return widgets;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<T>('selected', selected));
   }
 }

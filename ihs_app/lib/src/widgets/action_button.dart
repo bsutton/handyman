@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatefulWidget {
@@ -16,6 +17,15 @@ class ActionButton extends StatefulWidget {
 
   @override
   ActionButtonState createState() => ActionButtonState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('title', title))
+    ..add(ColorProperty('fillColor', fillColor))
+    ..add(DiagnosticsProperty<IconData>('icon', icon))
+    ..add(DiagnosticsProperty<bool>('checked', checked))
+    ..add(ObjectFlagProperty<void Function()?>.has('onPressed', onPressed));
+  }
 }
 
 class ActionButtonState extends State<ActionButton> {

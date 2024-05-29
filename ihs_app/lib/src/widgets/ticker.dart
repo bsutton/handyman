@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../util/log.dart';
 
 typedef TickerBuilder = Widget Function(BuildContext context, int index);
 typedef OnTick = void Function(int index);
@@ -11,7 +14,8 @@ typedef OnTick = void Function(int index);
 /// The builder is called each interval and is passed the tick count.
 /// The onTick is called each interval and is passed the tick count.
 ///
-/// The tick count is incremented each interval until it reaches the limit after which it is reset to zero.
+/// The tick count is incremented each interval until it reaches the
+/// limit after which it is reset to zero.
 /// The default limit is 100.
 /// The build is called each [interval] period.
 ///
@@ -31,6 +35,15 @@ class Ticker extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => TickerState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty<OnTick>.has('onTick', onTick))
+      ..add(DiagnosticsProperty<Duration>('interval', interval))
+      ..add(IntProperty('limit', limit))
+      ..add(DiagnosticsProperty<bool>('active', active));
+  }
 }
 
 class TickerState extends State<Ticker> {
@@ -49,7 +62,8 @@ class TickerState extends State<Ticker> {
   @override
   Widget build(BuildContext context) {
     // do we need to restart the ticker?
-    // This logic supports the ticker being cycled between active and inactive states.
+    // This logic supports the ticker being cycled between active
+    // and inactive states.
     // the ticker will only emit events when active and we shutdown the
     // time when inactive to save system resources.
     if (active == false && widget.active == true) {
@@ -62,11 +76,21 @@ class TickerState extends State<Ticker> {
 
   void queueTicker() {
     Future.delayed(widget.interval, () {
-      // Log.d("onTick called ${tickCount} active: ${widget.active} mounted: ${mounted}");
+      Log.d(
+          '''
+onTick called $tickCount active: ${widget.active} mounted: $mounted''');
       if (mounted && active) {
         widget.onTick(tickCount);
         queueTicker();
       }
     });
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(IntProperty('tickCount', tickCount))
+      ..add(DiagnosticsProperty<bool>('active', active));
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -83,5 +84,14 @@ class MoonPhaseState extends State<MoonPhase> {
         color = Colors.black;
       }
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('period', period))
+      ..add(StringProperty('icon', icon))
+      ..add(ColorProperty('color', color));
   }
 }

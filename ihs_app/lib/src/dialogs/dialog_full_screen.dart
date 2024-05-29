@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../app/router.dart';
@@ -112,5 +113,18 @@ class DialogFullScreen extends StatelessWidget {
     }
 
     return results;
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(ObjectFlagProperty<WidgetBuilder>.has('builder', builder))
+    ..add(DiagnosticsProperty<Key?>('dialogKey', dialogKey))
+    ..add(StringProperty('title', title))
+    ..add(StringProperty('okLabel', okLabel))
+    ..add(StringProperty('cancelLabel', cancelLabel))
+    ..add(ObjectFlagProperty<VoidCallback?>.has('onOK', onOK))
+    ..add(ObjectFlagProperty<VoidCallback?>.has('onCancel', onCancel))
+    ..add(ObjectFlagProperty<Validator?>.has('validator', validator))
+    ..add(DiagnosticsProperty<bool>('showCancel', showCancel));
   }
 }
