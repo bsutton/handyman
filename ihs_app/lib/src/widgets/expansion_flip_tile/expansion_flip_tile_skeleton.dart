@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -27,33 +28,38 @@ class ExpansionFlipTileSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ExpansionFlipTile(
-      swatch: swatch,
-      bodyBuilder: (context) => const Empty(),
-      actionBuilder: (context) => const Empty(),
-      title: Shimmer.fromColors(
-        baseColor: Colors.white70,
-        highlightColor: Colors.white38,
-        child: Row(
-          children: <Widget>[
-            Container(
-              width: _width(context),
-              height: _shimmerHeight,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-                borderRadius: BorderRadius.circular(_borderRadius),
+        swatch: swatch,
+        bodyBuilder: (context) => const Empty(),
+        actionBuilder: (context) => const Empty(),
+        title: Shimmer.fromColors(
+          baseColor: Colors.white70,
+          highlightColor: Colors.white38,
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: _width(context),
+                height: _shimmerHeight,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(_borderRadius),
+                ),
               ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: _spacerWidth),
-              width: _width(context),
-              height: _shimmerHeight,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.background,
-                borderRadius: BorderRadius.circular(_borderRadius),
+              Container(
+                margin: const EdgeInsets.only(left: _spacerWidth),
+                width: _width(context),
+                height: _shimmerHeight,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(_borderRadius),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(ColorProperty('swatch', swatch));
+  }
 }

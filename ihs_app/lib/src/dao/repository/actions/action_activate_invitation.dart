@@ -25,8 +25,8 @@ class ActionActivateInvitation<E extends Entity<E>>
 
   @override
   InvitationDetails decodeResponse(ActionResponse data) {
-    final details = InvitationDetails.fromJson(data);
-    details.firebaseTempUserUid = firebaseTempUserUid;
+    final details = InvitationDetails.fromJson(data)
+      ..firebaseTempUserUid = firebaseTempUserUid;
     return details;
   }
 

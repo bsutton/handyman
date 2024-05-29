@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +33,16 @@ class ThumbMenuImpl extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => ThumbMenuImplState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('title', title))
+      ..add(IterableProperty<MenuItem>('menuItems', menuItems))
+      ..add(DiagnosticsProperty<GlobalKey<ExpansionBottomAppBarState>?>(
+          'expansionMenuKey', expansionMenuKey))
+      ..add(DiagnosticsProperty<BuildContext>('context', context));
+  }
 }
 
 class ThumbMenuImplState extends State<ThumbMenuImpl>
@@ -79,6 +90,15 @@ class ThumbMenuImplState extends State<ThumbMenuImpl>
   Future<void> clicked() async {
     await QuickSnack().info(widget.context, 'Clicked');
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(
+        DiagnosticsProperty<OverlayEntry?>('scaffoldEntry', scaffoldEntry))
+    ..add(DiagnosticsProperty<MenuItemAnimator?>(
+        'menuItemAnimator', menuItemAnimator));
+  }
 }
 
 class ThumbMenuTitle extends StatelessWidget {
@@ -110,4 +130,10 @@ class ThumbMenuTitle extends StatelessWidget {
                       ],
                     )))),
       ));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('title', title))
+    ..add(DoubleProperty('opacity', opacity));
+  }
 }

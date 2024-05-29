@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dialogs/dialog_alert.dart';
@@ -34,9 +35,9 @@ class NjBottomAppBar extends StatelessWidget {
       Row(children: [
         const ContextHelpButton(),
         _buildNoticesChip(context),
-      ])
+      ]),
+      Row(children: actions)
     ];
-    children.add(Row(children: actions));
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: children,
@@ -49,4 +50,9 @@ class NjBottomAppBar extends StatelessWidget {
         shape: shape,
         child: _buildContent(context),
       );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<NotchedShape>('shape', shape));
+  }
 }

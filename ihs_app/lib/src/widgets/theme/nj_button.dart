@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../empty.dart';
@@ -51,6 +52,17 @@ class NJButtonPrimary extends StatelessWidget {
                 color: svgColor,
               ),
       );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('label', label))
+      ..add(ObjectFlagProperty<VoidCallback?>.has('onPressed', onPressed))
+      ..add(StringProperty('svg', svg))
+      ..add(ColorProperty('svgColor', svgColor))
+      ..add(EnumProperty<LOCATION?>('svgLocation', svgLocation))
+      ..add(DiagnosticsProperty<bool>('enabled', enabled));
+  }
 }
 
 class NJButtonSecondary extends StatelessWidget {
@@ -68,4 +80,10 @@ class NJButtonSecondary extends StatelessWidget {
             disabledBackgroundColor: Colors.grey.withOpacity(0.12)),
         child: NJTextButton(label),
       );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('label', label))
+    ..add(ObjectFlagProperty<VoidCallback?>.has('onPressed', onPressed));
+  }
 }

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +30,16 @@ class MenuItemImpl extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => MenuItemImplState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DoubleProperty('degrees', degrees))
+    ..add(StringProperty('label', label))
+    ..add(StringProperty('svgFilename', svgFilename))
+    ..add(
+        ObjectFlagProperty<VoidCallback>.has('onNotifyParent', onNotifyParent))
+    ..add(ObjectFlagProperty<VoidCallback>.has('onTap', onTap));
+  }
 }
 
 class MenuItemImplState extends State<MenuItemImpl>
@@ -63,7 +74,8 @@ class MenuItemImplState extends State<MenuItemImpl>
         2;
 
     return Positioned(
-        // centres the base of the item over the centre of the thumb memu circle as the point of rotation.
+        // centres the base of the item over the centre of the thumb 
+        //memu circle as the point of rotation.
         right: screenWidth / 2,
         bottom: yPosition,
         child: buildAxleAndImage(xOrigin, yOrigin));
@@ -171,4 +183,11 @@ class MenuItemImplState extends State<MenuItemImpl>
   }
 
   double mmToPixels(int millimetres) => millimetres * 6.299;
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DoubleProperty('screenWidth', screenWidth))
+    ..add(DoubleProperty('screenHeight', screenHeight))
+    ..add(DoubleProperty('axleXSize', axleXSize));
+  }
 }

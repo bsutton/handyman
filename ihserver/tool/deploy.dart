@@ -1,4 +1,4 @@
-#! /usr/bin/env dcli
+#! /usr/bin/env dart
 
 import 'dart:io';
 
@@ -11,7 +11,7 @@ import 'package:path/path.dart';
 final pathToHandyman = join(rootPath, 'opt', 'handyman');
 final pathToHandymanBin = join(rootPath, 'opt', 'handyman', 'bin');
 
-/// when deploying we copy the executabler to an alternate location as the
+/// when deploying we copy the executable to an alternate location as the
 /// existing execs will be running and therefore locked.
 final pathToHandymanAltBin = join(rootPath, 'opt', 'handyman', 'altbin');
 final pathToWwwRoot = join(pathToHandyman, 'www_root');
@@ -51,7 +51,9 @@ void _restart() {
   killProcess('dart:ihserver');
 
   // on first time install the bin directory won't exist.
-  createDir(pathToHandymanBin, recursive: true);
+  if (!exists(pathToHandymanBin)) {
+    createDir(pathToHandymanBin, recursive: true);
+  }
 
   copyTree(pathToHandymanAltBin, pathToHandymanBin, overwrite: true);
 

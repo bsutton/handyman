@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,15 @@ class TimePicker extends StatefulWidget {
         builder: (context) => TimePicker(heading, timeOfDay));
 
     return result;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('heading', heading))
+      ..add(
+          DiagnosticsProperty<LocalTime>('initialTimeOfDay', initialTimeOfDay));
   }
 }
 
@@ -79,7 +89,8 @@ class TimePickerState extends State<TimePicker> {
   Widget buildTimeEditor() => Row(children: [
         Consumer<LocalTimeState>(
             builder: (context, timeOfDay, _) => NJTextSubheading(
-                  'Time: ${timeOfDay.hour.toString().padLeft(2, '0')}:${timeOfDay.minute.toString().padLeft(2, '0')}${timeOfDay.isAM() ? ' am' : ' pm'}',
+                  '''
+Time: ${timeOfDay.hour.toString().padLeft(2, '0')}:${timeOfDay.minute.toString().padLeft(2, '0')}${timeOfDay.isAM() ? ' am' : ' pm'}''',
                 )),
         //     TextFormField(),
         //    TextFormField(),
@@ -138,4 +149,9 @@ class TimePickerState extends State<TimePicker> {
       ]);
 
   void oneTap() {}
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<LocalTimeState>('timeOfDay', timeOfDay));
+  }
 }

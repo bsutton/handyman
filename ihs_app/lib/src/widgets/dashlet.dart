@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,8 @@ class Dashlet extends StatelessWidget {
   // final BuildContext parentContext;
 
   ///
-  /// chipText - the text to show in a chip in the upper right corner of the dashlet.
+  /// chipText - the text to show in a chip in the upper right corner of
+  /// the dashlet.
   ///             If the chipText is null then the chip will not be shown.
   const Dashlet(
       { // required this.parentContext,
@@ -54,8 +56,10 @@ class Dashlet extends StatelessWidget {
   // if true we replace the route rathen than pushing it on to the stack.
   final bool replaceRoute;
 
-  /// We recommend that you use targetRoute rather than onPressed unless you have
-  /// some specialise processing that you need to do or the route target is dynamic.
+  /// We recommend that you use targetRoute rather than onPressed unless 
+  /// you have
+  /// some specialise processing that you need to do or the route target 
+  /// is dynamic.
   final GestureTapCallback? onPressed;
 
   final String? heroTag;
@@ -113,6 +117,7 @@ class Dashlet extends StatelessWidget {
 
       // ignore: no_default_cases
       default:
+
         /// (centre)
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Padding(
@@ -158,4 +163,20 @@ class Dashlet extends StatelessWidget {
   Widget buildLabel() => Text(label,
       textAlign: TextAlign.left,
       style: const TextStyle(fontSize: 15, color: Colors.white));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('label', label))
+      ..add(DoubleProperty('width', width))
+      ..add(StringProperty('chipText', chipText))
+      ..add(ColorProperty('chipColor', chipColor))
+      ..add(ColorProperty('backgroundColor', backgroundColor))
+      ..add(IntProperty('flex', flex))
+      ..add(EnumProperty<DashletAlignment>('alignment', alignment))
+      ..add(DiagnosticsProperty<RouteName?>('targetRoute', targetRoute))
+      ..add(DiagnosticsProperty<bool>('replaceRoute', replaceRoute))
+      ..add(ObjectFlagProperty<GestureTapCallback?>.has('onPressed', onPressed))
+      ..add(StringProperty('heroTag', heroTag));
+  }
 }

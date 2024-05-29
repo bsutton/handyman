@@ -1,5 +1,6 @@
 //Credit : @Eugene (https://stackoverflow.com/questions/56340682/flutter-equvalent-android-toggle-switch
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 typedef OnToggle = Future<bool> Function(int index);
@@ -42,6 +43,23 @@ class ToggleSwitch extends StatefulWidget {
 
   @override
   ToggleSwitchState createState() => ToggleSwitchState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ColorProperty('activeTextColor', activeTextColor))
+      ..add(ColorProperty('activeBgColor', activeBgColor))
+      ..add(ColorProperty('inactiveBgColor', inactiveBgColor))
+      ..add(ColorProperty('inactiveTextColor', inactiveTextColor))
+      ..add(IterableProperty<String>('labels', labels))
+      ..add(DoubleProperty('cornerRadius', cornerRadius))
+      ..add(ObjectFlagProperty<OnToggle?>.has('onToggle', onToggle))
+      ..add(IntProperty('initialLabelIndex', initialLabelIndex))
+      ..add(DoubleProperty('minWidth', minWidth))
+      ..add(DoubleProperty('minHeight', minHeight))
+      ..add(IterableProperty<IconData>('icons', icons))
+      ..add(IterableProperty<Color>('activeColors', activeColors));
+  }
 }
 
 class ToggleSwitchState extends State<ToggleSwitch>
@@ -123,11 +141,19 @@ class ToggleSwitchState extends State<ToggleSwitch>
     allowToggle = await widget.onToggle?.call(index) ?? true;
 
     setState(() {
-      if (allowToggle) current = index;
+      if (allowToggle) {
+        current = index;
+      }
     });
   }
 
   void setIndex(int index) {
     setState(() => current = index);
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('current', current));
   }
 }

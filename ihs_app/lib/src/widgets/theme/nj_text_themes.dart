@@ -1,12 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'nj_theme.dart';
 
 ///
-/// Use this style on any page that has a full width heading at the top of the page.
+/// Use this style on any page that has a full width heading at the 
+/// top of the page.
 ///
 class NJTextPageHeading extends StatelessWidget {
-
   NJTextPageHeading(String text, {super.key, this.color = NJColors.textPrimary})
       : text = text.toUpperCase();
   final String text;
@@ -15,48 +16,66 @@ class NJTextPageHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => FittedBox(
-        fit: BoxFit.fitWidth,
-        child: Text(text,
-            style: TextStyle(
-                color: color,
-                fontSize: fontSize,
-                fontWeight: FontWeight.w500)));
+      fit: BoxFit.fitWidth,
+      child: Text(text,
+          style: TextStyle(
+              color: color, fontSize: fontSize, fontWeight: FontWeight.w500)));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('text', text))
+      ..add(ColorProperty('color', color));
+  }
 }
 
 class NJTextHeadline extends StatelessWidget {
-
-  const NJTextHeadline(this.text, {super.key, this.color = NJColors.textPrimary});
+  const NJTextHeadline(this.text,
+      {super.key, this.color = NJColors.textPrimary});
   final String text;
   final Color color;
   static const fontSize = 30.0;
 
   @override
   Widget build(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 12),
-      child: Text(text,
-          style: TextStyle(
-              color: color, fontSize: fontSize, fontWeight: FontWeight.w500)),
-    );
+        padding: const EdgeInsets.only(top: 8, bottom: 12),
+        child: Text(text,
+            style: TextStyle(
+                color: color, fontSize: fontSize, fontWeight: FontWeight.w500)),
+      );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('text', text))
+      ..add(ColorProperty('color', color));
+  }
 }
 
 class NJTextHeadline2 extends StatelessWidget {
-
-  const NJTextHeadline2(this.text, {super.key, this.color = NJColors.textPrimary});
+  const NJTextHeadline2(this.text,
+      {super.key, this.color = NJColors.textPrimary});
   final String text;
   final Color color;
   static const fontSize = 26.0;
 
   @override
   Widget build(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 12),
-      child: Text(text,
-          style: TextStyle(
-              color: color, fontSize: fontSize, fontWeight: FontWeight.w500)),
-    );
+        padding: const EdgeInsets.only(top: 8, bottom: 12),
+        child: Text(text,
+            style: TextStyle(
+                color: color, fontSize: fontSize, fontWeight: FontWeight.w500)),
+      );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('text', text))
+      ..add(ColorProperty('color', color));
+  }
 }
 
 class NJTextSubheading extends StatelessWidget {
-
   NJTextSubheading(this.text, {super.key, this.color = NJColors.textPrimary})
       : style = TextStyle(fontSize: fontSize, color: color);
   final String text;
@@ -67,17 +86,25 @@ class NJTextSubheading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-      padding: const EdgeInsets.all(8),
-      child: Text(text, style: style),
-    );
+        padding: const EdgeInsets.all(8),
+        child: Text(text, style: style),
+      );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('text', text))
+      ..add(ColorProperty('color', color))
+      ..add(DiagnosticsProperty<TextStyle>('style', style));
+  }
 }
 
 /// Use this for a section heading within the body of a document
 /// This is normally used as a heading for a paragraph which
 /// uses the TextNJBody style.
 class NJTextSectionHeading extends StatelessWidget {
-
-  NJTextSectionHeading(this.text, {super.key, this.color = NJColors.textPrimary})
+  NJTextSectionHeading(this.text,
+      {super.key, this.color = NJColors.textPrimary})
       : style = TextStyle(
             fontSize: fontSize, color: color, fontWeight: FontWeight.bold);
   final String text;
@@ -88,14 +115,21 @@ class NJTextSectionHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(10), child: Text(text, style: style));
+      padding: const EdgeInsets.all(10), child: Text(text, style: style));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('text', text))
+      ..add(ColorProperty('color', color))
+      ..add(DiagnosticsProperty<TextStyle>('style', style));
+  }
 }
 
 ///
 /// Used for text and  paragraphs of text that should use the
 ///  standard font/styling for the body of a document.
 class NJTextBody extends StatelessWidget {
-
   NJTextBody(this.text, {super.key, this.color = NJColors.textPrimary})
       : _style = style.copyWith(color: color);
   static const fontSize = 16.0;
@@ -107,14 +141,20 @@ class NJTextBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-      padding: const EdgeInsets.all(8),
-      child: Text(text, style: _style),
-    );
+        padding: const EdgeInsets.all(8),
+        child: Text(text, style: _style),
+      );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('text', text))
+      ..add(ColorProperty('color', color));
+  }
 }
 
 /// Use for text in a body section that needs to be bold.
 class NJTextBodyBold extends StatelessWidget {
-
   NJTextBodyBold(this.text, {super.key, this.color = NJColors.textPrimary})
       : style = TextStyle(
             color: color, fontSize: fontSize, fontWeight: FontWeight.bold);
@@ -125,6 +165,14 @@ class NJTextBodyBold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(text, style: style);
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('text', text))
+      ..add(ColorProperty('color', color))
+      ..add(DiagnosticsProperty<TextStyle>('style', style));
+  }
 }
 
 ///
@@ -132,7 +180,6 @@ class NJTextBodyBold extends StatelessWidget {
 /// highlight the text. This is essentially a bolded TextNJBody
 ///
 class NJTextNotice extends StatelessWidget {
-
   const NJTextNotice(this.text, {super.key});
   static const fontSize = 14.0;
   final String text;
@@ -141,13 +188,17 @@ class NJTextNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(text, style: noticeStyle);
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('text', text));
+  }
 }
 
 ///
 /// Used when you need to display text indicating an error.
 ///
 class NJTextError extends StatelessWidget {
-
   const NJTextError(this.text, {super.key});
   static const fontSize = 14.0;
   final String text;
@@ -159,13 +210,17 @@ class NJTextError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(text, style: noticeStyle);
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('text', text));
+  }
 }
 
 ///
 /// Text style used by buttons such as ButtonPrimary/ButtonSecondary
 ///
 class NJTextButton extends StatelessWidget {
-
   NJTextButton(this.text, {super.key, this.color = NJColors.textPrimary})
       : style = TextStyle(color: color, fontSize: fontSize);
   static const fontSize = 16.0;
@@ -175,11 +230,17 @@ class NJTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(text.toUpperCase(), style: style);
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('text', text))
+    ..add(ColorProperty('color', color))
+    ..add(DiagnosticsProperty<TextStyle>('style', style));
+  }
 }
 
 /// Use for Form Field labels.
 class NJTextLabel extends StatelessWidget {
-
   NJTextLabel(this.text, {super.key, this.color = NJColors.textPrimary})
       : style = TextStyle(color: color, fontSize: fontSize);
   static const fontSize = 16.0;
@@ -189,29 +250,43 @@ class NJTextLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(text, style: style);
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('text', text))
+    ..add(ColorProperty('color', color))
+    ..add(DiagnosticsProperty<TextStyle>('style', style));
+  }
 }
 
 ///
 /// Use this for text that is displayed in the likes of a ListView
 ///
 class NJTextListItem extends StatelessWidget {
-
-  const NJTextListItem(this.text, {super.key, this.color = NJColors.listCardText});
+  const NJTextListItem(this.text,
+      {super.key, this.color = NJColors.listCardText});
   final String text;
   final Color? color;
   static const fontSize = 16.0;
   static const TextStyle style = TextStyle(fontSize: fontSize);
 
   @override
-  Widget build(BuildContext context) => Text(text, style: style.copyWith(color: color));
+  Widget build(BuildContext context) =>
+      Text(text, style: style.copyWith(color: color));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('text', text))
+    ..add(ColorProperty('color', color));
+  }
 }
 
 ///
 /// Use this for text that is displayed in the likes of a ListView
 ///
 class NJTextListItemBold extends StatelessWidget {
-
-  const NJTextListItemBold(this.text, {super.key, this.color = NJColors.listCardText});
+  const NJTextListItemBold(this.text,
+      {super.key, this.color = NJColors.listCardText});
   static const fontSize = 16.0;
   final String text;
   final Color color;
@@ -219,7 +294,14 @@ class NJTextListItemBold extends StatelessWidget {
       TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold);
 
   @override
-  Widget build(BuildContext context) => Text(text, style: style.copyWith(color: color));
+  Widget build(BuildContext context) =>
+      Text(text, style: style.copyWith(color: color));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('text', text))
+    ..add(ColorProperty('color', color));
+  }
 }
 
 ///
@@ -227,7 +309,6 @@ class NJTextListItemBold extends StatelessWidget {
 /// some ancillary information that isn't that important.
 /// Ancillary text will be displayed in a lighter font color
 class NJUTextAncillary extends StatelessWidget {
-
   NJUTextAncillary(this.text, {super.key, this.color = Colors.grey})
       : style = TextStyle(color: color, fontSize: fontSize);
   static const fontSize = 16.0;
@@ -237,13 +318,19 @@ class NJUTextAncillary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(8), child: Text(text, style: style));
+      padding: const EdgeInsets.all(8), child: Text(text, style: style));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('text', text))
+    ..add(ColorProperty('color', color))
+    ..add(DiagnosticsProperty<TextStyle>('style', style));
+  }
 }
 
 ///
 /// Used for the text within chips.
 class NJTextChip extends StatelessWidget {
-
   NJTextChip(this.text, {super.key, this.color = NJColors.chipTextColor})
       : _style = style.copyWith(color: color);
   static const fontSize = 15.0;
@@ -255,12 +342,17 @@ class NJTextChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(text, style: _style);
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('text', text))
+    ..add(ColorProperty('color', color));
+  }
 }
 
 enum Position { start, end }
 
 class NJTextIcon extends StatelessWidget {
-
   const NJTextIcon(this.text, this.icon,
       {super.key, this.position = Position.start, this.iconColor, this.color});
   static const fontSize = NJTextListItem.fontSize;
@@ -287,5 +379,15 @@ class NJTextIcon extends StatelessWidget {
         Icon(icon, color: iconColor)
       ]);
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('text', text))
+    ..add(DiagnosticsProperty<IconData>('icon', icon))
+    ..add(EnumProperty<Position>('position', position))
+    ..add(ColorProperty('color', color))
+    ..add(ColorProperty('iconColor', iconColor));
   }
 }

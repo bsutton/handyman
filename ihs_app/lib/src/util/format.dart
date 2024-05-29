@@ -10,9 +10,11 @@ class Format {
   /// Formats the Duration to H:mm
   ///
   /// @param duration
-  /// @param showSuffix if true then a suffix such as 'secs' is added to the string.
+  /// @param showSuffix if true then a suffix such as 'secs' is added to t
+  /// he string.
   ///   defaults to true.
-  /// @return a blank string if duration is null otherwise the duration as per the format.
+  /// @return a blank string if duration is null otherwise the duration as
+  /// per the format.
   ///
   ///
   static String duration(Duration duration, {bool showSuffix = true}) {
@@ -90,7 +92,9 @@ class Format {
             word.substring(1).toLowerCase();
       }
 
-      if (result.length > 0) result.write(' ');
+      if (result.length > 0) {
+        result.write(' ');
+      }
 
       result.write(word);
     }
@@ -164,7 +168,8 @@ class Format {
 
 	static const DateFormat timeFormat = DateFormat('hh:mma');
 
-	 static String format(DateTime date, [ DateFormat formatter = DateFormat.yMEd()])
+	 static String format(DateTime date, 
+   [ DateFormat formatter = DateFormat.yMEd()])
 	{
     return (date == null ? '' : formatter.format(date));
 		
@@ -231,7 +236,8 @@ class Format {
 	}
 
 	/**
-	 * If the date is today we just display the time. If the date is NOT today we just display the date.
+	 * If the date is today we just display the time. If the date is 
+   * NOT today we just display the date.
 	 * 
 	 * @param dateTime
 	 * @return
@@ -264,17 +270,20 @@ class Format {
 	}
 
 	/**
-	 * Formats the Duration to the given format. Formats support are any supported by
+	 * Formats the Duration to the given format. Formats support are
+   *  any supported by
 	 * {@link DurationFormatUtils.formatDuration}
 	 * 
 	 * @param duration
 	 * @param format to render duration to.
-	 * @return a blank string if duration is null otherwise the duration as per the format.
+	 * @return a blank string if duration is null otherwise the duration
+   *  as per the format.
 	 */
 	 static String format(Duration duration, String format)
 	{
 
-		return (duration == null ? '' : DurationFormatUtils.formatDuration(duration.toMillis(), format));
+		return (duration == null ? '' : DurationFormatUtils
+    .formatDuration(duration.toMillis(), format));
 	}
 
 */

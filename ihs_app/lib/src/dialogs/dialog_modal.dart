@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../app/router.dart';
@@ -70,6 +71,18 @@ class DialogModal extends StatefulWidget {
             showCancel: showCancel,
             builder: builder));
   }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty<Key?>('dialogKey', dialogKey))
+    ..add(ObjectFlagProperty<WidgetBuilder>.has('builder', builder))
+    ..add(StringProperty('title', title))
+    ..add(StringProperty('okLabel', okLabel))
+    ..add(StringProperty('cancelLabel', cancelLabel))
+    ..add(ObjectFlagProperty<VoidCallback?>.has('onOK', onOK))
+    ..add(ObjectFlagProperty<VoidCallback?>.has('onCancel', onCancel))
+    ..add(DiagnosticsProperty<bool>('showCancel', showCancel));
+  }
 }
 
 class DialogModalState extends State<DialogModal> {
@@ -119,5 +132,10 @@ class DialogModalState extends State<DialogModal> {
     }
 
     return results;
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Duration>('duration', duration));
   }
 }

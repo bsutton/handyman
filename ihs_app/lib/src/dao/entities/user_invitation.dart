@@ -15,11 +15,13 @@ enum InvitationType {
   newOrganisation,
   // A Customer Admin (CA) has invited a new user to join their organisation.
   newUser
-  // A Customer Admin has invited an existing user to re-register agains their organisation.
+  // A Customer Admin has invited an existing user to re-register against
+  //their organisation.
   // Required if user gets a new phone or uninstalls squarephone
   ,
   existingUser
-  // The user has commence a recovery after getting a new phone or re-installing squarephone.
+  // The user has commence a recovery after getting a new phone
+  // or re-installing squarephone.
   ,
   recovery
 }
@@ -119,8 +121,10 @@ enum InvitationState {
   /// however this does not mean they are a known user
   mobileValidated,
 
-  /// indicates that the users' email has been validated (by sending then a email and them responding to it)
-  /// We only allow the email validation process to start if the user account has a valid
+  /// indicates that the users' email has been validated (by sending
+  ///  then a email and them responding to it)
+  /// We only allow the email validation process to start if the user 
+  /// account has a valid
   /// email address.
   emailValidated,
 

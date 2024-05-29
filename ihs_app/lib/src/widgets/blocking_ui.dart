@@ -62,7 +62,8 @@ class BlockingUI extends ChangeNotifier {
   /// if necessary.
   ///
   /// The [label] can be provided to inform the user what action is
-  /// holding things up. The [label] is displayed after the text: 'Just a moment'.
+  /// holding things up. The [label] is displayed after the text:
+  /// 'Just a moment'.
   /// As such the action should be a short verb e.g. Saving.
   /// example
   ///
@@ -106,8 +107,8 @@ class BlockingUI extends ChangeNotifier {
                 // ignore: avoid_types_on_closure_parameters
                 onError: (Object e, StackTrace st) {
               onError?.call(e);
-              Log().e(
-                  'blockUntilFuture returned an error $e st: ${StackTraceImpl.fromStackTrace(st).formatStackTrace()}');
+              Log().e('''
+blockUntilFuture returned an error $e st: ${StackTraceImpl.fromStackTrace(st).formatStackTrace()}''');
             }),
         label: label);
   }
@@ -117,7 +118,8 @@ class BlockingUI extends ChangeNotifier {
     count++;
     // Log.e('begin count=$count');
     // Log.d(green('UI is blocked'));
-    // Log.d(green('blocked by: ${actions.peek().stackTrace.formatStackTrace()}'));
+    // Log.d(green(
+    //'blocked by: ${actions.peek().stackTrace.formatStackTrace()}'));
 
     if (count == 1) {
       startTime = DateTime.now();
@@ -132,7 +134,8 @@ class BlockingUI extends ChangeNotifier {
     actions.pop();
 
     // Log.e('end count=$count');
-    // Log.d(green('unblocked for: ${callPoint.stackTrace.formatStackTrace()}'));
+    // Log.d(
+    //green('unblocked for: ${callPoint.stackTrace.formatStackTrace()}'));
 
     if (count == 0) {
       startTime = null;
@@ -183,8 +186,9 @@ class BlockingUIBuilder<T> extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties
-        .add(ObjectFlagProperty<CompletedBuilder<T>>.has('builder', builder));
-    properties.add(DiagnosticsProperty<StackTrace>('stacktrace', stacktrace));
+      ..add(ObjectFlagProperty<CompletedBuilder<T>>.has('builder', builder))
+      ..add(DiagnosticsProperty<StackTrace>('stacktrace', stacktrace))
+      ..add(ObjectFlagProperty<Future<T> Function()>.has('future', future));
   }
 }
 
@@ -201,10 +205,13 @@ class BlockingUIBuilder<T> extends StatelessWidget {
 ///
 class BlockingUIWidget extends StatefulWidget {
   /// [placement] controls where the spinning placement indicator goes
-  /// We normally use [TopOrTailPlacement.top] during the Registration Wizard and
+  /// We normally use [TopOrTailPlacement.top] during the Registration
+  /// Wizard and
   /// [TopOrTailPlacement.bottom] at all other times.
-  /// [hideHelpIcon] defaults to true and should be used when using the [TopOrTailPlacement.bottom]
-  /// placement otherwise you can see the help icon below the progress indicator.
+  /// [hideHelpIcon] defaults to true and should be used when using the
+  ///  [TopOrTailPlacement.bottom]
+  /// placement otherwise you can see the help icon below the
+  ///  progress indicator.
   const BlockingUIWidget(
       {super.key,
       this.placement = TopOrTailPlacement.bottom,
@@ -293,7 +300,8 @@ class BlockingUIWidgetState extends State<BlockingUIWidget> {
                                 label: (blockingUI.action.label == null
                                     ? NJTextChip('Just a moment...')
                                     : NJTextChip(
-                                        'Just a moment: ${blockingUI.action.label}')),
+                                        '''
+Just a moment: ${blockingUI.action.label}''')),
                                 backgroundColor: Colors.yellow,
                                 elevation: 7,
                               ))))

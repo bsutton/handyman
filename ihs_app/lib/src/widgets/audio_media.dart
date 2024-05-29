@@ -9,8 +9,10 @@ import '../util/log.dart';
 
 enum RecordingStorage { url, file, buffer }
 
-/// Takes a URL or a byte buffer and stores it into a temporary file so that it can be played back.
-/// YOU MUST call dispose on this object to ensure the temporary file is removed.
+/// Takes a URL or a byte buffer and stores it into a temporary file so
+/// that it can be played back.
+/// YOU MUST call dispose on this object to ensure the temporary
+/// file is removed.
 class AudioMedia {
   /// Creates an empty AudioMedia object that you can record into.
   AudioMedia.empty()

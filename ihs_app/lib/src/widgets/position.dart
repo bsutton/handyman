@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'theme/nj_theme.dart';
@@ -20,5 +21,10 @@ class TopOrTail extends StatelessWidget {
     } else {
       return Positioned(top: 5, right: NJTheme.padding, child: child);
     }
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<TopOrTailPlacement>('placement', placement));
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dcache/dcache.dart';
 import 'package:debounce_throttle/debounce_throttle.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 
@@ -62,6 +63,22 @@ class CrudIndex<T extends Entity<T>> extends StatefulWidget {
 
   @override
   CrudIndexState createState() => CrudIndexState<T>();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('title', title))
+      ..add(
+          DiagnosticsProperty<RouteName>('currentRouteName', currentRouteName))
+      ..add(ObjectFlagProperty<WidgetBuilder?>.has(
+          'createPageBuilder', createPageBuilder))
+      ..add(ObjectFlagProperty<EntityIndexedWidgetBuilder<T>?>.has(
+          'editPageBuilder', editPageBuilder))
+      ..add(ObjectFlagProperty<EntityIndexedWidgetBuilder<T>>.has(
+          'listItemBuilder', listItemBuilder))
+      ..add(ObjectFlagProperty<IndexedWidgetBuilder?>.has(
+          'skeletonItemBuilder', skeletonItemBuilder));
+  }
 }
 
 class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
@@ -127,7 +144,7 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
   }
 
   void _performDelete() {
-    _pendingDeletedItems.forEach((id, item) async {
+    _pendingDeletedItems..forEach((id, item) async {
       await _repository.delete(item.entity!).then((_) {
         _deletedItems[id] = item;
         Bus().add(BusAction.delete, oldInstance: item.entity);
@@ -137,15 +154,15 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
           _error = error.toString();
         });
       });
-    });
-    _pendingDeletedItems.clear();
+    })
+    ..clear();
   }
 
   void _cancelDelete() {
     _deleteFuture?.cancel();
     _pendingDeletedItems
-        .forEach((id, item) => item.animationController.forward());
-    _pendingDeletedItems.clear();
+        ..forEach((id, item) => item.animationController.forward())
+    ..clear();
   }
 
   Future<void> deleteEntity(int index, T entity) async {
@@ -297,7 +314,8 @@ class CrudIndexState<T extends Entity<T>> extends State<CrudIndex<T>>
         return _buildSkeleton(context, index);
       case ListPageStatus.avaliable:
         final item = _cache.get(pageNum)?[_itemIndex(pageNum, index)];
-        // In case our entity got deleted from the remote while paging, render empty container
+        // In case our entity got deleted from the remote while paging, 
+        //render empty container
         if (item == null || item.entity == null) {
           return const Empty();
         }

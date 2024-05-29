@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -6,14 +7,22 @@ import 'menu_item_impl.dart';
 import 'menu_open_state.dart';
 
 class MenuItems extends StatefulWidget {
-
-  const MenuItems(this.menuItems, this.onNotifyParent, this.closeMenu, {super.key});
+  const MenuItems(this.menuItems, this.onNotifyParent, this.closeMenu,
+      {super.key});
   final List<MenuItem> menuItems;
   final VoidCallback onNotifyParent;
   final VoidCallback closeMenu;
 
   @override
   State<StatefulWidget> createState() => MenuItemsState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(IterableProperty<MenuItem>('menuItems', menuItems))
+    ..add(
+        ObjectFlagProperty<VoidCallback>.has('onNotifyParent', onNotifyParent))
+    ..add(ObjectFlagProperty<VoidCallback>.has('closeMenu', closeMenu));
+  }
 }
 
 class MenuItemsState extends State<MenuItems> {
@@ -21,9 +30,13 @@ class MenuItemsState extends State<MenuItems> {
   static const int menuItemArc = 170;
 
   @override
-  Widget build(BuildContext context) => buildMenuItems(createMenuItems(widget.menuItems));
+  Widget build(BuildContext context) =>
+      buildMenuItems(createMenuItems(widget.menuItems));
 
-  Widget buildMenuItems(List<MenuItemImpl> menuItems) => Consumer<MenuOpenState>(builder: (context, menuOpenState, _) => buildOverlay(context, menuOpenState, menuItems));
+  Widget buildMenuItems(List<MenuItemImpl> menuItems) =>
+      Consumer<MenuOpenState>(
+          builder: (context, menuOpenState, _) =>
+              buildOverlay(context, menuOpenState, menuItems));
 
   List<MenuItemImpl> createMenuItems(List<MenuItem> menuItems) {
     final axleCount = menuItems.length;

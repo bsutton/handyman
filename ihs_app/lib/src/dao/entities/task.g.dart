@@ -31,7 +31,7 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
       'job': const ERConverterJob().toJson(instance.job),
       'name': instance.name,
       'description': instance.description,
-      'status': _$TaskStatusEnumMap[instance.status]!,
+      'status': _$TaskStatusEnumMap[instance.status],
       'startDate': _$JsonConverterToJson<String, LocalDate>(
           instance.startDate, const LocalDateConverter().toJson),
       'startTime': _$JsonConverterToJson<String, LocalTime>(

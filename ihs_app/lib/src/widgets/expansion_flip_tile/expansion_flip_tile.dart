@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flip/flip.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 const EdgeInsets _defaultContentPadding = EdgeInsets.all(16);
@@ -26,6 +27,15 @@ class ExpansionFlipTile extends StatefulWidget {
 
   @override
   ExpansionFlipTileState createState() => ExpansionFlipTileState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty<WidgetBuilder>.has('bodyBuilder', bodyBuilder))
+      ..add(
+          ObjectFlagProperty<WidgetBuilder>.has('actionBuilder', actionBuilder))
+      ..add(ColorProperty('swatch', swatch));
+  }
 }
 
 class ExpansionFlipTileState extends State<ExpansionFlipTile> {
@@ -87,7 +97,7 @@ class ExpansionFlipTileState extends State<ExpansionFlipTile> {
             width: _flipControlWidth,
             child: Material(
               color: widget.swatch?.shade500 ??
-                  Theme.of(context).colorScheme.background,
+                  Theme.of(context).colorScheme.surface,
               child: InkWell(
                 onTap: _flipController.flip,
                 child: SizedBox(

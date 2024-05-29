@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../util/customer_account_status.dart';
 import '../entities/entity.dart';
+import '../entities/user.dart';
 import '../transaction/api/retry/retry_data.dart';
 import '../types/phone_number.dart';
 import 'actions/action_activate_first_user.dart';
@@ -17,7 +19,8 @@ import 'repository.dart';
 /// data to the backend whilst we are still unauthenticated.
 ///
 /// NOTE: all unauthed requests MUST passed the FirebaseTempUserUid which
-/// is obtained during phase 1 of the firebase signing (mobile has been verified).
+/// is obtained during phase 1 of the firebase signing 
+/// (mobile has been verified).
 ///
 ///  ServiceLocator.getPersistentKeyStore().getFirebaseTempUserUid();
 
@@ -32,7 +35,8 @@ class UnAuthedAction extends Entity<UnAuthedAction> {
 /// of the user.
 ///
 /// NOTE: all unauthed requests MUST passed the FirebaseTempUserUid which
-/// is obtained during phase 1 of the firebase signing (mobile has been verified).
+/// is obtained during phase 1 of the firebase signing
+///  (mobile has been verified).
 ///
 ///  ServiceLocator.getPersistentKeyStore().getFirebaseTempUserUid();
 class UnAuthedActionRepository extends Repository<UnAuthedAction> {
@@ -50,4 +54,8 @@ class UnAuthedActionRepository extends Repository<UnAuthedAction> {
   UnAuthedAction fromJson(Map<String, dynamic> json) {
     throw Exception('Not implemented');
   }
+
+  CustomerAccountStatus getCustomerAccountStatus(
+          User user, RetryData defaultRetry) =>
+      CustomerAccountStatus.customerCancelled;
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/app_scaffold.dart';
@@ -29,7 +30,8 @@ class LimitsPageState extends State<LimitsPage> {
             title: 'Limits',
             currentRouteName: LimitsPage.routeName,
             builder:
-                // Center(child: ButtonPrimary(label: 'Limits Page', onPressed: lock)),
+                // Center(child: ButtonPrimary(label: 'Limits Page'
+                //, onPressed: lock)),
                 (context) => Wizard(
                       initialSteps: steps,
                       onFinished: onFinished,
@@ -48,6 +50,11 @@ class LimitsPageState extends State<LimitsPage> {
 
   Future<void> onFinished(WizardCompletionReason reason) async {
     SQRouter().pop<void>();
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IterableProperty<WizardStep>('steps', steps));
   }
 }
 

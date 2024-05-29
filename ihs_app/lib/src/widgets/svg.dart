@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -72,5 +73,18 @@ class Svg extends StatelessWidget {
     }
 
     return path + filename + extension;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('filename', filename))
+      ..add(StringProperty('label', label))
+      ..add(DoubleProperty('width', width))
+      ..add(DoubleProperty('height', height))
+      ..add(EnumProperty<LOCATION>('location', location))
+      ..add(ObjectFlagProperty<void Function()?>.has('onTap', onTap))
+      ..add(ColorProperty('color', color));
   }
 }

@@ -33,7 +33,8 @@ class DialogRecorder {
         // var track =
         //     Track.fromFile(path, mediaFormat: WellKnownMediaFormats.adtsAac);
 
-        // DialogModal.show(context, title: 'Record Message', builder: (context) {
+        // DialogModal.show(context, title: 'Record Message', 
+        //builder: (context) {
         //   return RecorderPlaybackController(
         //       child: LocalContext(
         //           key: localContextKey,
@@ -52,13 +53,15 @@ class DialogRecorder {
         //             );
         //           }));
         // }, onOK: () {
-        //   RecorderPlaybackController.of(localContextKey.currentContext).stop();
+        //   RecorderPlaybackController.of(localContextKey.currentContext)
+        // .stop();
         //   BlockingUI().run<void>(() async {
         //     if (onOK != null) onOK(await track.asBuffer);
         //     unawaited(File(path).delete());
         //   });
         // }, onCancel: () {
-        //   RecorderPlaybackController.of(localContextKey.currentContext).stop();
+        //   RecorderPlaybackController.of(localContextKey.currentContext)
+        // .stop();
         //   if (onCancel != null) onCancel();
         //   File(path).delete();
         // });
@@ -86,7 +89,8 @@ class DialogRecorder {
   //     // ignore: unrelated_type_equality_checks
   //     if (Permission.storage.status == PermissionStatus.undetermined) {
   //       print(
-  //           'You are probably missing the storage permission in your manifest.');
+  //          
+  // 'You are probably missing the storage permission in your manifest.');
   //     }
 
   //     storageRequired =
@@ -138,12 +142,13 @@ class DialogRecorder {
   //           await Permission.storage.isGranted;
   //       if (!granted) {
   //         QuickSnack().error(context,
-  //             'Recording cannot start as you did not allow the required permissions.');
+
+  //   'Recording cannot start as you did not allow the required permissions.');
   //       }
   //     } else {
   //       granted = false;
   //       QuickSnack().error(context,
-  //           'Recording cannot start as you did not allow the required permissions.');
+  //   'Recording cannot start as you did not allow the required permissions.');
   //     }
   //   } else {
   //     granted = true;

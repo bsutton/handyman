@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../dao/crud_providers/product_editable.dart';
-import '../dao/customer_dao.dart';
-import '../dao/models/product.dart';
-import 'crud_holder.dart';
-import 'product_edit.dart';
+import '../../dao/customer_dao.dart';
+import '../../dao/entities/customer.dart';
+import '../crud_holder.dart';
+import 'customer_editable.dart';
 
-class Products extends StatelessWidget {
-  const Products({super.key});
+class CustomerList extends StatelessWidget implements CrudList {
+  const CustomerList({super.key});
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -22,15 +21,15 @@ class Products extends StatelessWidget {
             onPressed: () async {
               if (context.mounted) {
                 await Navigator.of(context).push<void>(MaterialPageRoute(
-                    builder: (context) => CrudHolder<Product>(
-                        editable: ProductEditable(),
-                        child: const EditProduct())));
+                    builder: (context) => CrudHolder<Customer>(
+                        editable: CustomerEditable(),
+                        listWidget: const CustomerList())));
               }
             },
           )
         ],
       ),
-      body: products());
+      body: customers());
 
   // body: (products.isNotEmpty)
   //     ? ListView.builder(
@@ -48,15 +47,15 @@ class Products extends StatelessWidget {
   //     : const Center(child: Text('Click + to add a new product')));
 }
 
-Widget products() {
-  final items = <Product>[];
+Widget customers() {
+  final items = <Customer>[];
   return StreamBuilder(
-      stream: ProductDao().getProducts(),
+      stream: CustomerDao().getCustomers(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else if (snapshot.connectionState == ConnectionState.done) {
-          return const Text('Click + to add a new product');
+          return const Text('Click + to add a new customer');
         } else if (snapshot.hasError) {
           return const Text('Error!');
         } else {
@@ -66,13 +65,14 @@ Widget products() {
             ListView.builder(
               shrinkWrap: true,
               itemBuilder: (context, index) => ListTile(
-                title: Text(items[index].name!),
-                trailing: Text(items[index].price.toString()),
+                title: Text(items[index].name),
                 onTap: () async {
                   await Navigator.of(context).push<void>(MaterialPageRoute(
-                      builder: (context) => CrudHolder<Product>(
-                          editable: ProductEditable(),
-                          child: EditProduct(product: items[index]))));
+                      builder: (context) => CrudHolder<Customer>(
+                          editable: CustomerEditable(),
+                          listWidget: const CustomerList(
+                              // customer: items[index]
+                              ))));
                 },
               ),
               itemCount: items.length,

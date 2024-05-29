@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/app_scaffold.dart';
@@ -7,9 +8,6 @@ import '../../../../widgets/empty.dart';
 import '../../user_dashboard/dashlets/office_dashboard.dart';
 import '../dashlets/about_dashlet.dart';
 import '../dashlets/contact_dashlet.dart';
-import '../dashlets/invite_user_dashlet.dart';
-import '../dashlets/phone_management_dashlet.dart';
-import '../dashlets/team_dashboard_dashlet.dart';
 import '../dashlets/user_dashboard_dashlet.dart';
 import '../dashlets/users_dashlet.dart';
 
@@ -44,7 +42,6 @@ class OfficeDashboardState extends State<OfficeDashboard> {
       children: [Text('Office: 03 8320 8100'), Text('Closing Time: 5:15pm')]);
 
   Row buildRowOne() => const Row(children: [
-        PhoneManagementDashlet(),
         AboutDashlet(),
       ]);
 
@@ -52,19 +49,26 @@ class OfficeDashboardState extends State<OfficeDashboard> {
           // crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-                flex:
-                    2, // The dashlets in the next column should be twice as wide.
+                flex: 2, // The dashlets in the next column should be
+                // twice as wide.
                 child: Column(children: [Empty()]))
           ]);
 
-  Row buildRowThree() =>
-      const Row(children: [UsersDashlet(), SendInviteDashlet()]);
+  Row buildRowThree() => const Row(children: [
+        UsersDashlet(),
+        //  SendInviteDashlet()
+      ]);
 
   Row buildRowFour() => const Row(children: [
         UserDashboardDashlet(),
-        TeamDashboardDashlet(),
+        // TeamDashboardDashlet(),
         OfficeSettingsDashlet(),
       ]);
 
   Row buildRowFive() => const Row(children: [ContactDashlet()]);
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('visible', visible));
+  }
 }

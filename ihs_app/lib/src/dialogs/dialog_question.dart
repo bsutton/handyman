@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../app/router.dart';
@@ -37,7 +38,8 @@ class DialogQuestion extends StatefulWidget {
   ///   If the user clicks the [noLabel] [DialogQuestionResult.no] is returned.
   /// If the [noLabel] is null then the No button will not be displayed.
   /// [yesLabel] the lable to show on the right hand button - defaults to 'Yes'
-  ///   If the user clicks the [yesLabel] [DialogQuestionResult.yes] is returned.
+  ///   If the user clicks the [yesLabel] [DialogQuestionResult.yes] is
+  ///  returned.
   static Future<DialogQuestionResult?> show(
       BuildContext context, String title, String question,
       {Color titleColor = NJColors.infoBackground,
@@ -69,7 +71,8 @@ class DialogQuestion extends StatefulWidget {
   /// [noLabel] the label to show on the left hand button.
   ///   If the user clicks the [noLabel] [DialogQuestionResult.no] is returned.
   /// [yesLabel] the lable to show on the right hand button.
-  ///   If the user clicks the [yesLabel] [DialogQuestionResult.yes] is returned.
+  ///   If the user clicks the [yesLabel] [DialogQuestionResult.yes]
+  /// is returned.
   static Future<DialogQuestionResult?> showWithWidget(
       BuildContext context, String title, Widget question,
       {Color titleColor = NJColors.infoBackground,
@@ -92,6 +95,15 @@ class DialogQuestion extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => DialogQuestionState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('title', title))
+    ..add(ColorProperty('titleColor', titleColor))
+    ..add(DiagnosticsProperty<BuildContext>('context', context))
+    ..add(StringProperty('noLabel', noLabel))
+    ..add(StringProperty('yesLabel', yesLabel));
+  }
 }
 
 class DialogQuestionState extends State<DialogQuestion> {
@@ -139,4 +151,10 @@ class DialogQuestionState extends State<DialogQuestion> {
         padding: const EdgeInsets.all(8),
         child: widget.question,
       );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty<NavigatorState>('navigatorState', navigatorState));
+  }
 }

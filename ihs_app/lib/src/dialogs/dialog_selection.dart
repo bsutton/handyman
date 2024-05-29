@@ -1,6 +1,7 @@
 import 'dart:core' as prefix0;
 import 'dart:core';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide SearchBar;
 import 'package:future_builder_ex/future_builder_ex.dart';
 
@@ -72,6 +73,20 @@ class DialogSelection<T> extends StatelessWidget {
       heightFactor: 1,
       child: SelectionList<T>(selectionListStateKey, searchLabel, searchHint,
           filterMatch, cardBuilder, initialData, listLoader, initialT));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('searchLabel', searchLabel))
+      ..add(StringProperty('searchHint', searchHint))
+      ..add(ObjectFlagProperty<CardBuilder<T>>.has('cardBuilder', cardBuilder))
+      ..add(ObjectFlagProperty<FilterMatch<T>>.has('filterMatch', filterMatch))
+      ..add(IterableProperty<T>('initialData', initialData))
+      ..add(DiagnosticsProperty<T?>('initialT', initialT))
+      ..add(ObjectFlagProperty<ListLoader<T>?>.has('listLoader', listLoader))
+      ..add(DiagnosticsProperty<GlobalKey<SelectionListState<T>>>(
+          'selectionListStateKey', selectionListStateKey));
+  }
 }
 
 class SelectionList<T> extends StatefulWidget {
@@ -95,6 +110,18 @@ class SelectionList<T> extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => SelectionListState<T>();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('searchLabel', searchLabel))
+      ..add(StringProperty('searchHint', searchHint))
+      ..add(DiagnosticsProperty<T?>('initialT', initialT))
+      ..add(ObjectFlagProperty<FilterMatch<T>>.has('filterMatch', filterMatch))
+      ..add(ObjectFlagProperty<CardBuilder<T>>.has('cardBuilder', cardBuilder))
+      ..add(IterableProperty<T>('initialData', initialData))
+      ..add(ObjectFlagProperty<ListLoader<T>?>.has('listLoader', listLoader));
+  }
 }
 
 class SelectionListState<T> extends State<SelectionList<T>> {
@@ -176,6 +203,17 @@ class SelectionListState<T> extends State<SelectionList<T>> {
       onChange: (value) {
         setState(() => filter = value.toLowerCase());
       });
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('filter', filter))
+      ..add(ObjectFlagProperty<FilterMatch<T>>.has('filterMatch', filterMatch))
+      ..add(ObjectFlagProperty<CardBuilder<T>>.has('bodyBuilder', bodyBuilder))
+      ..add(IterableProperty<T>('initialData', initialData))
+      ..add(ObjectFlagProperty<ListLoader<T>?>.has('listLoader', listLoader))
+      ..add(DiagnosticsProperty<T?>('selected', selected));
+  }
 }
 
 class TCard<T> extends StatelessWidget {
@@ -194,4 +232,13 @@ class TCard<T> extends StatelessWidget {
           child: Card(
               color: (selected ? Colors.orange : Colors.orangeAccent),
               child: Center(child: cardBuilder(context, item, selected)))));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<T>('item', item))
+      ..add(DiagnosticsProperty<prefix0.bool>('selected', selected))
+      ..add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap))
+      ..add(ObjectFlagProperty<CardBuilder<T>>.has('cardBuilder', cardBuilder));
+  }
 }

@@ -1,5 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'crud/add_edit_customer_screen.dart';
@@ -19,7 +21,7 @@ class _OldCustomerListScreenState extends State<OldCustomerListScreen> {
   @override
   void initState() {
     super.initState();
-    _refreshCustomerList();
+    unawaited(_refreshCustomerList());
   }
 
   Future<void> _refreshCustomerList() async {

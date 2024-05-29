@@ -4,7 +4,6 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../util/local_time.dart';
 
 class LocalTimeState extends ChangeNotifier {
-
   LocalTimeState(LocalTime localTime) {
     hour = localTime.hour;
     minute = localTime.minute;
@@ -96,7 +95,8 @@ class TimeOfDayConverter implements JsonConverter<TimeOfDay, String> {
   const TimeOfDayConverter();
 
   @override
-  TimeOfDay fromJson(String json) => TimeOfDay.fromDateTime(DateTime.parse('2000-01-01 $json'));
+  TimeOfDay fromJson(String json) =>
+      TimeOfDay.fromDateTime(DateTime.parse('2000-01-01 $json'));
 
   @override
   String toJson(TimeOfDay timeOfDay) => '${timeOfDay.hour}:${timeOfDay.minute}';

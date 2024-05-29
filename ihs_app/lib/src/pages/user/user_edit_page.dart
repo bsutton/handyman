@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/entities/user.dart';
@@ -12,6 +13,11 @@ class UserEditPage extends StatefulWidget {
 
   @override
   UserEditPageState createState() => UserEditPageState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<User>('user', user));
+  }
 }
 
 class UserEditPageState extends State<UserEditPage> {
@@ -70,4 +76,11 @@ class UserEditPageState extends State<UserEditPage> {
         ),
       ],
     );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('firstname', firstname))
+    ..add(StringProperty('surname', surname))
+    ..add(StringProperty('mobilePhone', mobilePhone));
+  }
 }

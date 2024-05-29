@@ -1,10 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/router.dart';
 import '../../pages/contacts/contacts.dart';
 import '../../pages/dashboards/user_dashboard/dashboard/user_dashboard.dart';
 import '../../pages/test_thumb_menu.dart';
-import '../../pages/voicemail/voicemail_index_page.dart';
 import '../expansion_bottom_app_bar/expansion_bottom_app_bar.dart';
 
 class NavMenu extends StatefulWidget {
@@ -13,6 +13,12 @@ class NavMenu extends StatefulWidget {
 
   @override
   NavMenuState createState() => NavMenuState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty<RouteName>('currentRoute', currentRoute));
+  }
 }
 
 class NavMenuState extends State<NavMenu> {
@@ -28,19 +34,6 @@ class NavMenuState extends State<NavMenu> {
             leading: const Icon(Icons.contacts),
             title: const Text('Contacts'),
             onTap: () => routeTo(Contacts.routeName)?.call(),
-          ),
-          ListTile(
-            dense: true,
-            selected: SQRouter().isCurrentRoute(VoicemailIndexPage.routeName),
-            leading: const Icon(Icons.voicemail),
-            title: const Text('Voicemail'),
-            onTap: () => routeTo(VoicemailIndexPage.routeName),
-            /*
-            trailing: Chip(
-              backgroundColor: Colors.amberAccent,
-              label: Text('3'),
-            ),
-            */
           ),
           ListTile(
             dense: true,
@@ -82,7 +75,8 @@ class NavMenuState extends State<NavMenu> {
 
   GestureTapCallback? routeTo(RouteName routeName) {
     ExpansionBottomAppBar.of(context).close(() async {
-      // changed to pushNamed, the old method was reasonable broken anyway and this code isn't in use.
+      // changed to pushNamed, the old method was reasonable
+      //broken anyway and this code isn't in use.
       await SQRouter().pushNamed(routeName);
     });
 

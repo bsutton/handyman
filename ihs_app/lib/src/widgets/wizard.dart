@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:completer_ex/completer_ex.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../util/log.dart';
@@ -24,7 +25,8 @@ typedef WizardCompletion = Future<void> Function(WizardCompletionReason reason);
 /// Called each time the wizard is about to transition.
 /// The transition can be tiggered via an api call or a user action. The
 /// argument [userOriginated] is true if it was caused by a user action.
-/// The [currentStep] is the step the wizard is currently showing when the transition started.
+/// The [currentStep] is the step the wizard is currently showing when the
+///  transition started.
 /// The [targetStep] is the step the wizard is moving to.
 typedef Transition = void Function(
     {required WizardStep currentStep,
@@ -34,7 +36,7 @@ typedef Transition = void Function(
 /// Build multi-step wizards.
 /// [initialSteps] the set of states the wizard starts with.
 class Wizard extends StatefulWidget {
-   Wizard({
+  Wizard({
     required this.initialSteps,
     super.key,
     this.onTransition,
@@ -52,6 +54,16 @@ class Wizard extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => WizardState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(IterableProperty<WizardStep>('initialSteps', initialSteps))
+      ..add(ObjectFlagProperty<WizardCompletion?>.has('onFinished', onFinished))
+      ..add(ObjectFlagProperty<Transition?>.has('onTransition', onTransition))
+      ..add(StringProperty('cancelLabel', cancelLabel))
+      ..add(IterableProperty<WizardStep>('steps', steps));
+  }
 }
 
 class WizardState extends State<Wizard> {
@@ -162,7 +174,8 @@ class WizardState extends State<Wizard> {
 
     var nextStep = await target.future;
 
-    // Check if we can transition and get the new step as onNext can redirect us.
+    // Check if we can transition and get the new step as onNext can
+    //redirect us.
     if (nextStep != _currentStep) {
       // yes we are moving.
 
@@ -214,7 +227,8 @@ class WizardState extends State<Wizard> {
       {required bool userOriginated}) async {
     _hideKeyboard();
 
-    // Check if we can transition and get the new step as onBack can redirect us.
+    // Check if we can transition and get the new step as onBack
+    //can redirect us.
     _currentStep.buildRequired = true;
     final target = WizardStepTarget(this, targetStep);
     await _safeOnPrev(context, _currentStep, target,
@@ -377,7 +391,8 @@ class WizardState extends State<Wizard> {
     if (step.buildRequired) {
       final width = MediaQuery.of(context).size.width - lineInset - lineWidth;
 
-      // height required for phone edit return SizedBox(width: width, height: 100, child: step.build(context));
+      // height required for phone edit return SizedBox(width: width,
+      //height: 100, child: step.build(context));
       return SizedBox(width: width, child: step.build(context));
     } else {
       return const SizedBox(width: 1, height: 1);
@@ -556,7 +571,9 @@ class WizardState extends State<Wizard> {
   /// Throws an [ArgumentError] if the step doesn't exist.
   int _indexOf(WizardStep step) {
     for (var i = 0; i < widget.steps.length; i++) {
-      if (step == widget.steps[i]) return i;
+      if (step == widget.steps[i]) {
+        return i;
+      }
     }
 
     throw ArgumentError.value(step, 'Given step is not in the list of steps');
@@ -635,6 +652,12 @@ class WizardState extends State<Wizard> {
       Log.e(e.toString(), stackTrace: st);
       target.cancel();
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ScrollPhysics>('physics', physics));
   }
 }
 

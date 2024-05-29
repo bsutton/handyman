@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:money2/money2.dart';
 
-import '../dao/servicdes/persistent_key_store.dart';
+import '../dao/services/persistent_key_store.dart';
 import '../dao/transaction/api/http_protocol.dart';
 
 GetIt _getIt = GetIt.instance;

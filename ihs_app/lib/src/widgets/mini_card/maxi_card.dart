@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:completer_ex/completer_ex.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 
@@ -36,15 +37,22 @@ class MaxiCard<T, S extends MiniRowState<T, S>> extends StatefulWidget {
 
   const MaxiCard(this.miniCard, this.miniRowState, {super.key});
   final MiniCard<T, S> miniCard;
-  final MiniRowState<T,S> miniRowState;
+  final MiniRowState<T, S> miniRowState;
 
   @override
-  MaxiCardState<T,S> createState() => MaxiCardState<T, S>();
+  MaxiCardState<T, S> createState() => MaxiCardState<T, S>();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty<MiniRowState<T, S>>('miniRowState', miniRowState));
+  }
 }
 
 class MaxiCardState<T, S extends MiniRowState<T, S>>
     extends State<MaxiCard<T, S>> {
   bool selected = false;
+  // ignore: diagnostic_describe_all_properties
   GlobalKey<ToggleSwitchState> toggleSwitchKey = GlobalKey<ToggleSwitchState>();
 
   @override
@@ -188,5 +196,11 @@ class MaxiCardState<T, S extends MiniRowState<T, S>>
       });
     }
     return complete.future;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('selected', selected));
   }
 }

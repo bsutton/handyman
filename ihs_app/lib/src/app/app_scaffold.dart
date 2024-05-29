@@ -24,7 +24,7 @@ class AppScaffold extends StatefulWidget {
   // TODO(bsutton): remove fixed height values here, should never be necessary
   static const double bottomBarHeight = 50;
   // The area above the bottom bar that widgets such
-  // as the Home button and the todo widget expand into.
+  // as the Home button and the `todo` widget expand into.
   static const double bottomBarExtension = 35;
 
   final WidgetBuilder builder;
@@ -38,10 +38,11 @@ class AppScaffold extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<WidgetBuilder>.has('builder', builder));
-    properties.add(DiagnosticsProperty<bool>('showHomeButton', showHomeButton));
-    properties.add(DiagnosticsProperty<FloatingActionButtonLocation?>(
-        'floatingActionButtonLocation', floatingActionButtonLocation));
+    properties
+      ..add(ObjectFlagProperty<WidgetBuilder>.has('builder', builder))
+      ..add(DiagnosticsProperty<bool>('showHomeButton', showHomeButton))
+      ..add(DiagnosticsProperty<FloatingActionButtonLocation?>(
+          'floatingActionButtonLocation', floatingActionButtonLocation));
   }
 }
 
@@ -52,28 +53,29 @@ class AppScaffoldState extends State<AppScaffold> {
       );
 
   Widget _buildOverlays() {
-    final entries = <OverlayEntry>[];
+    final entries = <OverlayEntry>[
+      OverlayEntry(builder: (_) => _buildScaffold()),
+      OverlayEntry(
+          builder: (_) => BlockingUIWidget(
+                hideHelpIcon: widget.showHomeButton,
+                placement: widget.showHomeButton
+                    ? TopOrTailPlacement.bottom
+                    : TopOrTailPlacement.top,
+              ))
+    ]
 
-    entries.add(OverlayEntry(builder: (_) => _buildScaffold()));
+        // entries.add(OverlayEntry(builder: (_) => buildNoticeChip()));
+        // entries.add(OverlayEntry(builder: (_) => buildTodoChip()));
+        // entries.add(OverlayEntry(builder: (_) => buildErrorIndicator()));
 
-    // entries.add(OverlayEntry(builder: (_) => buildNoticeChip()));
-    // entries.add(OverlayEntry(builder: (_) => buildTodoChip()));
-    // entries.add(OverlayEntry(builder: (_) => buildErrorIndicator()));
-
-    entries.add(OverlayEntry(
-        builder: (_) => BlockingUIWidget(
-              hideHelpIcon: widget.showHomeButton,
-              placement: widget.showHomeButton
-                  ? TopOrTailPlacement.bottom
-                  : TopOrTailPlacement.top,
-            )));
+        ;
 
     return Material(child: Overlay(initialEntries: entries));
   }
 
   Widget _buildScaffold() => ContextHelpController(
         child: Scaffold(
-          //extendBody: true, // TODO: This is needed for scrolling bodies behind the bottomAppBar, but has flow-on effects for the rest of the layouts
+          // extendBody: true, // `TODO`: This is needed for scrolling bodies behind the bottomAppBar, but has flow-on effects for the rest of the layouts
           body: LocalContext(builder: _buildBody),
           bottomNavigationBar: LocalContext(
               builder: (context) => _buildAppBar(context) ?? const Empty()),
@@ -94,12 +96,12 @@ class AppScaffoldState extends State<AppScaffold> {
           if (!isConnected) {
             children.add(_buildOfflineIndicator(context));
           }
-          children.add(Padding(
+          children..add(Padding(
             padding: EdgeInsets.only(
                 top: isConnected ? 0 : _kOfflineIndicatorHeight),
             child: child,
-          ));
-          children.add(_buildFAB(context));
+          ))
+          ..add(_buildFAB(context));
           return Stack(
             fit: StackFit.expand,
             children: children,

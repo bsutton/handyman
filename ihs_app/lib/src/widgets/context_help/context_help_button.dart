@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'context_help_controller.dart';
@@ -11,6 +12,12 @@ class ContextHelpButton extends StatefulWidget {
 
   @override
   ContextHelpButtonState createState() => ContextHelpButtonState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<GlobalKey<ContextHelpControllerState>?>(
+        'controllerKey', controllerKey));
+  }
 }
 
 class ContextHelpButtonState extends State<ContextHelpButton> {

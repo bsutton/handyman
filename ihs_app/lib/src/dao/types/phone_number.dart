@@ -107,7 +107,8 @@ class PhoneNumber {
   }
 
   ///
-  /// We consider the DID to be adjacent to the current PhoneNumber if it is one less or one greater that our phone
+  /// We consider the DID to be adjacent to the current PhoneNumber
+  /// if it is one less or one greater that our phone
   /// number.
   ///
   /// @param rhs
@@ -118,7 +119,8 @@ class PhoneNumber {
 
   ///
   /// @param nextNumber
-  /// @return true if nextNumber is the next number (numerically) after this number
+  /// @return true if nextNumber is the next number (numerically)
+  /// after this number
   ///
   bool isSequential(PhoneNumber nextNumber) => add(1).equals(nextNumber);
 
@@ -152,7 +154,8 @@ class PhoneNumber {
   bool equal(PhoneNumber rhs) => phone == rhs.phone;
 
 /////
-  /// Adds 'operand' to the existing phone number by treating the phone number as a big int and returns the next phone
+  /// Adds 'operand' to the existing phone number by treating the phone number
+  ///  as a big int and returns the next phone
   /// number numerically. e.g. 0383208100.add(1) becomes 03 8320 8101
   ///
   /// @param operand
@@ -188,15 +191,15 @@ class PhoneNumber {
     if (phoneNumber.isEmpty) {
       result = '';
     } else if (phoneNumber.length == 6 && phoneNumber.startsWith('13')) {
-      result =
-          '${phoneNumber.substring(0, 2)} ${phoneNumber.substring(2, 4)} ${phoneNumber.substring(4)}';
+      result = '''
+${phoneNumber.substring(0, 2)} ${phoneNumber.substring(2, 4)} ${phoneNumber.substring(4)}''';
     } else if (phoneNumber.length == 8) {
       // local number
       result = '${phoneNumber.substring(0, 4)} ${phoneNumber.substring(4, 8)}';
     } else if (phoneNumber.length == 10 &&
         (isMobile(phoneNumber) || phoneNumber.startsWith('1300'))) {
-      result =
-          '${phoneNumber.substring(0, 4)} ${phoneNumber.substring(4, 7)} ${phoneNumber.substring(7)}';
+      result = '''
+${phoneNumber.substring(0, 4)} ${phoneNumber.substring(4, 7)} ${phoneNumber.substring(7)}''';
     } else if (phoneNumber.length == 10) {
       if (isMobile(phoneNumber)) {
         result = '${phoneNumber.substring(0, 4)} ${phoneNumber.substring(4, 7)}'

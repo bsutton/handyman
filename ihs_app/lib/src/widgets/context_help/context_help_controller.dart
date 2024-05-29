@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'context_help.dart';
@@ -21,6 +22,12 @@ class _InheritedContextHelpController extends InheritedWidget {
   @override
   //return old.state != state || old.child != child;
   bool updateShouldNotify(_InheritedContextHelpController old) => false;
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+        .add(DiagnosticsProperty<ContextHelpControllerState>('state', state));
+  }
 }
 
 /// This controller is included in any page that is built using AppScaffold.
@@ -244,7 +251,8 @@ class ContextHelpControllerState extends State<ContextHelpController>
       }
       if (mounted) {
         final overlay = Overlay.of(context);
-        // The ancestor is a hack to calculate the correct coordinates for the target, I'd like to remove this if I can work out how.
+        // The ancestor is a hack to calculate the correct coordinates 
+        //for the target, I'd like to remove this if I can work out how.
         final targetDimensions = _TargetDimensions.parse(
           step.context,
           ancestor: context.findRenderObject(),
@@ -292,6 +300,11 @@ class ContextHelpControllerState extends State<ContextHelpController>
         state: this,
         child: widget.child,
       );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('active', active));
+  }
 }
 
 class _ContextHelpCutoutPainter extends CustomPainter {
@@ -383,8 +396,8 @@ class _ContextHelpCutoutPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.saveLayer(Offset.zero & size, Paint());
-    canvas.drawColor(_kCutoutBackgroundColor, BlendMode.dstATop);
+    canvas..saveLayer(Offset.zero & size, Paint())
+    ..drawColor(_kCutoutBackgroundColor, BlendMode.dstATop);
     if (help.widget.highlight) {
       _drawCutout(canvas);
     }

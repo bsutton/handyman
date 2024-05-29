@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/router.dart';
@@ -20,4 +21,9 @@ class MaxiCardPage<T, S extends MiniRowState<T, S>> extends StatelessWidget {
                 // args.active,
                 args.miniCard,
                 args.state)));
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<MaxiCardRouteArgs<T, S>>('args', args));
+  }
 }

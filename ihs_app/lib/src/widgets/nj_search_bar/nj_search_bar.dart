@@ -1,4 +1,5 @@
 import 'package:debounce_throttle/debounce_throttle.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 typedef SearchCallback = void Function(String searchTerm);
@@ -10,6 +11,13 @@ class NjSearchBar extends StatefulWidget {
 
   @override
   NjSearchBarState createState() => NjSearchBarState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(ObjectFlagProperty<VoidCallback>.has('onClose', onClose))
+      ..add(ObjectFlagProperty<SearchCallback>.has('onSearch', onSearch));
+  }
 }
 
 class NjSearchBarState extends State<NjSearchBar> {
@@ -30,28 +38,28 @@ class NjSearchBarState extends State<NjSearchBar> {
 
   @override
   Widget build(BuildContext context) => BottomAppBar(
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: TextField(
-                autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Search...',
-                  contentPadding: EdgeInsets.only(left: 16),
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: TextField(
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Search...',
+                    contentPadding: EdgeInsets.only(left: 16),
+                  ),
+                  onChanged: (search) => _debouncer.value = search,
                 ),
-                onChanged: (search) => _debouncer.value = search,
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: widget.onClose,
-            )
-          ],
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: widget.onClose,
+              )
+            ],
+          ),
         ),
-      ),
-    );
+      );
 }

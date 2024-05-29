@@ -1,4 +1,7 @@
+// ignore_for_file: diagnostic_describe_all_properties
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -87,7 +90,8 @@ class _ContactListState extends State<ContactList>
           sizeFactor: animation.drive(mt3),
           child: Provider.of<UndoManagerNotifier>(context).entities[index]);
 
-  // passing doc, so that ContactCard scan delete the firebase record when needed.
+  // passing doc, so that ContactCard scan delete the firebase
+  //record when needed.
   ContactCard buildCard(Contact contact) => ContactCard(contact);
 
   Row buildSearchBar() => Row(children: [
@@ -110,5 +114,12 @@ class _ContactListState extends State<ContactList>
   void onItemUndo(int idx) {
     animatedListGlobalKey.currentState
         ?.insertItem(idx, duration: const Duration(seconds: 1));
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<GlobalKey<AnimatedListState>>(
+        'animatedListGlobalKey', animatedListGlobalKey));
   }
 }

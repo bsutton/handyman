@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/router.dart';
@@ -11,7 +12,6 @@ import 'user_create_page.dart';
 import 'user_edit_page.dart';
 
 class UserIndexPage extends StatelessWidget {
-
   UserIndexPage({super.key});
   static const RouteName routeName = RouteName('userspage');
   static const _swatch = Colors.green;
@@ -46,11 +46,13 @@ class UserIndexPage extends StatelessWidget {
         children: <Widget>[
           NJButtonPrimary(
             label: 'Edit',
-            onPressed: () async => crudKey.currentState!.editEntity(index, user),
+            onPressed: () async =>
+                crudKey.currentState!.editEntity(index, user),
           ),
           NJButtonPrimary(
             label: 'Delete',
-            onPressed: () async => crudKey.currentState!.deleteEntity(index, user),
+            onPressed: () async =>
+                crudKey.currentState!.deleteEntity(index, user),
           ),
         ],
       ),
@@ -59,14 +61,21 @@ class UserIndexPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CrudIndex<User>(
-      key: crudKey,
-      title: 'Users',
-      currentRouteName: UserIndexPage.routeName,
-      createPageBuilder: (context) => const UserCreatePage(),
-      editPageBuilder: (context, index, user) => UserEditPage(user: user),
-      listItemBuilder: _buildItem,
-      skeletonItemBuilder: (context, index) => const ExpansionFlipTileSkeleton(
-        swatch: _swatch,
-      ),
-    );
+        key: crudKey,
+        title: 'Users',
+        currentRouteName: UserIndexPage.routeName,
+        createPageBuilder: (context) => const UserCreatePage(),
+        editPageBuilder: (context, index, user) => UserEditPage(user: user),
+        listItemBuilder: _buildItem,
+        skeletonItemBuilder: (context, index) =>
+            const ExpansionFlipTileSkeleton(
+          swatch: _swatch,
+        ),
+      );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<GlobalKey<CrudIndexState<User>>>(
+        'crudKey', crudKey));
+  }
 }

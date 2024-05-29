@@ -67,12 +67,12 @@ class UndoManagerNotifier extends ChangeNotifier {
   void undo(DeletableItem entity) {
     deleteFuture?.cancel();
     if (pendingDelete.isNotEmpty) {
-      pendingDelete.forEach((item, idx) {
-        _entities.add(item);
-        eventListener.onItemUndo(idx);
-      });
-
-      pendingDelete.clear();
+      pendingDelete
+        ..forEach((item, idx) {
+          _entities.add(item);
+          eventListener.onItemUndo(idx);
+        })
+        ..clear();
       notifyListeners();
     }
   }

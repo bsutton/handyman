@@ -4,8 +4,8 @@ dependency_overrides:
   # simple_mysql_orm:
   #   path: ../../simple_mysql_orm
   x509:
-    hosted: https://squarephone.biz/api/jbbxpsdavu/
+    hosted: https://onepub.dev/api/jbbxpsdavu/
     version: ^0.2.5
   jose:
-    hosted: https://squarephone.biz/api/jbbxpsdavu/
+    hosted: https://onepub.dev/api/jbbxpsdavu/
     version: ^0.3.4

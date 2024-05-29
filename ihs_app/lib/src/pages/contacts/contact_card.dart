@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,11 @@ class ContactCard extends DeletableItem {
 
   @override
   String getDescription() => contact.getDescription();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Contact>('contact', contact));
+  }
 }
 
 class _ContactCardState extends State<ContactCard>
@@ -203,5 +209,10 @@ class _ContactCardState extends State<ContactCard>
 
   void doFlip() {
     _flipKey.currentState!.flip();
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Contact>('contact', contact));
   }
 }

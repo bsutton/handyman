@@ -10,6 +10,9 @@ part 'customer.g.dart';
 @JsonSerializable()
 class Customer extends Entity<Customer> {
   Customer();
+  Customer.withArgs(this.name);
+
+  Customer.forInsert() : super.forInsert();
 
   factory Customer.fromJson(Map<String, dynamic> json) =>
       _$CustomerFromJson(json);

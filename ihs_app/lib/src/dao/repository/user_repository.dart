@@ -54,15 +54,15 @@ class UserRepository extends Repository<User>
       filterMode: FilterMode.or,
       offset: offset,
       limit: limit,
-    );
-    query.addFilter(Match('username', filter, matchMode: MatchMode.wild));
-    query.addFilter(Match('firstname', filter, matchMode: MatchMode.wild));
-    query.addFilter(Match('surname', filter, matchMode: MatchMode.wild));
-    query.addFilter(Match('description', filter, matchMode: MatchMode.wild));
-    query.addFilter(Match('emailAddress', filter, matchMode: MatchMode.wild));
-    query.addFilter(Match('landline', filter, matchMode: MatchMode.wild));
-    query.addFilter(Match('mobilePhone', filter, matchMode: MatchMode.wild));
-    query.addFilter(Match('extensionNo', filter, matchMode: MatchMode.wild));
+    )
+      ..addFilter(Match('username', filter, matchMode: MatchMode.wild))
+      ..addFilter(Match('firstname', filter, matchMode: MatchMode.wild))
+      ..addFilter(Match('surname', filter, matchMode: MatchMode.wild))
+      ..addFilter(Match('description', filter, matchMode: MatchMode.wild))
+      ..addFilter(Match('emailAddress', filter, matchMode: MatchMode.wild))
+      ..addFilter(Match('landline', filter, matchMode: MatchMode.wild))
+      ..addFilter(Match('mobilePhone', filter, matchMode: MatchMode.wild))
+      ..addFilter(Match('extensionNo', filter, matchMode: MatchMode.wild));
     return query;
   }
 
@@ -75,11 +75,10 @@ class UserRepository extends Repository<User>
     final query = Query(
       entity,
       limit: 1,
-    );
-    query.addFilter(
-        Match('userRole', UserRole.customerAdministrator.toString()));
-    query.addFilter(
-        Match('guid', user.guid.toString(), matchMode: MatchMode.notEq));
+    )
+      ..addFilter(Match('userRole', UserRole.customerAdministrator.toString()))
+      ..addFilter(
+          Match('guid', user.guid.toString(), matchMode: MatchMode.notEq));
     return (await select(query)).isEmpty;
   }
 

@@ -12,19 +12,26 @@
 //   runApp(const MyApp());
 // }
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
+import 'package:flutter/material.dart';
 
-//   // This widget is the root of your application.
-//   @override
-//   Widget build(BuildContext context) => MaterialApp(
-//         title: 'Flutter Demo',
-//         theme: ThemeData(
-//           primarySwatch: Colors.blue,
-//         ),
-//         home: CrudHolder<Product>(
-//           editable: ProductEditable(),
-//           child: const Products(),
-//         ),
-//       );
-// }
+import 'src/crud/crud_holder.dart';
+import 'src/crud/customer/customer_editable.dart';
+import 'src/crud/customer/customer_list.dart';
+import 'src/dao/entities/customer.dart';
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: CrudHolder<Customer>(
+          editable: CustomerEditable(),
+          listWidget: const CustomerList(),
+        ),
+      );
+}

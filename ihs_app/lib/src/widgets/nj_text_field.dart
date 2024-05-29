@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'theme/nj_theme.dart';
@@ -35,6 +36,27 @@ class TextFieldNJ extends StatefulWidget {
   final Color? labelColor;
   @override
   State<StatefulWidget> createState() => TextFieldNJState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(
+          ObjectFlagProperty<ValueChanged<String>?>.has('onChanged', onChanged))
+      ..add(DiagnosticsProperty<FocusNode?>('focusNode', focusNode))
+      ..add(StringProperty('initialValue', initialValue))
+      ..add(DiagnosticsProperty<TextInputType>('keyboardType', keyboardType))
+      ..add(StringProperty('hintText', hintText))
+      ..add(DiagnosticsProperty<EdgeInsets?>('padding', padding))
+      ..add(ObjectFlagProperty<bool Function(String text)?>.has(
+          'validator', validator))
+      ..add(ObjectFlagProperty<String Function(String text)?>.has(
+          'errorMessage', errorMessage))
+      ..add(StringProperty('label', label))
+      ..add(IterableProperty<String>('autofillHints', autofillHints))
+      ..add(EnumProperty<TextCapitalization>(
+          'textCapitalization', textCapitalization))
+      ..add(ColorProperty('labelColor', labelColor));
+  }
 }
 
 class TextFieldNJState extends State<TextFieldNJ> {
@@ -76,5 +98,16 @@ class TextFieldNJState extends State<TextFieldNJ> {
       errorText =
           isValid ? '' : widget.errorMessage?.call(value) ?? 'Error in $value';
     });
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty<TextEditingController>(
+          'textController', textController))
+      ..add(StringProperty('errorText', errorText))
+      ..add(DiagnosticsProperty<EdgeInsets>('defaultPadding', defaultPadding))
+      ..add(DiagnosticsProperty<bool>('isValid', isValid));
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:core' as prefix0;
 import 'dart:core';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/dialog_heading.dart';
@@ -49,6 +50,15 @@ class DialogInfo extends StatefulWidget {
             message: message,
             titleColor: titleColor));
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('title', title))
+      ..add(ColorProperty('titleColor', titleColor))
+      ..add(DiagnosticsProperty<BuildContext>('context', context));
+  }
 }
 
 class DialogInfoState extends State<DialogInfo> {
@@ -91,4 +101,10 @@ class DialogInfoState extends State<DialogInfo> {
         padding: const EdgeInsets.all(8),
         child: widget.message,
       );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty<NavigatorState>('navigatorState', navigatorState));
+  }
 }

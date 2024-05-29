@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/entities/user.dart';
@@ -21,52 +22,60 @@ class UserCreatePageState extends State<UserCreatePage> {
 
   @override
   Widget build(BuildContext context) => CrudCreate<User>(
-      formKey: _formKey,
-      onSave: () async {
-        final user = User.forInsert();
-        user.firstname = firstname;
-        user.surname = surname;
-        user.mobilePhone = PhoneNumber(mobilePhone ?? '');
-        user.owner = (await Repos().user.loggedInUser).owner;
-        user.enabled = true;
-        return user;
-      },
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(right: NJTheme.padding),
+        formKey: _formKey,
+        onSave: () async {
+          final user = User.forInsert()
+            ..firstname = firstname
+            ..surname = surname
+            ..mobilePhone = PhoneNumber(mobilePhone ?? '')
+            ..owner = (await Repos().user.loggedInUser).owner
+            ..enabled = true;
+          return user;
+        },
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: NJTheme.padding),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'First name',
+                      labelText: 'First name *',
+                    ),
+                    validator: UserValidator.firstname,
+                    onSaved: (value) => firstname = value,
+                  ),
+                ),
+              ),
+              Expanded(
                 child: TextFormField(
                   decoration: const InputDecoration(
-                    hintText: 'First name',
-                    labelText: 'First name *',
+                    hintText: 'Surname',
+                    labelText: 'Surname *',
                   ),
-                  validator: UserValidator.firstname,
-                  onSaved: (value) => firstname = value,
+                  validator: UserValidator.surname,
+                  onSaved: (value) => surname = value,
                 ),
               ),
-            ),
-            Expanded(
-              child: TextFormField(
-                decoration: const InputDecoration(
-                  hintText: 'Surname',
-                  labelText: 'Surname *',
-                ),
-                validator: UserValidator.surname,
-                onSaved: (value) => surname = value,
-              ),
-            ),
-          ],
-        ),
-        TextFormField(
-          decoration: const InputDecoration(
-            hintText: 'Mobile/cell phone number',
-            labelText: 'Mobile/cell phone number *',
+            ],
           ),
-          validator: UserValidator.mobilePhone,
-          onSaved: (value) => mobilePhone = value,
-        ),
-      ],
-    );
+          TextFormField(
+            decoration: const InputDecoration(
+              hintText: 'Mobile/cell phone number',
+              labelText: 'Mobile/cell phone number *',
+            ),
+            validator: UserValidator.mobilePhone,
+            onSaved: (value) => mobilePhone = value,
+          ),
+        ],
+      );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(StringProperty('firstname', firstname))
+      ..add(StringProperty('surname', surname))
+      ..add(StringProperty('mobilePhone', mobilePhone));
+  }
 }

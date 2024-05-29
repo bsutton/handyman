@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, avoid_print
 
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart' hide AnsiColor;

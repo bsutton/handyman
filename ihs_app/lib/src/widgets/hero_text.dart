@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 /// This class is to hack around a know problem when
 /// using a hero with text.
@@ -24,27 +25,34 @@ class HeroText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Hero(
-      flightShuttleBuilder:
-          (_, animation, flightDirection, fromHeroContext, toHeroContext) => AnimatedBuilder(
+        flightShuttleBuilder:
+            (_, animation, flightDirection, fromHeroContext, toHeroContext) =>
+                AnimatedBuilder(
           animation: animation,
           child: child,
           builder: (_, _child) => DefaultTextStyle.merge(
-              child: _child!,
-              style: TextStyle.lerp(
-                  DefaultTextStyle.of(fromHeroContext).style,
-                  DefaultTextStyle.of(toHeroContext).style,
-                  flightDirection == HeroFlightDirection.pop
-                      ? 1 - animation.value
-                      : animation.value),
-            ),
+            child: _child!,
+            style: TextStyle.lerp(
+                DefaultTextStyle.of(fromHeroContext).style,
+                DefaultTextStyle.of(toHeroContext).style,
+                flightDirection == HeroFlightDirection.pop
+                    ? 1 - animation.value
+                    : animation.value),
+          ),
         ),
-      tag: tag,
-      child: child,
-    );
+        tag: tag,
+        child: child,
+      );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('tag', tag));
+  }
 }
 
 class HeroNoop extends StatelessWidget {
-  const HeroNoop({required this.tag, required this.child, super.key, this.noop = true});
+  const HeroNoop(
+      {required this.tag, required this.child, super.key, this.noop = true});
   final bool noop;
   final Widget child;
   final String tag;
@@ -57,10 +65,19 @@ class HeroNoop extends StatelessWidget {
       return Hero(tag: tag, child: child);
     }
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty<bool>('noop', noop))
+    ..add(StringProperty('tag', tag));
+  }
+
 }
 
 class HeroTextNoop extends StatelessWidget {
-  const HeroTextNoop({required this.tag, required this.child, super.key, this.noop = true});
+  const HeroTextNoop(
+      {required this.tag, required this.child, super.key, this.noop = true});
   final bool noop;
   final Widget child;
   final String tag;
@@ -73,4 +90,12 @@ class HeroTextNoop extends StatelessWidget {
       return Hero(tag: tag, child: child); // , context: context);
     }
   }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(DiagnosticsProperty<bool>('noop', noop))
+    ..add(StringProperty('tag', tag));
+  }
+
 }

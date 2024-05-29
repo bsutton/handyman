@@ -12,9 +12,9 @@ class TransportIsolate {
 
   Future<List<ActionResponse>> isolateSend(RequestSenderData data) async {
     // create isolate
-    data.basePath = '/micropbx/rest/flutterService2/';
-    data.host = ServiceLocator.getPersistentKeyStore().getServerAPIFQDN();
-    data.httpProtocol = ServiceLocator.serverHttpProtocol;
+    data..basePath = '/micropbx/rest/flutterService2/'
+    ..host = ServiceLocator.getPersistentKeyStore().getServerAPIFQDN()
+    ..httpProtocol = ServiceLocator.serverHttpProtocol;
 
     Log.w('Sending request to isolate');
     // send request to isolate

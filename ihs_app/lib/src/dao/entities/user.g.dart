@@ -48,7 +48,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'mobilePhone': _$JsonConverterToJson<String, PhoneNumber>(
           instance.mobilePhone, const ConverterPhoneNumber().toJson),
       'extensionNo': instance.extensionNo,
-      'userRole': _$UserRoleEnumMap[instance.userRole]!,
+      'userRole': _$UserRoleEnumMap[instance.userRole],
       'owner': _$JsonConverterToJson<String, ER<Customer>>(
           instance.owner, const ERConverterCustomer().toJson),
       'enabled': instance.enabled,

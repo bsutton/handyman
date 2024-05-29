@@ -1,6 +1,7 @@
 import 'dart:core' as prefix0;
 import 'dart:core';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/dialog_heading.dart';
@@ -35,6 +36,15 @@ class DialogAlert extends StatefulWidget {
             titleColor: titleColor));
 
     return;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(StringProperty('title', title))
+    ..add(StringProperty('message', message))
+    ..add(ColorProperty('titleColor', titleColor))
+    ..add(DiagnosticsProperty<BuildContext>('context', context));
   }
 }
 
@@ -78,4 +88,10 @@ class DialogAlertState extends State<DialogAlert> {
         padding: const EdgeInsets.all(8),
         child: NJTextSubheading(widget.message),
       );
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+        DiagnosticsProperty<NavigatorState>('navigatorState', navigatorState));
+  }
 }

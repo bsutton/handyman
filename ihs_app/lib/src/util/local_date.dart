@@ -3,7 +3,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'local_time.dart';
 
-/// Provides a class which wraps a DateTime but just supplies the date component.
+/// Provides a class which wraps a DateTime but just 
+/// supplies the date component.
 @immutable
 class LocalDate {
   /// Creates a [LocalDate] with the date set to today's date.

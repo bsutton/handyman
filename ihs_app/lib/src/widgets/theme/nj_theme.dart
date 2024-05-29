@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class NJTheme {
@@ -165,5 +166,11 @@ class Surface extends StatelessWidget {
         break;
     }
     return color;
+  }
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties..add(EnumProperty<SurfaceElevation>('elevation', elevation))
+    ..add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
   }
 }
