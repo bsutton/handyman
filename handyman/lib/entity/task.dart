@@ -1,6 +1,6 @@
 import 'entity.dart';
 
-class Task extends Entity {
+class Task extends Entity<Task> {
   Task(
       {required super.id,
       required this.jobId,
@@ -41,6 +41,7 @@ class Task extends Entity {
   String description;
   bool completed;
 
+  @override
   Map<String, dynamic> toMap() => {
         'id': id,
         'jobId': jobId,

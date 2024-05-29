@@ -72,7 +72,7 @@ class EntityListScreenState<T extends Entity>
         ],
       ),
       body: FutureBuilderEx<List<T>>(
-          future: () async => entities,
+          future: entities,
           waitingBuilder: (_) =>
               const Center(child: CircularProgressIndicator()),
           builder: (context, list) {

@@ -1,6 +1,6 @@
 import 'entity.dart';
 
-class Job extends Entity {
+class Job extends Entity<Job> {
   Job({
     required super.id,
     required super.createdDate,
@@ -40,6 +40,7 @@ class Job extends Entity {
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
       );
 
+  @override
   Map<String, dynamic> toMap() => {
         'id': id,
         'customerId': customerId,

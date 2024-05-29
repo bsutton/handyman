@@ -2,7 +2,7 @@ import 'entity.dart';
 
 enum CustomerType { residential, realestate, tradePartner, community }
 
-class Customer extends Entity {
+class Customer extends Entity<Customer> {
   Customer({
     required super.id,
     required this.name,
@@ -147,6 +147,7 @@ class Customer extends Entity {
   bool disbarred;
   CustomerType customerType;
 
+  @override
   Map<String, dynamic> toMap() => {
         'id': id,
         'name': name,

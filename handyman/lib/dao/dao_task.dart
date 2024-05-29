@@ -1,26 +1,13 @@
-import 'package:sqflite/sqflite.dart';
-
 import '../entity/job.dart';
 import '../entity/task.dart';
 import 'dao.dart';
 
 class DaoTask extends Dao<Task> {
-  @override
-  Future<int> insert(covariant Task entity, [Transaction? transaction]) async {
-    final db = _db(transaction);
-    final id = await db.insert('tasks', entity.toMap()..remove('id'));
-    entity.id = id;
-    return id;
-  }
-
-  DatabaseExecutor _db([Transaction? transaction]) =>
-      transaction ?? DatabaseHelper.instance.database;
-
   Future<List<Task>> getTasksByJob(Job job) async {
-    final db = _db();
+    final db = getDb();
 
     final results =
-        await db.query('task', where: 'jobid = ?', whereArgs: [job.id]);
+        await db.query(tableName, where: 'jobid = ?', whereArgs: [job.id]);
 
     final tasks = <Task>[];
     for (final result in results) {
@@ -30,30 +17,8 @@ class DaoTask extends Dao<Task> {
   }
 
   @override
-  Future<List<Task>> getAll([Transaction? transaction]) async {
-    final db = _db(transaction);
-    final List<Map<String, dynamic>> maps = await db.query('tasks');
-    return List.generate(maps.length, (i) => Task.fromMap(maps[i]));
-  }
+  Task fromMap(Map<String, dynamic> map) => Task.fromMap(map);
 
   @override
-  Future<int> update(covariant Task entity, [Transaction? transaction]) async {
-    final db = _db(transaction);
-    return db.update(
-      'tasks',
-      entity.toMap(),
-      where: 'id = ?',
-      whereArgs: [entity.id],
-    );
-  }
-
-  @override
-  Future<int> delete(int id, [Transaction? transaction]) async {
-    final db = _db(transaction);
-    return db.delete(
-      'tasks',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
+  String get tableName => 'tasks';
 }
