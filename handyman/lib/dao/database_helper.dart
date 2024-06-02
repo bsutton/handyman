@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'db_upgrade.dart';
+import 'versions/db_upgrade.dart';
 
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();

@@ -6,7 +6,7 @@ import '../../dao/dao_supplier.dart';
 import '../../entity/supplier.dart';
 import '../../widgets/dial_widget.dart';
 import '../../widgets/mail_to.dart';
-import '../base/entity_edit_screen.dart';
+import '../base_full_screen/entity_edit_screen.dart';
 
 class SupplierEditScreen extends StatefulWidget {
   const SupplierEditScreen({super.key, this.supplier});

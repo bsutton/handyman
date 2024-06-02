@@ -7,7 +7,7 @@ import '../../entity/customer.dart';
 import '../../entity/job.dart';
 import '../../util/format.dart';
 import '../../widgets/rich_editor.dart';
-import '../base/entity_list_screen.dart';
+import '../base_full_screen/entity_list_screen.dart';
 import 'job_edit_screen.dart';
 
 class JobListScreen extends StatelessWidget {

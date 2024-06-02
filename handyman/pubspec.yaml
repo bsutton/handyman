@@ -39,6 +39,7 @@ dependencies:
   ftoast: ^2.0.0
   future_builder_ex: ^4.0.0
   image_picker: ^1.1.1
+  june: ^1.0.0+1
   mailto: ^2.0.0
   parchment_delta: ^1.0.0
   path: ^1.9.0

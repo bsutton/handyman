@@ -2,14 +2,13 @@ import 'dart:convert';
 
 import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
-import 'package:future_builder_ex/future_builder_ex.dart';
+import 'package:june/june.dart';
 
-import '../../dao/dao_customer.dart';
 import '../../dao/dao_job.dart';
-import '../../entity/customer.dart';
 import '../../entity/job.dart';
 import '../../widgets/rich_editor.dart';
-import '../base/entity_edit_screen.dart';
+import '../../widgets/select_customer.dart';
+import '../base_full_screen/entity_edit_screen.dart';
 
 class JobEditScreen extends StatefulWidget {
   const JobEditScreen({super.key, this.job});
@@ -30,8 +29,6 @@ class JobEditScreenState extends State<JobEditScreen>
 
   late TextEditingController _addressController;
   late DateTime _selectedDate;
-
-  Customer? selectedCustomer;
 
   @override
   void initState() {
@@ -54,34 +51,9 @@ class JobEditScreenState extends State<JobEditScreen>
       dao: DaoJob(),
       entityState: this,
       editor: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        FutureBuilderEx(
-          // ignore: discarded_futures
-          future: DaoCustomer().getById(widget.job?.customerId),
-          builder: (context, initialCustomer) {
-            selectedCustomer ??= initialCustomer;
-            return FutureBuilderEx<List<Customer>>(
-                // ignore: discarded_futures
-                future: DaoCustomer().getAll(),
-                builder: (context, data) => DropdownButtonFormField<Customer>(
-                      value: selectedCustomer,
-                      hint: const Text('Select a customer'),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedCustomer = newValue;
-                        });
-                      },
-                      items: data!
-                          .map((customer) => DropdownMenuItem<Customer>(
-                                value: customer,
-                                child: Text(customer.name),
-                              ))
-                          .toList(),
-                      decoration: const InputDecoration(labelText: 'Client'),
-                      validator: (value) =>
-                          value == null ? 'Please select a client' : null,
-                    ));
-          },
-        ),
+        JuneBuilder(
+            () => SelectedCustomer()..customerId = widget.job?.customerId,
+            builder: (state) => SelectCustomer(selectedCustomer: state)),
         Padding(
           padding: const EdgeInsets.all(8),
           child: SizedBox(
@@ -135,7 +107,7 @@ class JobEditScreenState extends State<JobEditScreen>
   @override
   Future<Job> forUpdate(Job job) async => Job.forUpdate(
         entity: job,
-        customerId: selectedCustomer?.id,
+        customerId: June.getState(SelectedCustomer.new).customerId,
         startDate: _selectedDate,
         summary: _summaryController.text,
         description: jsonEncode(_descriptionController.document),
@@ -144,7 +116,7 @@ class JobEditScreenState extends State<JobEditScreen>
 
   @override
   Future<Job> forInsert() async => Job.forInsert(
-        customerId: selectedCustomer?.id,
+        customerId: June.getState(SelectedCustomer.new).customerId,
         startDate: _selectedDate,
         summary: _summaryController.text,
         description: jsonEncode(_descriptionController.document),

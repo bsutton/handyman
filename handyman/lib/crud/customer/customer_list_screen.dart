@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../dao/dao.dart';
 import '../../entity/customer.dart';
-import '../base/entity_list_screen.dart';
+import '../base_full_screen/entity_list_screen.dart';
 import 'customer_edit_screen.dart';
 
 class CustomerListScreen extends StatelessWidget {

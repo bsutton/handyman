@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../dao/dao_supplier.dart';
 import '../../entity/entities.dart';
-import '../base/entity_list_screen.dart';
+import '../base_full_screen/entity_list_screen.dart';
 import 'supplier_edit_screen.dart';
 
 class SupplierListScreen extends StatelessWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'crud/contact/contact_list_screen.dart';
 import 'crud/customer/customer_list_screen.dart';
 import 'crud/job/job_list_screen.dart'; // Import the JobListScreen
 import 'crud/supplier/supplier_list_screen.dart';
@@ -43,6 +44,7 @@ class MyDrawer extends StatelessWidget {
     DrawerItem(title: 'Jobs', screen: const JobListScreen()),
     DrawerItem(title: 'Customers', screen: const CustomerListScreen()),
     DrawerItem(title: 'Suppliers', screen: const SupplierListScreen()),
+    DrawerItem(title: 'Contacts', screen: const ContactListScreen()),
   ];
 
   @override

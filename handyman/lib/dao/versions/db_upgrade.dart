@@ -1,13 +1,17 @@
 import 'package:sqflite/sqflite.dart';
 
-import 'versions/v1.dart';
-import 'versions/v2.dart';
-import 'versions/v3.dart';
-import 'versions/v4.dart';
-import 'versions/v5.dart';
-import 'versions/v6.dart';
+import 'v1.dart';
+import 'v2.dart';
+import 'v3.dart';
+import 'v4.dart';
+import 'v5.dart';
+import 'v6.dart';
+import 'v7.dart';
+import 'v8.dart';
 
 final Map<int, Future<void> Function(Database)?> upgrades = {
+  8: applyV8,
+  7: applyV7,
   6: applyV6,
   5: applyV5,
   4: applyV4,
