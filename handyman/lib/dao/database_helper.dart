@@ -19,7 +19,9 @@ class DatabaseHelper {
     databaseFactory = databaseFactoryFfi;
     final path = join(await getDatabasesPath(), 'handyman.db');
     _database = await openDatabase(path,
-        version: 2, onCreate: _createDatabase, onUpgrade: upgradeDb);
+        version: upgrades.keys.first,
+        onCreate: _createDatabase,
+        onUpgrade: upgradeDb);
   }
 
   static Future<void> _createDatabase(Database db, int version) async {
