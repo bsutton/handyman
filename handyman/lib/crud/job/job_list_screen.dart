@@ -5,6 +5,8 @@ import '../../dao/dao_customer.dart';
 import '../../dao/dao_job.dart';
 import '../../entity/customer.dart';
 import '../../entity/job.dart';
+import '../../util/format.dart';
+import '../../widgets/rich_editor.dart';
 import '../base/entity_list_screen.dart';
 import 'job_edit_screen.dart';
 
@@ -15,12 +17,12 @@ class JobListScreen extends StatelessWidget {
   Widget build(BuildContext context) => EntityListScreen<Job>(
         dao: DaoJob(),
         pageTitle: 'Jobs',
-        title: (job) => Text(job.summary),
         onEdit: (job) => JobEditScreen(job: job),
-        subTitle: (entity) {
+        title: (job) => Text(job.summary),
+        details: (entity) {
           final job = entity;
           return SizedBox(
-            height: 100,
+            height: 150,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -30,9 +32,10 @@ class JobListScreen extends StatelessWidget {
                   builder: (context, customer) =>
                       Text('Customer: ${customer?.name ?? 'Not Set'}'),
                 ),
-                Text('Start Date: ${job.startDate}'),
+                Text('Scheduled: ${formatDate(job.startDate)}'),
                 Text('Summary: ${job.summary}'),
-                Text('Description: ${job.description}'),
+                Text(
+                    '''Description: ${RichEditor.createParchment(job.description).toPlainText().split('\n').first}'''),
                 Text('Address: ${job.address}'),
               ],
             ),
