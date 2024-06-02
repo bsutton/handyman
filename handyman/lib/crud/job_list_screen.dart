@@ -19,20 +19,23 @@ class JobListScreen extends StatelessWidget {
         onEdit: (job) => AddEditJobScreen(job: job),
         subTitle: (entity) {
           final job = entity;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FutureBuilderEx<Customer?>(
-                // ignore: discarded_futures
-                future: DaoCustomer().getById(job.customerId),
-                builder: (context, customer) =>
-                    Text('Customer: ${customer?.name ?? 'Not Set'}'),
-              ),
-              Text('Start Date: ${job.startDate}'),
-              Text('Summary: ${job.summary}'),
-              Text('Description: ${job.description}'),
-              Text('Address: ${job.address}'),
-            ],
+          return SizedBox(
+            height: 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FutureBuilderEx<Customer?>(
+                  // ignore: discarded_futures
+                  future: DaoCustomer().getById(job.customerId),
+                  builder: (context, customer) =>
+                      Text('Customer: ${customer?.name ?? 'Not Set'}'),
+                ),
+                Text('Start Date: ${job.startDate}'),
+                Text('Summary: ${job.summary}'),
+                Text('Description: ${job.description}'),
+                Text('Address: ${job.address}'),
+              ],
+            ),
           );
         },
       );

@@ -35,10 +35,11 @@ dependencies:
   flutter:
     sdk: flutter
 
-  flutter_bloc: ^7.2.0
   ftoast: ^2.0.0
-  future_builder_ex: ^3.1.0
+  future_builder_ex: ^4.0.0
+  image_picker: ^1.1.1
   mailto: ^2.0.0
+  parchment_delta: ^1.0.0
   path: ^1.9.0
   path_provider: ^2.0.0
   sqflite: ^2.3.2

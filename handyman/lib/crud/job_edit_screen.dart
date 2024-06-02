@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
@@ -6,6 +8,7 @@ import '../dao/dao_customer.dart';
 import '../dao/dao_job.dart';
 import '../entity/customer.dart';
 import '../entity/job.dart';
+import '../widgets/rich_editor.dart';
 
 class AddEditJobScreen extends StatefulWidget {
   const AddEditJobScreen({super.key, this.job});
@@ -19,9 +22,9 @@ class AddEditJobScreenState extends State<AddEditJobScreen> {
   late TextEditingController _summaryController;
   // late TextEditingController _descriptionController;
 
-  late FleatherController _descriptionController;
+  late RichEditorController _descriptionController;
 
-  late ParchmentDocument _descriptionDocument;
+  late ParchmentDocument document;
 
   late TextEditingController _addressController;
   late DateTime _selectedDate;
@@ -36,9 +39,8 @@ class AddEditJobScreenState extends State<AddEditJobScreen> {
     // _descriptionController =
     //     TextEditingController(text: widget.job?.description ?? '');
 
-    _descriptionDocument =
-        ParchmentDocument.fromJson([widget.job?.description ?? '']);
-    _descriptionController = FleatherController(document: _descriptionDocument);
+    _descriptionController = RichEditorController(
+        parchmentAsJsonString: widget.job?.description ?? '');
 
     _addressController = TextEditingController(text: widget.job?.address ?? '');
   }
@@ -93,10 +95,11 @@ class AddEditJobScreenState extends State<AddEditJobScreen> {
                 controller: _summaryController,
                 decoration: const InputDecoration(labelText: 'Summary'),
               ),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(labelText: 'Description'),
-              ),
+              RichEditor(controller: _descriptionController
+                  // controller: _descriptionController,
+                  // decoration: const InputDecoration(labelText:
+                  //   'Description'),
+                  ),
               TextFormField(
                 controller: _addressController,
                 decoration: const InputDecoration(labelText: 'Address'),
@@ -132,7 +135,7 @@ class AddEditJobScreenState extends State<AddEditJobScreen> {
         customerId: selectedCustomer?.id,
         startDate: _selectedDate,
         summary: _summaryController.text,
-        description: _descriptionController.text,
+        description: jsonEncode(_descriptionController.document),
         address: _addressController.text,
       );
 
@@ -142,7 +145,7 @@ class AddEditJobScreenState extends State<AddEditJobScreen> {
         customerId: selectedCustomer?.id,
         startDate: _selectedDate,
         summary: _summaryController.text,
-        description: _descriptionController.text,
+        description: jsonEncode(_descriptionController.document),
         address: _addressController.text,
       );
 
