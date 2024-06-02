@@ -14,13 +14,13 @@ class EntityListScreen<T extends Entity<T>> extends StatefulWidget {
     required this.onEdit,
     required this.pageTitle,
     required this.title,
-    required this.subTitle,
+    required this.details,
     super.key, // Add key parameter here
   });
 
   final String pageTitle;
   final Widget Function(T entity) title;
-  final Widget Function(T entity) subTitle;
+  final Widget Function(T entity) details;
   final Widget Function(T? entity) onEdit;
   final Dao<T> dao;
 
@@ -89,7 +89,7 @@ class EntityListScreenState<T extends Entity<T>>
           final entity = list[index];
           return ListTile(
             title: widget.title(entity),
-            subtitle: widget.subTitle(entity),
+            subtitle: widget.details(entity),
             trailing: IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () async {

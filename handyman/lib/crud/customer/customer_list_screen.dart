@@ -14,7 +14,7 @@ class CustomerListScreen extends StatelessWidget {
       dao: DaoCustomer(),
       title: (entity) => Text(entity.name) as Widget,
       onEdit: (customer) => CustomerEditScreen(customer: customer),
-      subTitle: (entity) {
+      details: (entity) {
         final customer = entity;
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('Business Name: ${customer.name}'),
