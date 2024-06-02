@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  date_time_format: ^2.0.1
   direct_caller_sim_choice: ^1.0.5
   email_validator: ^2.1.17
   equatable: ^2.0.0
