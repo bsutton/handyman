@@ -10,5 +10,5 @@ class DaoCustomer extends Dao<Customer> {
   Customer fromMap(Map<String, dynamic> map) => Customer.fromMap(map);
 
   @override
-  String get tableName => 'customers';
+  String get tableName => 'customer';
 }

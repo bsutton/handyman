@@ -20,5 +20,5 @@ class DaoTask extends Dao<Task> {
   Task fromMap(Map<String, dynamic> map) => Task.fromMap(map);
 
   @override
-  String get tableName => 'tasks';
+  String get tableName => 'task';
 }

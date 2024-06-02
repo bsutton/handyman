@@ -26,7 +26,7 @@ class DaoJob extends Dao<Job> {
   }
 
   @override
-  String get tableName => 'jobs';
+  String get tableName => 'job';
 
   @override
   Job fromMap(Map<String, dynamic> map) => Job.fromMap(map);

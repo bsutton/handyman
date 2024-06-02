@@ -10,5 +10,5 @@ class DaoSupplier extends Dao<Supplier> {
   Supplier fromMap(Map<String, dynamic> map) => Supplier.fromMap(map);
 
   @override
-  String get tableName => 'suppliers';
+  String get tableName => 'supplier';
 }
