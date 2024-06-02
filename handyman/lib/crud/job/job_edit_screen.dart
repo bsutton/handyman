@@ -58,7 +58,7 @@ class JobEditScreenState extends State<JobEditScreen>
           // ignore: discarded_futures
           future: DaoCustomer().getById(widget.job?.customerId),
           builder: (context, initialCustomer) {
-            selectedCustomer ??= initialCustomer!;
+            selectedCustomer ??= initialCustomer;
             return FutureBuilderEx<List<Customer>>(
                 // ignore: discarded_futures
                 future: DaoCustomer().getAll(),
