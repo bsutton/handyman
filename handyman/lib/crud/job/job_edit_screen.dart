@@ -85,21 +85,37 @@ class JobEditScreenState extends State<JobEditScreen> {
                           ));
                 },
               ),
-              TextButton(
-                onPressed: _selectDate,
-                child: Text(
-                  'Start Date: ${_selectedDate.toLocal()}'.split(' ')[0],
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: SizedBox(
+                  width: 120,
+                  child: Container(
+                    constraints:
+                        const BoxConstraints(maxWidth: 125, maxHeight: 64),
+                    child: ElevatedButton(
+                      onPressed: _selectDate,
+                      child: Text(
+                        'Scheduled: ${_selectedDate.toLocal()}'.split(' ')[0],
+                      ),
+                    ),
+                  ),
                 ),
               ),
               TextFormField(
                 controller: _summaryController,
                 decoration: const InputDecoration(labelText: 'Summary'),
               ),
-              RichEditor(controller: _descriptionController
-                  // controller: _descriptionController,
-                  // decoration: const InputDecoration(labelText:
-                  //   'Description'),
-                  ),
+              // ExpandChild(
+              //     child:
+              SizedBox(
+                height: 200,
+                child: RichEditor(controller: _descriptionController
+                    // controller: _descriptionController,
+                    // decoration: const InputDecoration(labelText:
+                    //   'Description'),
+                    ),
+                // )
+              ),
               TextFormField(
                 controller: _addressController,
                 decoration: const InputDecoration(labelText: 'Address'),
