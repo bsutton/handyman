@@ -4,21 +4,21 @@ import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 
-import '../dao/dao_customer.dart';
-import '../dao/dao_job.dart';
-import '../entity/customer.dart';
-import '../entity/job.dart';
-import '../widgets/rich_editor.dart';
+import '../../dao/dao_customer.dart';
+import '../../dao/dao_job.dart';
+import '../../entity/customer.dart';
+import '../../entity/job.dart';
+import '../../widgets/rich_editor.dart';
 
-class AddEditJobScreen extends StatefulWidget {
-  const AddEditJobScreen({super.key, this.job});
+class JobEditScreen extends StatefulWidget {
+  const JobEditScreen({super.key, this.job});
   final Job? job;
 
   @override
-  AddEditJobScreenState createState() => AddEditJobScreenState();
+  JobEditScreenState createState() => JobEditScreenState();
 }
 
-class AddEditJobScreenState extends State<AddEditJobScreen> {
+class JobEditScreenState extends State<JobEditScreen> {
   late TextEditingController _summaryController;
   // late TextEditingController _descriptionController;
 

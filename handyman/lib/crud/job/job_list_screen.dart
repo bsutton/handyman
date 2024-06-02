@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 
-import '../dao/dao_customer.dart';
-import '../dao/dao_job.dart';
-import '../entity/customer.dart';
-import '../entity/job.dart';
-import 'base/entity_list_screen.dart';
+import '../../dao/dao_customer.dart';
+import '../../dao/dao_job.dart';
+import '../../entity/customer.dart';
+import '../../entity/job.dart';
+import '../base/entity_list_screen.dart';
 import 'job_edit_screen.dart';
 
 class JobListScreen extends StatelessWidget {
@@ -16,7 +16,7 @@ class JobListScreen extends StatelessWidget {
         dao: DaoJob(),
         pageTitle: 'Jobs',
         title: (job) => Text(job.summary),
-        onEdit: (job) => AddEditJobScreen(job: job),
+        onEdit: (job) => JobEditScreen(job: job),
         subTitle: (entity) {
           final job = entity;
           return SizedBox(

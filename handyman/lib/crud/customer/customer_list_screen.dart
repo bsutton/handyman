@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../dao/dao.dart';
-import '../entity/entities.dart';
-import 'add_edit_customer_screen.dart';
-import 'base/entity_list_screen.dart';
+import '../../dao/dao.dart';
+import '../../entity/entities.dart';
+import '../base/entity_list_screen.dart';
+import 'customer_edit_screen.dart';
 
 class CustomerListScreen extends StatelessWidget {
   const CustomerListScreen({super.key});
@@ -13,7 +13,7 @@ class CustomerListScreen extends StatelessWidget {
       pageTitle: 'Customers',
       dao: DaoCustomer(),
       title: (entity) => Text(entity.name) as Widget,
-      onEdit: (customer) => AddEditCustomerScreen(customer: customer),
+      onEdit: (customer) => CustomerEditScreen(customer: customer),
       subTitle: (entity) {
         final customer = entity;
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

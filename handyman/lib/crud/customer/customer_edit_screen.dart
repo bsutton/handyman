@@ -3,17 +3,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../dao/dao_customer.dart';
-import '../entity/customer.dart';
-import '../widgets/dial_widget.dart';
-import '../widgets/mail_to.dart';
+import '../../dao/dao_customer.dart';
+import '../../entity/customer.dart';
+import '../../widgets/dial_widget.dart';
+import '../../widgets/mail_to.dart';
 
-class AddEditCustomerScreen extends StatefulWidget {
-  const AddEditCustomerScreen({super.key, this.customer});
+class CustomerEditScreen extends StatefulWidget {
+  const CustomerEditScreen({super.key, this.customer});
   final Customer? customer;
 
   @override
-  _AddEditCustomerScreenState createState() => _AddEditCustomerScreenState();
+  _CustomerEditScreenState createState() => _CustomerEditScreenState();
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -21,7 +21,7 @@ class AddEditCustomerScreen extends StatefulWidget {
   }
 }
 
-class _AddEditCustomerScreenState extends State<AddEditCustomerScreen> {
+class _CustomerEditScreenState extends State<CustomerEditScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _primaryFirstNameController;
