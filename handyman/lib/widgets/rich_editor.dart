@@ -27,8 +27,8 @@ class RichEditorController {
     try {
       // define heuristics - these where just taken
       // from the example and are probably not needed.
-      final doc = _createParchment(parchmentAsJsonString);
-      controller = FleatherController(document: doc);
+      document = RichEditor.createParchment(parchmentAsJsonString);
+      controller = FleatherController(document: document);
       // ignore: avoid_catches_without_on_clauses
     } catch (err, st) {
       print('Cannot read welcome.json: $err\n$st');
@@ -36,7 +36,23 @@ class RichEditorController {
     }
   }
 
-  ParchmentDocument _createParchment(String parchmentAsJsonString) {
+  void replaceText(int index, int length, Object data,
+      {TextSelection? selection}) {
+    controller.replaceText(index, length, data, selection: selection);
+  }
+}
+
+class RichEditor extends StatefulWidget {
+  const RichEditor({required this.controller, super.key});
+
+  final RichEditorController controller;
+
+  @override
+  State<RichEditor> createState() => _RichEditorState();
+
+  /// Generates a [ParchmentDocument] from a json string that contains
+  /// a json encoded Parchment.
+  static ParchmentDocument createParchment(String parchmentAsJsonString) {
     List<dynamic>? json;
 
     if (Strings.isEmpty(parchmentAsJsonString)) {
@@ -75,20 +91,6 @@ class RichEditorController {
     }
     return doc;
   }
-
-  void replaceText(int index, int length, Object data,
-      {TextSelection? selection}) {
-    controller.replaceText(index, length, data, selection: selection);
-  }
-}
-
-class RichEditor extends StatefulWidget {
-  const RichEditor({required this.controller, super.key});
-
-  final RichEditorController controller;
-
-  @override
-  State<RichEditor> createState() => _RichEditorState();
 }
 
 class _RichEditorState extends State<RichEditor> {
@@ -112,7 +114,6 @@ class _RichEditorState extends State<RichEditor> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(elevation: 0, title: const Text('Fleather Demo')),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
             final picker = ImagePicker();
@@ -152,17 +153,25 @@ class _RichEditorState extends State<RichEditor> {
                   bottom: MediaQuery.of(context).padding.bottom,
                 ),
                 onLaunchUrl: _launchUrl,
-                maxContentWidth: 800,
                 embedBuilder: _embedBuilder,
-                spellCheckConfiguration: SpellCheckConfiguration(
-                    spellCheckService: DefaultSpellCheckService(),
-                    misspelledSelectionColor: Colors.red,
-                    misspelledTextStyle: DefaultTextStyle.of(context).style),
+                spellCheckConfiguration: _getSpellCheckService(context),
               ),
             ),
           ],
         ),
       );
+
+  /// Spell checker only supported on andriod and iOS.
+  SpellCheckConfiguration? _getSpellCheckService(BuildContext context) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      return SpellCheckConfiguration(
+          spellCheckService: DefaultSpellCheckService(),
+          misspelledSelectionColor: Colors.red,
+          misspelledTextStyle: DefaultTextStyle.of(context).style);
+    } else {
+      return null;
+    }
+  }
 
   Widget _embedBuilder(BuildContext context, EmbedNode node) {
     if (node.value.type == 'icon') {
