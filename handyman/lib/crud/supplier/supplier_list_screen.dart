@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-import '../../dao/dao.dart';
-import '../../entity/customer.dart';
+import '../../dao/dao_supplier.dart';
+import '../../entity/entities.dart';
 import '../base/entity_list_screen.dart';
-import 'customer_edit_screen.dart';
+import 'supplier_edit_screen.dart';
 
-class CustomerListScreen extends StatelessWidget {
-  const CustomerListScreen({super.key});
+class SupplierListScreen extends StatelessWidget {
+  const SupplierListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) => EntityListScreen<Customer>(
-      pageTitle: 'Customers',
-      dao: DaoCustomer(),
+  Widget build(BuildContext context) => EntityListScreen<Supplier>(
+      pageTitle: 'Suppliers',
+      dao: DaoSupplier(),
       title: (entity) => Text(entity.name) as Widget,
-      onEdit: (customer) => CustomerEditScreen(customer: customer),
+      onEdit: (supplier) => SupplierEditScreen(suppler: supplier),
       subTitle: (entity) {
         final customer = entity;
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

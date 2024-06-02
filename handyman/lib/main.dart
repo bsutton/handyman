@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'crud/customer_list_screen.dart';
-import 'crud/job_list_screen.dart'; // Import the JobListScreen
+import 'crud/customer/customer_list_screen.dart';
+import 'crud/job/job_list_screen.dart'; // Import the JobListScreen
+import 'crud/supplier/supplier_list_screen.dart';
 import 'dao/database_helper.dart';
 
 void main() async {
@@ -39,8 +40,9 @@ class MyDrawer extends StatelessWidget {
   MyDrawer({super.key});
 
   final List<DrawerItem> drawerItems = [
-    DrawerItem(title: 'Job', screen: const JobListScreen()),
-    DrawerItem(title: 'Customer', screen: const CustomerListScreen()),
+    DrawerItem(title: 'Jobs', screen: const JobListScreen()),
+    DrawerItem(title: 'Customers', screen: const CustomerListScreen()),
+    DrawerItem(title: 'Suppliers', screen: const SupplierListScreen()),
   ];
 
   @override
