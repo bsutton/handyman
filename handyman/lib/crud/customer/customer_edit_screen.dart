@@ -255,7 +255,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
 
   @override
   Future<Customer> forUpdate(Customer customer) async => Customer.forUpdate(
-      entity: widget.customer!,
+      entity: customer,
       name: _nameController.text,
       primaryFirstName: _primaryFirstNameController.text,
       primarySurname: _primarySurnameController.text,
