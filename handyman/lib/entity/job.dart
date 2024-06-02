@@ -31,7 +31,7 @@ class Job extends Entity<Job> {
 
   factory Job.fromMap(Map<String, dynamic> map) => Job(
         id: map['id'] as int,
-        customerId: map['customerId'] as int?,
+        customerId: map['customer_id'] as int?,
         summary: map['summary'] as String,
         description: map['description'] as String,
         startDate: DateTime.parse(map['startDate'] as String),
@@ -43,7 +43,7 @@ class Job extends Entity<Job> {
   @override
   Map<String, dynamic> toMap() => {
         'id': id,
-        'customerId': customerId,
+        'customer_id': customerId,
         'summary': summary,
         'description': description,
         'startDate': startDate.toIso8601String(),
