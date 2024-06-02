@@ -13,7 +13,7 @@ class SupplierListScreen extends StatelessWidget {
       pageTitle: 'Suppliers',
       dao: DaoSupplier(),
       title: (entity) => Text(entity.name) as Widget,
-      onEdit: (supplier) => SupplierEditScreen(suppler: supplier),
+      onEdit: (supplier) => SupplierEditScreen(supplier: supplier),
       details: (entity) {
         final customer = entity;
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
