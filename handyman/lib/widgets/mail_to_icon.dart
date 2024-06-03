@@ -5,15 +5,15 @@ import 'package:mailto/mailto.dart';
 import 'package:strings/strings.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-class MailToWidget extends StatelessWidget {
-  const MailToWidget(this.email, {super.key});
-  final String email;
+class MailToIcon extends StatelessWidget {
+  const MailToIcon(this.email, {super.key});
+  final String? email;
 
   @override
   Widget build(BuildContext context) => IconButton(
         icon: const Icon(Icons.email),
         onPressed: () async =>
-            Strings.isEmpty(email) ? null : _sendEmail(context, email),
+            Strings.isEmpty(email) ? null : _sendEmail(context, email!),
         color: Strings.isEmpty(email) ? Colors.grey : Colors.blue,
       );
 
