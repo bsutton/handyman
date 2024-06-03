@@ -3,7 +3,6 @@ import 'package:strings/strings.dart';
 
 import '../../dao/dao_contact.dart';
 import '../../entity/contact.dart';
-import '../../widgets/dial_widget.dart';
 import '../../widgets/phone_text.dart';
 import '../base_full_screen/entity_list_screen.dart';
 import 'contact_edit_screen.dart';
@@ -22,7 +21,7 @@ class ContactListScreen extends StatelessWidget {
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('''
 Contact: ${customer.firstName} ${entity.surname}'''),
-          PhoneText(label: 'Mobile:', phoneNo:customer.mobileNumber),
+          PhoneText(label: 'Mobile:', phoneNo: customer.mobileNumber),
           if (Strings.isNotBlank(customer.emailAddress))
             Text('Email: ${customer.emailAddress}'),
         ]);
