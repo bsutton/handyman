@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/contact.dart';
+import '../entity/customer.dart';
 import 'dao.dart';
 
 class DaoContact extends Dao<Contact> {
@@ -11,4 +12,22 @@ class DaoContact extends Dao<Contact> {
 
   @override
   String get tableName => 'contact';
+
+  /// returns the primary contact for the customer
+  Future<Contact?> getPrimaryForCustomer(Customer customer) async {
+    final db = getDb();
+    final data = await db.rawQuery('''
+select co.* from contact co
+join customer_contact cc
+  on co.id = cc.contact_id
+join customer cu
+  on cc.customer_id = cu.id
+where cu.id =? 
+and co.`primary` = 1''', [customer.id]);
+
+    if (data.isEmpty) {
+      return null;
+    }
+    return fromMap(data.first);
+  }
 }

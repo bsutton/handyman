@@ -1,6 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 
 import 'v1.dart';
+import 'v10.dart';
+import 'v11.dart';
 import 'v2.dart';
 import 'v3.dart';
 import 'v4.dart';
@@ -8,8 +10,12 @@ import 'v5.dart';
 import 'v6.dart';
 import 'v7.dart';
 import 'v8.dart';
+import 'v9.dart';
 
-final Map<int, Future<void> Function(Database)?> upgrades = {
+final Map<int, Future<void> Function(Database)?> upgradeDeltas = {
+  11: applyV11,
+  10: applyV10,
+  9: applyV9,
   8: applyV8,
   7: applyV7,
   6: applyV6,
@@ -20,6 +26,8 @@ final Map<int, Future<void> Function(Database)?> upgrades = {
   1: applyV1
 };
 
+/// Upgrade the database by applying each upgrade script in order
+/// from the db's current version to the latest version.
 Future<void> upgradeDb(Database db, int oldVersion, int newVersion) async {
   if (oldVersion == 1) {
     print('Creating database');
@@ -28,7 +36,7 @@ Future<void> upgradeDb(Database db, int oldVersion, int newVersion) async {
   }
   for (var version = oldVersion + 1; version <= newVersion; version++) {
     print('Upgrading to $version');
-    await upgrades[version]?.call(db);
+    await upgradeDeltas[version]?.call(db);
   }
 }
 

@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:future_builder_ex/future_builder_ex.dart';
 
 import '../../dao/dao.dart';
+import '../../dao/dao_contact.dart';
+import '../../dao/dao_site.dart';
 import '../../entity/customer.dart';
+import '../../widgets/contact_text.dart';
+import '../../widgets/mail_text.dart';
+import '../../widgets/phone_text.dart';
+import '../../widgets/site_text.dart';
 import '../base_full_screen/entity_list_screen.dart';
 import 'customer_edit_screen.dart';
 
@@ -16,14 +23,23 @@ class CustomerListScreen extends StatelessWidget {
       onEdit: (customer) => CustomerEditScreen(customer: customer),
       details: (entity) {
         final customer = entity;
-        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Business Name: ${customer.name}'),
-          Text('''
-      Primary Contact: ${customer.primaryFirstName} ${entity.primarySurname}'''),
-          Text('Mobile: ${customer.primaryMobileNumber}'),
-          Text('Email: ${customer.primaryEmailAddress}'),
-          Text('''
-      Address: ${customer.primaryAddressLine1}, ${customer.primaryAddressLine2}, ${customer.primarySuburb}, ${customer.primaryState}, ${customer.primaryPostcode}''')
-        ]);
+        return FutureBuilderEx(
+            // ignore: discarded_futures
+            future: DaoSite().getPrimaryForCustomer(customer),
+            builder: (context, site) => FutureBuilderEx(
+                // ignore: discarded_futures
+                future: DaoContact().getPrimaryForCustomer(customer),
+                builder: (context, contact) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Business Name: ${customer.name}'),
+                          ContactText(
+                              label: 'Primary Contact:', contact: contact),
+                          PhoneText(
+                              label: 'Mobile:', phoneNo: contact?.mobileNumber),
+                          MailText(
+                              label: 'Email', email: contact?.emailAddress),
+                          SiteText(label: 'Address', site: site)
+                        ])));
       });
 }

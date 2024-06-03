@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../../dao/dao_customer.dart';
 import '../../entity/customer.dart';
 import '../base_full_screen/entity_edit_screen.dart';
-import '../contact/contact_list_screen.dart';
 
 class CustomerEditScreen extends StatefulWidget {
   const CustomerEditScreen({super.key, this.customer});
@@ -49,14 +48,14 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
               autofocus: true,
               controller: _nameController,
               decoration: const InputDecoration(labelText: 'Name'),
-              validator: (value) {          
+              validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter a name';
                 }
                 return null;
               },
             ),
-            const SizedBox(height: 150, child: ContactListScreen()),
+            // Add other form fields for the new fields
             TextFormField(
               controller: _disbarredController,
               decoration: const InputDecoration(labelText: 'Disbarred'),

@@ -19,7 +19,7 @@ class DatabaseHelper {
     databaseFactory = databaseFactoryFfi;
     final path = join(await getDatabasesPath(), 'handyman.db');
     _database = await openDatabase(path,
-        version: upgrades.keys.first,
+        version: upgradeDeltas.keys.first,
         onCreate: _createDatabase,
         onUpgrade: upgradeDb);
   }

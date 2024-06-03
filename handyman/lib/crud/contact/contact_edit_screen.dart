@@ -7,7 +7,7 @@ import '../../dao/dao_contact.dart';
 import '../../entity/contact.dart';
 import '../../entity/customer.dart';
 import '../../widgets/dial_widget.dart';
-import '../../widgets/mail_to.dart';
+import '../../widgets/mail_to_icon.dart';
 import '../../widgets/select_customer.dart';
 import '../base_full_screen/entity_edit_screen.dart';
 
@@ -97,7 +97,7 @@ class _ContactEditScreenstate extends State<ContactEditScreen>
               controller: _emailaddressController,
               decoration: InputDecoration(
                 labelText: ' email address',
-                suffixIcon: MailToWidget(_emailaddressController.text),
+                suffixIcon: MailToIcon(_emailaddressController.text),
               ),
             ),
           ],

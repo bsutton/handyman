@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../dao/dao_supplier.dart';
 import '../../entity/supplier.dart';
 import '../../widgets/dial_widget.dart';
-import '../../widgets/mail_to.dart';
+import '../../widgets/mail_to_icon.dart';
 import '../base_full_screen/entity_edit_screen.dart';
 
 class SupplierEditScreen extends StatefulWidget {
@@ -174,7 +174,7 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
               controller: _primaryEmailAddressController,
               decoration: InputDecoration(
                 labelText: 'Primary Email Address',
-                suffixIcon: MailToWidget(_primaryEmailAddressController.text),
+                suffixIcon: MailToIcon(_primaryEmailAddressController.text),
               ),
             ),
             TextFormField(
@@ -234,7 +234,7 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
                 decoration: InputDecoration(
                     labelText: 'Secondary Email Address',
                     suffixIcon:
-                        MailToWidget(_secondaryEmailAddressController.text))),
+                        MailToIcon(_secondaryEmailAddressController.text))),
           ],
         ),
       );
