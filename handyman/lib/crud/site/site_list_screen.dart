@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
 
 import '../../dao/dao_site.dart';
+import '../../entity/customer.dart';
 import '../../entity/site.dart';
-import '../base_full_screen/entity_list_screen.dart';
+import '../../widgets/text_site.dart';
+import '../base_nested/nested_list_screen.dart';
 import 'site_edit_screen.dart';
 
 class SiteListScreen extends StatelessWidget {
-  const SiteListScreen({super.key});
+  const SiteListScreen({required this.parent, super.key});
+
+  final Parent<Customer> parent;
 
   @override
-  Widget build(BuildContext context) => EntityListScreen<Site>(
+  Widget build(BuildContext context) => NestedEntityListScreen<Site, Customer>(
+      parent: parent,
       pageTitle: 'Sites',
       dao: DaoSite(),
+      // ignore: discarded_futures
+      fetchList: () => DaoSite().getByCustomer(parent.parent),
       title: (site) => Text('${site.addressLine1} ${site.suburb}') as Widget,
       onEdit: (site) => SiteEditScreen(site: site),
       details: (entity) {
         final site = entity;
-        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('''
-      Address: ${site.addressLine1}, ${site.addressLine2}, ${site.suburb}, ${site.state}, ${site.postcode}''')
-        ]);
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [TextSite(label: 'Address', site: site)]);
       });
 }

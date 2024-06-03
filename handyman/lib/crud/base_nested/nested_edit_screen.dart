@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 import '../../dao/dao.dart';
 import '../../entity/entity.dart';
 
-abstract class EntityState<E extends Entity<E>> {
+abstract class NestedEntityState<E extends Entity<E>> {
   Future<E> forInsert();
   Future<E> forUpdate(E entity);
 }
 
-class EntityEditScreen<E extends Entity<E>> extends StatefulWidget {
-  const EntityEditScreen(
+class NestedEntityEditScreen<E extends Entity<E>> extends StatefulWidget {
+  const NestedEntityEditScreen(
       {required this.entity,
       required this.editor,
       required this.entityName,
@@ -22,14 +22,14 @@ class EntityEditScreen<E extends Entity<E>> extends StatefulWidget {
   final Dao<E> dao;
 
   final Widget editor;
-  final EntityState<E> entityState;
+  final NestedEntityState<E> entityState;
 
   @override
-  EntityEditScreenState createState() => EntityEditScreenState<E>();
+  NestedEntityEditScreenState createState() => NestedEntityEditScreenState<E>();
 }
 
-class EntityEditScreenState<E extends Entity<E>>
-    extends State<EntityEditScreen<E>> {
+class NestedEntityEditScreenState<E extends Entity<E>>
+    extends State<NestedEntityEditScreen<E>> {
   final _formKey = GlobalKey<FormState>();
 
   @override

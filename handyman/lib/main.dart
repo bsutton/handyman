@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
-import 'package:sqflite/sqflite.dart';
 
-import 'crud/contact/contact_list_screen.dart';
 import 'crud/customer/customer_list_screen.dart';
 import 'crud/job/job_list_screen.dart'; // Import the JobListScreen
 import 'crud/supplier/supplier_list_screen.dart';
 import 'crud/system/system_edit_screen.dart';
 import 'dao/dao_system.dart';
-import 'dao/database_helper.dart';
+import 'dao/management/database_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await DatabaseHelper.initDatabase();
 
-  print('Database located at: ${await getDatabasesPath()}');
+  print('Database located at: ${await DatabaseHelper.pathToDatabase()}');
 
   runApp(const MyApp());
 }
@@ -47,7 +45,6 @@ class MyDrawer extends StatelessWidget {
     DrawerItem(title: 'Jobs', screen: const JobListScreen()),
     DrawerItem(title: 'Customers', screen: const CustomerListScreen()),
     DrawerItem(title: 'Suppliers', screen: const SupplierListScreen()),
-    DrawerItem(title: 'Contacts', screen: const ContactListScreen()),
     DrawerItem(
         title: 'System',
         screen: FutureBuilderEx(

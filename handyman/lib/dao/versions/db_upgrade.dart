@@ -1,8 +1,13 @@
 import 'package:sqflite/sqflite.dart';
 
+import '../management/database_helper.dart';
+import '../management/db_backup.dart';
 import 'v1.dart';
 import 'v10.dart';
 import 'v11.dart';
+import 'v12.dart';
+import 'v13.dart';
+import 'v14.dart';
 import 'v2.dart';
 import 'v3.dart';
 import 'v4.dart';
@@ -13,6 +18,9 @@ import 'v8.dart';
 import 'v9.dart';
 
 final Map<int, Future<void> Function(Database)?> upgradeDeltas = {
+  14: applyV14,
+  13: applyV13,
+  12: applyV12,
   11: applyV11,
   10: applyV10,
   9: applyV9,
@@ -32,6 +40,9 @@ Future<void> upgradeDb(Database db, int oldVersion, int newVersion) async {
   if (oldVersion == 1) {
     print('Creating database');
   } else {
+    print('Backing up database prior to upgrade');
+    await backupDatabase(await DatabaseHelper.pathToDatabase(),
+        version: oldVersion);
     print('Upgrade database from Version $oldVersion');
   }
   for (var version = oldVersion + 1; version <= newVersion; version++) {

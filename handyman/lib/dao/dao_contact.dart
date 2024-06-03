@@ -23,11 +23,29 @@ join customer_contact cc
 join customer cu
   on cc.customer_id = cu.id
 where cu.id =? 
-and co.`primary` = 1''', [customer.id]);
+and cc.`primary` = 1''', [customer.id]);
 
     if (data.isEmpty) {
       return null;
     }
     return fromMap(data.first);
+  }
+
+  Future<List<Contact>> getByCustomer(Customer? customer) async {
+    final db = getDb();
+
+    if (customer == null) {
+      return [];
+    }
+    final data = await db.rawQuery('''
+select co.* from contact co
+join customer_contact cc
+  on co.id = cc.contact_id
+join customer cu
+  on cc.customer_id = cu.id
+where cu.id =? 
+''', [customer.id]);
+
+    return toList(data);
   }
 }

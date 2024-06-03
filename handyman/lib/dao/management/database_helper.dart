@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import 'versions/db_upgrade.dart';
+import '../versions/db_upgrade.dart';
 
 class DatabaseHelper {
   DatabaseHelper._privateConstructor();
@@ -17,11 +17,16 @@ class DatabaseHelper {
     sqfliteFfiInit();
 
     databaseFactory = databaseFactoryFfi;
-    final path = join(await getDatabasesPath(), 'handyman.db');
+    final path = await pathToDatabase();
     _database = await openDatabase(path,
         version: upgradeDeltas.keys.first,
         onCreate: _createDatabase,
         onUpgrade: upgradeDb);
+  }
+
+  static Future<String> pathToDatabase() async {
+    final path = join(await getDatabasesPath(), 'handyman.db');
+    return path;
   }
 
   static Future<void> _createDatabase(Database db, int version) async {

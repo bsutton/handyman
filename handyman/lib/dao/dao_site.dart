@@ -23,11 +23,29 @@ join customer_site sc
 join customer cu
   on sc.customer_id = cu.id
 where cu.id =? 
-and s.`primary` = 1''', [customer.id]);
+and sc.`primary` = 1''', [customer.id]);
 
     if (data.isEmpty) {
       return null;
     }
     return fromMap(data.first);
+  }
+
+  Future<List<Site>> getByCustomer(Customer? customer) async {
+    final db = getDb();
+
+    if (customer == null) {
+      return [];
+    }
+    final data = await db.rawQuery('''
+select s.* from site s
+join customer_site sc
+  on s.id = sc.site_id
+join customer cu
+  on sc.customer_id = cu.id
+where cu.id =? 
+''', [customer.id]);
+
+    return toList(data);
   }
 }

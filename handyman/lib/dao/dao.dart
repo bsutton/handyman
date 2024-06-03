@@ -1,13 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/entity.dart';
-import 'database_helper.dart';
+import 'management/database_helper.dart';
 
 export 'dao_customer.dart';
-export 'database_helper.dart';
+export 'management/database_helper.dart';
 
 abstract class Dao<T extends Entity<T>> {
-
   /// Insert [entity] into the database.
   Future<int> insert(covariant T entity, [Transaction? transaction]) async {
     final db = getDb(transaction);
@@ -24,8 +24,8 @@ abstract class Dao<T extends Entity<T>> {
 
   Future<T?> getById(int? entityId) {
     final db = getDb();
-    return db.query(tableName, where: 'id =?', whereArgs: [entityId]).then(
-        (value) {
+    return db
+        .query(tableName, where: 'id =?', whereArgs: [entityId]).then((value) {
       if (value.isEmpty) {
         return null;
       }
@@ -50,6 +50,14 @@ abstract class Dao<T extends Entity<T>> {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  @protected
+  List<T> toList(List<Map<String, Object?>> data) {
+    if (data.isEmpty) {
+      return [];
+    }
+    return List.generate(data.length, (i) => fromMap(data[i]));
   }
 
   T fromMap(Map<String, dynamic> map);

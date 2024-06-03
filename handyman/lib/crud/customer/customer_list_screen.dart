@@ -8,7 +8,7 @@ import '../../entity/customer.dart';
 import '../../widgets/contact_text.dart';
 import '../../widgets/mail_text.dart';
 import '../../widgets/phone_text.dart';
-import '../../widgets/site_text.dart';
+import '../../widgets/text_site.dart';
 import '../base_full_screen/entity_list_screen.dart';
 import 'customer_edit_screen.dart';
 
@@ -39,7 +39,7 @@ class CustomerListScreen extends StatelessWidget {
                               label: 'Mobile:', phoneNo: contact?.mobileNumber),
                           MailText(
                               label: 'Email', email: contact?.emailAddress),
-                          SiteText(label: 'Address', site: site)
+                          TextSite(label: 'Address', site: site)
                         ])));
       });
 }

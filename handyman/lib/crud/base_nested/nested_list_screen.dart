@@ -8,52 +8,66 @@ import 'package:future_builder_ex/future_builder_ex.dart';
 import '../../dao/dao.dart';
 import '../../entity/entities.dart';
 
-class EntityListScreen<T extends Entity<T>> extends StatefulWidget {
-  const EntityListScreen({
+class Parent<P extends Entity<P>> {
+  Parent(this.parent);
+
+  P? parent;
+}
+
+class NestedEntityListScreen<C extends Entity<C>, P extends Entity<P>>
+    extends StatefulWidget {
+  const NestedEntityListScreen({
     required this.dao,
     required this.onEdit,
     required this.pageTitle,
     required this.title,
     required this.details,
+    required this.parent,
+    required this.fetchList,
     super.key, // Add key parameter here
   });
 
+  final Parent<P> parent;
   final String pageTitle;
-  final Widget Function(T entity) title;
-  final Widget Function(T entity) details;
-  final Widget Function(T? entity) onEdit;
-  final Dao<T> dao;
+  final Widget Function(C entity) title;
+  final Widget Function(C entity) details;
+  final Widget Function(C? entity) onEdit;
+  final Future<List<C>> Function() fetchList;
+  final Dao<C> dao;
 
   @override
-  EntityListScreenState createState() => EntityListScreenState<T>();
+  NestedEntityListScreenState createState() =>
+      NestedEntityListScreenState<C, P>();
 }
 
-class EntityListScreenState<T extends Entity<T>>
-    extends State<EntityListScreen<T>> {
-  late Future<List<T>> entities;
+class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
+    extends State<NestedEntityListScreen<C, P>> {
+  late Future<List<C>> entities;
 
   @override
   void initState() {
     super.initState();
     // ignore: discarded_futures
-    entities = fetchList();
+    entities = widget.fetchList();
   }
 
   Future<void> _refreshEntityList() async {
     setState(() {
       print('refreshing');
-      entities = fetchList();
+      entities = widget.fetchList();
     });
   }
-
-  Future<List<T>> fetchList() async => widget.dao.getAll();
 
   @override
   Widget build(BuildContext context) => _buildList(context);
 
   Scaffold _buildList(BuildContext context) => Scaffold(
       appBar: AppBar(
-        title: Text(widget.pageTitle),
+        automaticallyImplyLeading: false, // No back button
+        title: Text(
+          widget.pageTitle,
+          style: const TextStyle(fontSize: 18),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -71,11 +85,14 @@ class EntityListScreenState<T extends Entity<T>>
           )
         ],
       ),
-      body: FutureBuilderEx<List<T>>(
+      body: FutureBuilderEx<List<C>>(
           future: entities,
           waitingBuilder: (_) =>
               const Center(child: CircularProgressIndicator()),
           builder: (context, list) {
+            if (widget.parent.parent == null) {
+              return const Center(child: Text('Save the parent first.'));
+            }
             if (list!.isEmpty) {
               return const Center(child: Text('No records found.'));
             } else {
@@ -83,7 +100,7 @@ class EntityListScreenState<T extends Entity<T>>
             }
           }));
 
-  Widget _buildListTiles(List<T> list) => ListView.builder(
+  Widget _buildListTiles(List<C> list) => ListView.builder(
         itemCount: list.length,
         itemBuilder: (context, index) {
           final entity = list[index];
@@ -113,7 +130,8 @@ class EntityListScreenState<T extends Entity<T>>
         },
       );
 
-  Future<void> _delete(Entity<T> entity) async {
+  Future<void> _delete(Entity<C> entity) async {
+    // TODO: we need to delete the join record (and also add and update as required)
     await widget.dao.delete(entity.id);
     await _refreshEntityList();
   }
