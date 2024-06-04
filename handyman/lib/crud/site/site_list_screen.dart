@@ -24,7 +24,7 @@ class SiteListScreen extends StatelessWidget {
       // ignore: discarded_futures
       fetchList: () => DaoSite().getByCustomer(parent.parent),
       title: (site) => Text('${site.addressLine1} ${site.suburb}') as Widget,
-      onEdit: (site) => SiteEditScreen(site: site),
+      onEdit: (site) => SiteEditScreen(customer: parent.parent!, site: site),
       details: (entity) {
         final site = entity;
         return Column(

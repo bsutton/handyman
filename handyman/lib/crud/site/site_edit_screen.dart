@@ -3,11 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/dao_site.dart';
+import '../../entity/customer.dart';
 import '../../entity/site.dart';
-import '../base_full_screen/entity_edit_screen.dart';
+import '../base_nested/nested_edit_screen.dart';
 
 class SiteEditScreen extends StatefulWidget {
-  const SiteEditScreen({super.key, this.site});
+  const SiteEditScreen({required this.customer, super.key, this.site});
+  final Customer customer;
   final Site? site;
 
   @override
@@ -20,7 +22,7 @@ class SiteEditScreen extends StatefulWidget {
 }
 
 class _SiteEditScreenState extends State<SiteEditScreen>
-    implements EntityState<Site> {
+    implements NestedEntityState<Site> {
   late TextEditingController _addressLine1Controller;
   late TextEditingController _addressLine2Controller;
   late TextEditingController _suburbController;
@@ -40,11 +42,13 @@ class _SiteEditScreenState extends State<SiteEditScreen>
   }
 
   @override
-  Widget build(BuildContext context) => EntityEditScreen<Site>(
+  Widget build(BuildContext context) => NestedEntityEditScreen<Site, Customer>(
         entity: widget.site,
         entityName: 'Site',
         dao: DaoSite(),
         entityState: this,
+        onInsert: (site) async =>
+            DaoSite().insertForCustomer(site!, widget.customer),
         editor: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
