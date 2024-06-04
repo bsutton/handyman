@@ -39,7 +39,8 @@ and cc.`primary` = 1''', [customer.id]);
       return [];
     }
     final data = await db.rawQuery('''
-select co.* from contact co
+select co.* 
+from contact co
 join customer_contact cc
   on co.id = cc.contact_id
 join customer cu

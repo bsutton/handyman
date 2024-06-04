@@ -103,7 +103,6 @@ class _ContactEditScreenstate extends State<ContactEditScreen>
   @override
   Future<Contact> forUpdate(Contact contact) async => Contact.forUpdate(
         entity: contact,
-        customerId: widget.customer.id,
         firstName: _firstNameController.text,
         surname: _surnameController.text,
         mobileNumber: _mobileNumberController.text,
@@ -114,7 +113,6 @@ class _ContactEditScreenstate extends State<ContactEditScreen>
 
   @override
   Future<Contact> forInsert() async => Contact.forInsert(
-        customerId: widget.customer.id,
         firstName: _firstNameController.text,
         surname: _surnameController.text,
         mobileNumber: _mobileNumberController.text,

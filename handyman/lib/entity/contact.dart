@@ -3,7 +3,6 @@ import 'entity.dart';
 class Contact extends Entity<Contact> {
   Contact({
     required super.id,
-    required this.customerId,
     required this.firstName,
     required this.surname,
     required this.mobileNumber,
@@ -15,7 +14,6 @@ class Contact extends Entity<Contact> {
   }) : super();
 
   Contact.forInsert({
-    required this.customerId,
     required this.firstName,
     required this.surname,
     required this.mobileNumber,
@@ -26,7 +24,6 @@ class Contact extends Entity<Contact> {
 
   Contact.forUpdate({
     required super.entity,
-    required this.customerId,
     required this.firstName,
     required this.surname,
     required this.mobileNumber,
@@ -37,7 +34,6 @@ class Contact extends Entity<Contact> {
 
   factory Contact.fromMap(Map<String, dynamic> map) => Contact(
         id: map['id'] as int,
-        customerId: map['customer_id'] as int,
         firstName: map['firstName'] as String,
         surname: map['surname'] as String,
         mobileNumber: map['mobileNumber'] as String,
@@ -47,7 +43,6 @@ class Contact extends Entity<Contact> {
         createdDate: DateTime.parse(map['createdDate'] as String),
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
       );
-  int customerId;
   String firstName;
   String surname;
   String mobileNumber;
@@ -58,7 +53,6 @@ class Contact extends Entity<Contact> {
   @override
   Map<String, dynamic> toMap() => {
         'id': id,
-        'customer_id': customerId,
         'firstName': firstName,
         'surname': surname,
         'mobileNumber': mobileNumber,
