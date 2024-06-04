@@ -59,6 +59,5 @@ where cu.id =?
   Future<void> insertForCustomer(Contact contact, Customer customer) async {
     await insert(contact);
     await DaoContactCustomer().insertJoin(contact, customer);
-    await delete(contact.id);
   }
 }
