@@ -45,32 +45,35 @@ class EntityEditScreenState<E extends Entity<E>>
               onPressed: (context) async => _save(),
               child: Form(
                 key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            onPressed: _save,
-                            child:
-                                Text(widget.entity != null ? 'Update' : 'Add'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('Cancel'),
-                          ),
-                        ],
-                      ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: _save,
+                                child: Text(
+                                    widget.entity != null ? 'Update' : 'Add'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('Cancel'),
+                              ),
+                            ])),
 
-                      /// Inject the entity specific editor.
-                      widget.editor,
+                    /// Inject the entity specific editor.
+                    Expanded(
+                      child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(16),
+                          child: widget.editor),
+                    ),
 
-                      /// Save /Cancel Buttons
-                      const SizedBox(height: 16),
-                    ],
-                  ),
+                    /// Save /Cancel Buttons
+                    const SizedBox(height: 16),
+                  ],
                 ),
               ))));
 

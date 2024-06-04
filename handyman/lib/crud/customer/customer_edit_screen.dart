@@ -25,18 +25,25 @@ class CustomerEditScreen extends StatefulWidget {
 class _CustomerEditScreenState extends State<CustomerEditScreen>
     implements EntityState<Customer> {
   late TextEditingController _nameController;
-  late TextEditingController _disbarredController;
-  late TextEditingController _customerTypeController;
+  late bool _disbarred;
+  late CustomerType _selectedCustomerType;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.customer?.name);
-    _disbarredController =
-        TextEditingController(text: widget.customer?.disbarred.toString());
-    _customerTypeController =
-        TextEditingController(text: widget.customer?.customerType.toString());
+    _disbarred = widget.customer?.disbarred ?? false;
+    _selectedCustomerType =
+        widget.customer?.customerType ?? CustomerType.residential;
   }
+
+  List<DropdownMenuItem<CustomerType>> _getCustomerTypeDropdownItems() =>
+      CustomerType.values
+          .map((type) => DropdownMenuItem<CustomerType>(
+                value: type,
+                child: Text(type.name),
+              ))
+          .toList();
 
   @override
   Widget build(BuildContext context) => EntityEditScreen<Customer>(
@@ -47,30 +54,106 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
         editor: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextFormField(
-              autofocus: true,
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a name';
-                }
-                return null;
-              },
-            ),
-            SizedBox(
-                height: 200,
-                child: ContactListScreen(parent: Parent(widget.customer))),
-            SizedBox(
-                height: 200,
-                child: SiteListScreen(parent: Parent(widget.customer))),
-            TextFormField(
-              controller: _disbarredController,
-              decoration: const InputDecoration(labelText: 'Disbarred'),
-            ),
-            TextFormField(
-              controller: _customerTypeController,
-              decoration: const InputDecoration(labelText: 'Customer Type'),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Customer Details',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          autofocus: true,
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Name',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a name';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        SwitchListTile(
+                          title: const Text('Disbarred'),
+                          value: _disbarred,
+                          onChanged: (value) {
+                            setState(() {
+                              _disbarred = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        DropdownButtonFormField<CustomerType>(
+                          value: _selectedCustomerType,
+                          decoration: const InputDecoration(
+                            labelText: 'Customer Type',
+                            border: OutlineInputBorder(),
+                          ),
+                          items: _getCustomerTypeDropdownItems(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectedCustomerType = newValue!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Contacts',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          height: 200,
+                          child: ContactListScreen(
+                              parent: Parent(widget.customer)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Sites',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: 16),
+                        SizedBox(
+                          height: 200,
+                          child:
+                              SiteListScreen(parent: Parent(widget.customer)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -80,12 +163,12 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
   Future<Customer> forUpdate(Customer customer) async => Customer.forUpdate(
       entity: customer,
       name: _nameController.text,
-      disbarred: _disbarredController.text.toLowerCase() == 'true',
-      customerType: CustomerType.residential);
+      disbarred: _disbarred,
+      customerType: _selectedCustomerType);
 
   @override
   Future<Customer> forInsert() async => Customer.forInsert(
       name: _nameController.text,
-      disbarred: _disbarredController.text.toLowerCase() == 'true',
-      customerType: CustomerType.residential);
+      disbarred: _disbarred,
+      customerType: _selectedCustomerType);
 }

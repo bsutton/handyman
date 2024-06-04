@@ -1,4 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +14,8 @@ class ContactEditScreen extends StatefulWidget {
   final Contact? contact;
 
   @override
-  _ContactEditScreenstate createState() => _ContactEditScreenstate();
+  // ignore: library_private_types_in_public_api
+  _ContactEditScreenState createState() => _ContactEditScreenState();
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -23,7 +23,7 @@ class ContactEditScreen extends StatefulWidget {
   }
 }
 
-class _ContactEditScreenstate extends State<ContactEditScreen>
+class _ContactEditScreenState extends State<ContactEditScreen>
     implements NestedEntityState<Contact> {
   late TextEditingController _firstNameController;
   late TextEditingController _surnameController;
@@ -31,6 +31,9 @@ class _ContactEditScreenstate extends State<ContactEditScreen>
   late TextEditingController _landlineController;
   late TextEditingController _officeNumberController;
   late TextEditingController _emailaddressController;
+  late FocusNode _firstNameFocusNode;
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -45,6 +48,24 @@ class _ContactEditScreenstate extends State<ContactEditScreen>
         TextEditingController(text: widget.contact?.officeNumber);
     _emailaddressController =
         TextEditingController(text: widget.contact?.emailAddress);
+
+    _firstNameFocusNode = FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_firstNameFocusNode);
+    });
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _surnameController.dispose();
+    _mobileNumberController.dispose();
+    _landlineController.dispose();
+    _officeNumberController.dispose();
+    _emailaddressController.dispose();
+    _firstNameFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -56,47 +77,77 @@ class _ContactEditScreenstate extends State<ContactEditScreen>
         onInsert: (contact) async =>
             DaoContact().insertForCustomer(contact!, widget.customer),
         entityState: this,
-        editor: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // add other form fields for the new fields
-            TextFormField(
-              controller: _firstNameController,
-              decoration: const InputDecoration(labelText: ' first Name'),
-            ),
-            TextFormField(
-              controller: _surnameController,
-              decoration: const InputDecoration(labelText: ' surname'),
-            ),
-            TextFormField(
-              controller: _mobileNumberController,
-              decoration: InputDecoration(
-                labelText: ' mobile Number',
-                suffixIcon: DialWidget(_mobileNumberController.text),
+        editor: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextFormField(
+                controller: _firstNameController,
+                focusNode: _firstNameFocusNode,
+                decoration: const InputDecoration(labelText: 'First Name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the first name';
+                  }
+                  return null;
+                },
               ),
-            ),
-            TextFormField(
-              controller: _landlineController,
-              decoration: InputDecoration(
-                labelText: ' landline',
-                suffixIcon: DialWidget(_landlineController.text),
+              TextFormField(
+                controller: _surnameController,
+                decoration: const InputDecoration(labelText: 'Surname'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the surname';
+                  }
+                  return null;
+                },
               ),
-            ),
-            TextFormField(
-              controller: _officeNumberController,
-              decoration: InputDecoration(
-                labelText: ' office Number',
-                suffixIcon: DialWidget(_officeNumberController.text),
+              TextFormField(
+                controller: _mobileNumberController,
+                decoration: InputDecoration(
+                  labelText: 'Mobile Number',
+                  suffixIcon: DialWidget(_mobileNumberController.text),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the mobile number';
+                  }
+                  return null;
+                },
               ),
-            ),
-            TextFormField(
-              controller: _emailaddressController,
-              decoration: InputDecoration(
-                labelText: ' email address',
-                suffixIcon: MailToIcon(_emailaddressController.text),
+              TextFormField(
+                controller: _landlineController,
+                decoration: InputDecoration(
+                  labelText: 'Landline',
+                  suffixIcon: DialWidget(_landlineController.text),
+                ),
               ),
-            ),
-          ],
+              TextFormField(
+                controller: _officeNumberController,
+                decoration: InputDecoration(
+                  labelText: 'Office Number',
+                  suffixIcon: DialWidget(_officeNumberController.text),
+                ),
+              ),
+              TextFormField(
+                controller: _emailaddressController,
+                decoration: InputDecoration(
+                  labelText: 'Email Address',
+                  suffixIcon: MailToIcon(_emailaddressController.text),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the email address';
+                  }
+                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                    return 'Please enter a valid email address';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
         ),
       );
 
