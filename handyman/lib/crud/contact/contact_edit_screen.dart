@@ -48,10 +48,13 @@ class _ContactEditScreenstate extends State<ContactEditScreen>
   }
 
   @override
-  Widget build(BuildContext context) => NestedEntityEditScreen<Contact>(
+  Widget build(BuildContext context) =>
+      NestedEntityEditScreen<Contact, Customer>(
         entity: widget.contact,
         entityName: 'Contact',
         dao: DaoContact(),
+        onInsert: (contact) async =>
+            DaoContact().insertForCustomer(contact!, widget.customer),
         entityState: this,
         editor: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

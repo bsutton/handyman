@@ -17,6 +17,10 @@ class SiteListScreen extends StatelessWidget {
       parent: parent,
       pageTitle: 'Sites',
       dao: DaoSite(),
+      onDelete: (site) async =>
+          DaoSite().deleteFromCustomer(site!, parent.parent!),
+      onInsert: (site) async =>
+          DaoSite().insertForCustomer(site!, parent.parent!),
       // ignore: discarded_futures
       fetchList: () => DaoSite().getByCustomer(parent.parent),
       title: (site) => Text('${site.addressLine1} ${site.suburb}') as Widget,

@@ -19,6 +19,8 @@ class NestedEntityListScreen<C extends Entity<C>, P extends Entity<P>>
   const NestedEntityListScreen({
     required this.dao,
     required this.onEdit,
+    required this.onDelete,
+    required this.onInsert,
     required this.pageTitle,
     required this.title,
     required this.details,
@@ -32,6 +34,8 @@ class NestedEntityListScreen<C extends Entity<C>, P extends Entity<P>>
   final Widget Function(C entity) title;
   final Widget Function(C entity) details;
   final Widget Function(C? entity) onEdit;
+  final Future<void> Function(C? entity) onDelete;
+  final Future<void> Function(C? entity) onInsert;
   final Future<List<C>> Function() fetchList;
   final Dao<C> dao;
 
@@ -130,9 +134,8 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
         },
       );
 
-  Future<void> _delete(Entity<C> entity) async {
-    // TODO: we need to delete the join record (and also add and update as required)
-    await widget.dao.delete(entity.id);
+  Future<void> _delete(C entity) async {
+    await widget.onDelete(entity);
     await _refreshEntityList();
   }
 }

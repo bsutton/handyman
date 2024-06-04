@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import '../entity/customer.dart';
 import '../entity/site.dart';
 import 'dao.dart';
+import 'dao_site_customer.dart';
 
 class DaoSite extends Dao<Site> {
   Future<void> createTable(Database db, int version) async {}
@@ -14,7 +15,11 @@ class DaoSite extends Dao<Site> {
   String get tableName => 'site';
 
   /// returns the primary site for the customer
-  Future<Site?> getPrimaryForCustomer(Customer customer) async {
+  Future<Site?> getPrimaryForCustomer(Customer? customer) async {
+    if (customer == null) {
+      return null;
+    }
+
     final db = getDb();
     final data = await db.rawQuery('''
 select s.* from site s
@@ -47,5 +52,16 @@ where cu.id =?
 ''', [customer.id]);
 
     return toList(data);
+  }
+
+
+  Future<void> deleteFromCustomer(Site site, Customer customer) async {
+    await DaoSiteCustomer().deleteJoin(customer, site);
+    await delete(site.id);
+  }
+
+  Future<void> insertForCustomer(Site site, Customer customer) async {
+    await DaoSiteCustomer().insertJoin(site, customer);
+    await delete(site.id);
   }
 }

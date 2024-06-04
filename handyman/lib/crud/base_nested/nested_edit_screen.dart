@@ -9,27 +9,31 @@ abstract class NestedEntityState<E extends Entity<E>> {
   Future<E> forUpdate(E entity);
 }
 
-class NestedEntityEditScreen<E extends Entity<E>> extends StatefulWidget {
+class NestedEntityEditScreen<C extends Entity<C>, P extends Entity<P>>
+    extends StatefulWidget {
   const NestedEntityEditScreen(
       {required this.entity,
       required this.editor,
+      required this.onInsert,
       required this.entityName,
       required this.entityState,
       required this.dao,
       super.key});
-  final E? entity;
+  final C? entity;
   final String entityName;
-  final Dao<E> dao;
+  final Dao<C> dao;
 
   final Widget editor;
-  final NestedEntityState<E> entityState;
+  final NestedEntityState<C> entityState;
+  final Future<void> Function(C? entity) onInsert;
 
   @override
-  NestedEntityEditScreenState createState() => NestedEntityEditScreenState<E>();
+  NestedEntityEditScreenState createState() =>
+      NestedEntityEditScreenState<C, P>();
 }
 
-class NestedEntityEditScreenState<E extends Entity<E>>
-    extends State<NestedEntityEditScreen<E>> {
+class NestedEntityEditScreenState<C extends Entity<C>, P extends Entity<P>>
+    extends State<NestedEntityEditScreen<C, P>> {
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -82,7 +86,7 @@ class NestedEntityEditScreenState<E extends Entity<E>>
         await widget.dao.update(entity);
       } else {
         final entity = await widget.entityState.forInsert();
-        await widget.dao.insert(entity);
+        await widget.onInsert(entity);
       }
 
       if (mounted) {

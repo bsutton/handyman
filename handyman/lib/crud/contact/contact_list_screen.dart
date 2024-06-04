@@ -24,6 +24,10 @@ class ContactListScreen extends StatelessWidget {
           title: (entity) => Text('${entity.firstName} ${entity.surname}'),
           onEdit: (contact) =>
               ContactEditScreen(customer: parent.parent!, contact: contact),
+          onDelete: (contact) async =>
+              DaoContact().deleteFromCustomer(contact!, parent.parent!),
+          onInsert: (contact) async =>
+              DaoContact().insertForCustomer(contact!, parent.parent!),
           details: (entity) {
             final customer = entity;
             return Column(

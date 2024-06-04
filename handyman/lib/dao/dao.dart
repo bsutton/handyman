@@ -9,6 +9,7 @@ export 'management/database_helper.dart';
 
 abstract class Dao<T extends Entity<T>> {
   /// Insert [entity] into the database.
+  /// Updating the passed in entity so that it has the assigned id.
   Future<int> insert(covariant T entity, [Transaction? transaction]) async {
     final db = getDb(transaction);
     final id = await db.insert(tableName, entity.toMap()..remove('id'));

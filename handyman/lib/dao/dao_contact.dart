@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import '../entity/contact.dart';
 import '../entity/customer.dart';
 import 'dao.dart';
+import 'dao_contact_customer.dart';
 
 class DaoContact extends Dao<Contact> {
   Future<void> createTable(Database db, int version) async {}
@@ -47,5 +48,16 @@ where cu.id =?
 ''', [customer.id]);
 
     return toList(data);
+  }
+
+  Future<void> deleteFromCustomer(Contact contact, Customer customer) async {
+    await DaoContactCustomer().deleteJoin(customer, contact);
+    await delete(contact.id);
+  }
+
+  Future<void> insertForCustomer(Contact contact, Customer customer) async {
+    await insert(contact);
+    await DaoContactCustomer().insertJoin(contact, customer);
+    await delete(contact.id);
   }
 }
