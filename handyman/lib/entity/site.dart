@@ -31,11 +31,11 @@ class Site extends Entity<Site> {
 
   factory Site.fromMap(Map<String, dynamic> map) => Site(
         id: map['id'] as int,
-        addressLine1: map['AddressLine1'] as String,
-        addressLine2: map['AddressLine2'] as String,
-        suburb: map['Suburb'] as String,
-        state: map['State'] as String,
-        postcode: map['Postcode'] as String,
+        addressLine1: map['addressLine1'] as String,
+        addressLine2: map['addressLine2'] as String,
+        suburb: map['suburb'] as String,
+        state: map['state'] as String,
+        postcode: map['postcode'] as String,
         createdDate: DateTime.parse(map['createdDate'] as String),
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
       );
@@ -48,11 +48,11 @@ class Site extends Entity<Site> {
   @override
   Map<String, dynamic> toMap() => {
         'id': id,
-        'AddressLine1': addressLine1,
-        'AddressLine2': addressLine2,
-        'Suburb': suburb,
-        'State': state,
-        'Postcode': postcode,
+        'addressLine1': addressLine1,
+        'addressLine2': addressLine2,
+        'suburb': suburb,
+        'state': state,
+        'postcode': postcode,
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };
