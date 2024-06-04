@@ -54,14 +54,13 @@ where cu.id =?
     return toList(data);
   }
 
-
   Future<void> deleteFromCustomer(Site site, Customer customer) async {
     await DaoSiteCustomer().deleteJoin(customer, site);
     await delete(site.id);
   }
 
   Future<void> insertForCustomer(Site site, Customer customer) async {
+    await insert(site);
     await DaoSiteCustomer().insertJoin(site, customer);
-    await delete(site.id);
   }
 }
