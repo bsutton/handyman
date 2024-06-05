@@ -7,6 +7,7 @@ class HMBTextField extends StatelessWidget {
       this.required = false,
       this.validator,
       this.focusNode,
+      this.onChanged,
       super.key,
       this.autofocus = false,
       this.leadingSpace = true});
@@ -18,12 +19,14 @@ class HMBTextField extends StatelessWidget {
   final bool autofocus;
   final bool required;
   final bool leadingSpace;
+  final void Function(String?)? onChanged;
 
   @override
   Widget build(BuildContext context) => Column(
         children: [
           if (leadingSpace) const SizedBox(height: 16),
           TextFormField(
+            onChanged: onChanged?.call,
             controller: controller,
             focusNode: focusNode,
             autofocus: autofocus,

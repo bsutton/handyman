@@ -22,6 +22,7 @@ class JobListScreen extends StatelessWidget {
         dao: DaoJob(),
         pageTitle: 'Jobs',
         onEdit: (job) => JobEditScreen(job: job),
+          fetchList: (filter) => DaoJob().getByFilter(filter),
         title: (job) => Text(
           job.summary,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),

@@ -7,21 +7,27 @@ import 'package:future_builder_ex/future_builder_ex.dart';
 
 import '../../dao/dao.dart';
 import '../../entity/entities.dart';
+import '../../widgets/hmb_text_field.dart';
 
 class EntityListScreen<T extends Entity<T>> extends StatefulWidget {
-  const EntityListScreen({
+  EntityListScreen({
     required this.dao,
     required this.onEdit,
     required this.pageTitle,
     required this.title,
     required this.details,
+    Future<List<T>> Function(String? filter)? fetchList,
     super.key,
-  });
+  }) {
+    _fetchList = fetchList ?? (_) async => dao.getAll();
+  }
 
   final String pageTitle;
   final Widget Function(T entity) title;
   final Widget Function(T entity) details;
   final Widget Function(T? entity) onEdit;
+
+  late final Future<List<T>> Function(String? filter) _fetchList;
   final Dao<T> dao;
 
   @override
@@ -31,27 +37,51 @@ class EntityListScreen<T extends Entity<T>> extends StatefulWidget {
 class EntityListScreenState<T extends Entity<T>>
     extends State<EntityListScreen<T>> {
   late Future<List<T>> entities;
+  String? filterOption;
+
+  late final TextEditingController filterController;
 
   @override
   void initState() {
     super.initState();
+
+    filterController = TextEditingController();
     // ignore: discarded_futures
-    entities = fetchList();
+    entities = widget._fetchList(null);
   }
 
   Future<void> _refreshEntityList() async {
     setState(() {
-      entities = fetchList();
+      entities = widget._fetchList(filterOption);
     });
   }
-
-  Future<List<T>> fetchList() async => widget.dao.getAll();
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(widget.pageTitle),
           actions: [
+            SizedBox(
+              width: 300,
+              child: HMBTextField(
+                labelText: 'Filter',
+                controller: filterController,
+                onChanged: (newValue) async {
+                  filterOption = newValue;
+                  await _refreshEntityList();
+                  setState(() {});
+                },
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: () async {
+                filterController.clear();
+                filterOption = null;
+                await _refreshEntityList();
+                setState(() {});
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.add),
               onPressed: () async {
@@ -63,7 +93,7 @@ class EntityListScreenState<T extends Entity<T>>
                   ).then((_) => _refreshEntityList());
                 }
               },
-            )
+            ),
           ],
         ),
         body: FutureBuilderEx<List<T>>(
@@ -137,6 +167,12 @@ class EntityListScreenState<T extends Entity<T>>
     if (deleteConfirmed ?? false) {
       await _delete(entity);
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    filterController.dispose();
   }
 
   Future<void> _delete(Entity<T> entity) async {

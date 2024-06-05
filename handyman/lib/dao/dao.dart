@@ -17,7 +17,7 @@ abstract class Dao<T extends Entity<T>> {
     return id;
   }
 
-  Future<List<T>> getAll([Transaction? transaction]) async {
+  Future<List<T>> getAll( [Transaction? transaction]) async {
     final db = getDb(transaction);
     final List<Map<String, dynamic>> maps = await db.query(tableName);
     return List.generate(maps.length, (i) => fromMap(maps[i]));

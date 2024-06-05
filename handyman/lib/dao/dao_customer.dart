@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:strings/strings.dart';
 
 import '../entity/customer.dart';
 import '../entity/job.dart';
@@ -28,5 +29,20 @@ where j.id =?
 ''', [job.id]);
 
     return toList(data).first;
+  }
+
+  Future<List<Customer>> getByFilter(String? filter) async {
+    final db = getDb();
+
+    if (Strings.isBlank(filter)) {
+      return getAll();
+    }
+    final data = await db.rawQuery('''
+select * 
+from customer c
+where c.name like ?
+''', ['''%$filter%''']);
+
+    return toList(data);
   }
 }
