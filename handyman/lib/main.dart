@@ -61,15 +61,18 @@ class MyDrawer extends StatelessWidget {
           itemBuilder: (context, index) => ListTile(
             title: Text(drawerItems[index].title),
             onTap: () async {
-              // Navigator.pop(context); // Close the drawer
-              await Navigator.pushReplacement(
-                context,
-                MaterialPageRoute<void>(
+              final targetRoute = MaterialPageRoute<void>(
                   builder: (context) => HomeWithDrawer(
-                    initialScreen: drawerItems[index].screen,
-                  ),
-                ),
-              );
+                        initialScreen: drawerItems[index].screen,
+                      ));
+
+              if (drawerItems[index].title == 'System') {
+                Navigator.pop(context); // Close the drawer
+                await Navigator.push(context, targetRoute);
+              } else {
+                // Navigator.pop(context); // Close the drawer
+                await Navigator.pushReplacement(context, targetRoute);
+              }
             },
           ),
         ),
