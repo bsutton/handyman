@@ -4,22 +4,20 @@ import '../entity/job.dart';
 import 'dao.dart';
 
 class DaoJob extends Dao<Job> {
-  
-
   @override
   Future<int> delete(int id, [Transaction? transaction]) async {
     final db = getDb(transaction);
 
     // Delete tasks associated with the job
     await db.delete(
-      'tasks',
+      'task',
       where: 'jobId = ?',
       whereArgs: [id],
     );
 
     // Delete the job itself
     return db.delete(
-      'jobs',
+      tableName,
       where: 'id = ?',
       whereArgs: [id],
     );
