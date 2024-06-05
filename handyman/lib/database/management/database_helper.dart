@@ -19,17 +19,11 @@ class DatabaseHelper {
     databaseFactory = databaseFactoryFfi;
     final path = await pathToDatabase();
     _database = await openDatabase(path,
-        version: upgradeDeltas.keys.first,
-        onCreate: _createDatabase,
-        onUpgrade: upgradeDb);
+        version: await getLatestVersion(), onUpgrade: upgradeDb);
   }
 
   static Future<String> pathToDatabase() async {
     final path = join(await getDatabasesPath(), 'handyman.db');
     return path;
-  }
-
-  static Future<void> _createDatabase(Database db, int version) async {
-    await upgradeDb(db, 1, version);
   }
 }

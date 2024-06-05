@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../database/management/database_helper.dart';
 import '../entity/entity.dart';
-import 'management/database_helper.dart';
 
+export '../database/management/database_helper.dart';
 export 'dao_customer.dart';
-export 'management/database_helper.dart';
 
 abstract class Dao<T extends Entity<T>> {
   /// Insert [entity] into the database.
