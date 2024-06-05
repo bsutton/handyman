@@ -13,7 +13,15 @@ class JobSiteJoinAdaptor implements DaoJoinAdaptor<Site, Job> {
   }
 
   @override
-  Future<List<Site>> getByParent(Job? job) async => DaoSite().getByJob(job);
+  Future<List<Site>> getByParent(Job? job) async {
+    final site = await DaoSite().getByJob(job);
+
+    if (site == null) {
+      return [];
+    }
+
+    return [site];
+  }
 
   @override
   Future<void> insertForParent(Site site, Job job) async {

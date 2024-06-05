@@ -2,22 +2,26 @@
 
 import 'package:flutter/material.dart';
 
-class HMBDroplist<T extends Enum> extends StatelessWidget {
+class HMBDroplist<T> extends StatelessWidget {
   const HMBDroplist({
     required this.labelText,
     required this.initialValue,
     required this.items,
-    required this.onChange,
+    required this.onChanged,
     this.leadingSpace = true,
     super.key,
+    this.format,
   });
 
   final T initialValue;
   final String labelText;
-  final List<DropdownMenuItem<T>>? items;
+  final List<T> items;
+
   final bool leadingSpace;
 
-  final void Function(T? value) onChange;
+  final void Function(T? value) onChanged;
+
+  final String Function(T value)? format;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -29,8 +33,15 @@ class HMBDroplist<T extends Enum> extends StatelessWidget {
                 labelText: labelText,
                 border: const OutlineInputBorder(),
               ),
-              items: items,
-              onChanged: onChange),
+              items: _getDropdownItems(items),
+              onChanged: onChanged),
         ],
       );
+
+  List<DropdownMenuItem<T>> _getDropdownItems(List<T> values) => values
+      .map((type) => DropdownMenuItem<T>(
+            value: type,
+            child: Text(format != null ? format!(type) : type.toString()),
+          ))
+      .toList();
 }

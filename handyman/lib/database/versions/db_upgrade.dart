@@ -46,7 +46,7 @@ Future<int> getLatestVersion() async {
   // of the .sql extension.
   upgradeAssets.sort((a, b) => _extractVersion(a) - _extractVersion(b));
 
-  return _extractVersion(upgradeAssets[0]);
+  return _extractVersion(upgradeAssets.last);
 }
 
 Future<void> _executeScript(Database db, String pathToScript) async {

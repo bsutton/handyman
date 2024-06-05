@@ -7,14 +7,17 @@ import 'package:june/june.dart';
 
 import '../../dao/dao_customer.dart';
 import '../../dao/dao_job.dart';
+import '../../dao/dao_job_status.dart';
 import '../../entity/customer.dart';
 import '../../entity/job.dart';
+import '../../entity/job_status.dart';
 import '../../widgets/hmb_button.dart';
 import '../../widgets/hmb_child_crud_card.dart';
+import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_form_section.dart';
 import '../../widgets/hmb_select_contact.dart';
 import '../../widgets/hmb_select_site.dart';
-import '../../widgets/hmb_text_area.dart';
+import '../../widgets/hmb_text_field.dart';
 import '../../widgets/rich_editor.dart';
 import '../../widgets/select_customer.dart';
 import '../base_full_screen/entity_edit_screen.dart';
@@ -32,8 +35,6 @@ class JobEditScreen extends StatefulWidget {
 class JobEditScreenState extends State<JobEditScreen>
     implements EntityState<Job> {
   late TextEditingController _summaryController;
-  // late TextEditingController _descriptionController;
-
   late RichEditorController _descriptionController;
   late FocusNode _descriptionFocusNode;
 
@@ -46,8 +47,6 @@ class JobEditScreenState extends State<JobEditScreen>
     super.initState();
     _selectedDate = widget.job?.startDate ?? DateTime.now();
     _summaryController = TextEditingController(text: widget.job?.summary ?? '');
-    // _descriptionController =
-    //     TextEditingController(text: widget.job?.description ?? '');
 
     _descriptionController = RichEditorController(
         parchmentAsJsonString: widget.job?.description ?? '');
@@ -72,16 +71,17 @@ class JobEditScreenState extends State<JobEditScreen>
                       children: [
                         HMBFormSection(children: [
                           _chooseCustomer(),
+                          _chooseStatus(),
                           _chooseDate(),
                           _showSummary(),
-                          // SizedBox(
-                          //   height: 200,
-                          //   child: RichEditor(
-                          //       controller: _descriptionController,
-                          //       focusNode: _descriptionFocusNode,
-                          //       key: UniqueKey()),
-                          //   // )
-                          // ),
+                          SizedBox(
+                            height: 200,
+                            child: RichEditor(
+                                controller: _descriptionController,
+                                focusNode: _descriptionFocusNode,
+                                key: UniqueKey()),
+                            // )
+                          ),
                         ]),
 
                         /// allow the user to select a site for the job
@@ -89,13 +89,10 @@ class JobEditScreenState extends State<JobEditScreen>
 
                         /// allow the user to select a contact for the job
                         _chooseContact(customer),
-                        // HMBCrudContact(
-                        //     parent: Parent(widget.job),
-                        //     daoJoin: JobContactJoinAdaptor()),
                         _manageTasks(),
                       ]))));
 
-  HMBTextArea _showSummary() => HMBTextArea(
+  Widget _showSummary() => HMBTextField(
         controller: _summaryController,
         labelText: 'Job Summary',
       );
@@ -124,6 +121,23 @@ class JobEditScreenState extends State<JobEditScreen>
           });
         }),
       );
+
+  Widget _chooseStatus() => FutureBuilderEx(
+      // ignore: discarded_futures
+      future: DaoJobStatus().getAll(),
+      builder: (context, list) => HMBDroplist<JobStatus>(
+          labelText: 'Status',
+          items: list!,
+          initialValue: list.firstWhere(
+              (element) =>
+                  element.id == June.getState(SelectJobStatus.new).jobStatusId,
+              orElse: () => list[0]),
+          onChanged: (status) => setState(
+                () {
+                  June.getState(SelectJobStatus.new).jobStatusId = status?.id;
+                },
+              ),
+          format: (value) => value.name));
 
   HMBButton _chooseDate() => HMBButton(
         onPressed: _selectDate,
@@ -172,4 +186,10 @@ class JobEditScreenState extends State<JobEditScreen>
     _descriptionFocusNode.dispose();
     super.dispose();
   }
+}
+
+class SelectJobStatus {
+  SelectJobStatus();
+
+  int? jobStatusId;
 }

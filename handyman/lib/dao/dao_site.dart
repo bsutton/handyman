@@ -98,11 +98,11 @@ where cu.id =?
     return toList(data);
   }
 
-  Future<List<Site>> getByJob(Job? job) async {
+  Future<Site?> getByJob(Job? job) async {
     final db = getDb();
 
     if (job == null) {
-      return [];
+      return null;
     }
     final data = await db.rawQuery('''
 select si.* 
@@ -114,7 +114,12 @@ join job jo
 where jo.id =? 
 ''', [job.id]);
 
-    return toList(data);
+    final list = toList(data);
+
+    if (list.isEmpty) {
+      return null;
+    }
+    return list.first;
   }
 
   Future<void> deleteFromCustomer(Site site, Customer customer) async {

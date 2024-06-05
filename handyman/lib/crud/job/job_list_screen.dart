@@ -35,7 +35,7 @@ class JobListScreen extends StatelessWidget {
                 future: DaoCustomer().getById(job.customerId),
                 builder: (context, customer) => FutureBuilderEx(
                   // ignore: discarded_futures
-                  future: DaoSite().getPrimaryForCustomer(customer),
+                  future: DaoSite().getByJob(job),
                   builder: (context, site) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

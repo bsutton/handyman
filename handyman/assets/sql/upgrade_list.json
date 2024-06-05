@@ -1,1 +1,1 @@
-["assets/sql/upgrade_scripts/v1.sql"]
+["assets/sql/upgrade_scripts/v2.sql","assets/sql/upgrade_scripts/v1.sql"]

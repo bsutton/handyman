@@ -43,14 +43,6 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
         widget.customer?.customerType ?? CustomerType.residential;
   }
 
-  List<DropdownMenuItem<CustomerType>> _getCustomerTypeDropdownItems() =>
-      CustomerType.values
-          .map((type) => DropdownMenuItem<CustomerType>(
-                value: type,
-                child: Text(type.name),
-              ))
-          .toList();
-
   @override
   Widget build(BuildContext context) => EntityEditScreen<Customer>(
         entity: widget.customer,
@@ -85,9 +77,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                         }),
                     HMBDroplist<CustomerType>(
                         initialValue: _selectedCustomerType,
-                        items: _getCustomerTypeDropdownItems(),
+                        items: CustomerType.values,
                         labelText: 'Customer Type',
-                        onChange: (newValue) {
+                        onChanged: (newValue) {
                           setState(() {
                             _selectedCustomerType = newValue!;
                           });
