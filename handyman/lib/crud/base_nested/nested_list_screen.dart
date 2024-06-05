@@ -72,9 +72,7 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
   }
 
   @override
-  Widget build(BuildContext context) => _buildList(context);
-
-  Scaffold _buildList(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false, // No back button
           title: Text(
@@ -90,8 +88,7 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
                     context,
                     MaterialPageRoute<void>(
                         builder: (context) => widget.onEdit(null)),
-                  ).then((_) =>
-                      _refreshEntityList()); // Refresh list after adding/editing
+                  ).then((_) => _refreshEntityList());
                 }
               },
             )
@@ -103,10 +100,18 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
               const Center(child: CircularProgressIndicator()),
           builder: (context, list) {
             if (widget.parent.parent == null) {
-              return const Center(child: Text('Save the parent first.'));
+              return const Center(
+                  child: Text(
+                'Save the parent first.',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ));
             }
             if (list!.isEmpty) {
-              return const Center(child: Text('No records found.'));
+              return const Center(
+                  child: Text(
+                'No records found.',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ));
             } else {
               return _buildListTiles(list);
             }
@@ -115,28 +120,32 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
       );
 
   Widget _buildListTiles(List<C> list) => ListView.builder(
+        padding: const EdgeInsets.all(8),
         itemCount: list.length,
         itemBuilder: (context, index) {
           final entity = list[index];
-          return ListTile(
-            title: widget.title(entity),
-            subtitle: widget.details(entity),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () async {
-                await _confirmDelete(entity);
+          return Card(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            elevation: 2,
+            child: ListTile(
+              title: widget.title(entity),
+              subtitle: widget.details(entity),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: () async {
+                  await _confirmDelete(entity);
+                },
+              ),
+              onTap: () async {
+                if (context.mounted) {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                        builder: (context) => widget.onEdit(entity)),
+                  ).then((_) => _refreshEntityList());
+                }
               },
             ),
-            onTap: () async {
-              if (context.mounted) {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                      builder: (context) => widget.onEdit(entity)),
-                ).then(
-                    (_) => _refreshEntityList()); // Refresh list after editing
-              }
-            },
           );
         },
       );
@@ -149,20 +158,18 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
         content: const Text('Are you sure you want to delete this item?'),
         actions: [
           TextButton(
-            onPressed: () =>
-                Navigator.of(context).pop(false), // User pressed No
+            onPressed: () => Navigator.of(context).pop(false),
             child: const Text('No'),
           ),
           TextButton(
-            onPressed: () =>
-                Navigator.of(context).pop(true), // User pressed Yes
+            onPressed: () => Navigator.of(context).pop(true),
             child: const Text('Yes'),
           ),
         ],
       ),
     );
 
-    if (deleteConfirmed! == true) {
+    if (deleteConfirmed ?? false) {
       await _delete(entity);
     }
   }
