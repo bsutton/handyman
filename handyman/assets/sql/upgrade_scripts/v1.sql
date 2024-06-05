@@ -25,7 +25,9 @@ CREATE TABLE IF NOT EXISTS "task"(
         jobId INTEGER,
         name TEXT,
         description TEXT,
-        completed INTEGER, createdDate TEXT, modifiedDate TEXT,
+        completed INTEGER, 
+        createdDate TEXT, 
+        modifiedDate TEXT,
         FOREIGN KEY (jobId) REFERENCES "job"(id)
       );
 CREATE TABLE IF NOT EXISTS "supplier"(
