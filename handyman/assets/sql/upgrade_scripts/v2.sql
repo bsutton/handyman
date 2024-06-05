@@ -14,3 +14,7 @@ VALUES
 ('Rejected', 'The Job was rejected by the Customer', '#FFB6C1', datetime('now'), datetime('now')),
 ('On Hold', 'The Job is on hold', '#FAFAD2', datetime('now'), datetime('now')),
 ('In progress', 'The Job is currently in progress', '#87CEFA', datetime('now'), datetime('now'));
+
+
+insert into system (id, createdDate, modifiedDate)
+values (1, datetime('now'), datetime('now'));

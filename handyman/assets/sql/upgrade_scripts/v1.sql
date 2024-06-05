@@ -52,7 +52,8 @@ CREATE TABLE customer_site(
         site_id integer,
         customer_id integer,
         createdDate TEXT,
-        modifiedDate TEXT, `primary` integer,
+        modifiedDate TEXT, 
+        `primary` integer,
         FOREIGN KEY (site_id) references site(id),
         FOREIGN KEY (customer_id) references customer(id)
       );
@@ -61,6 +62,7 @@ CREATE TABLE supplier_site(
         site_id integer,
         supplier_id, createdDate TEXT,
         modifiedDate TEXT,
+        `primary` integer,
         FOREIGN KEY (site_id) references site(id),
         FOREIGN KEY (supplier_id) references supplier(id)
       );
@@ -104,7 +106,8 @@ CREATE TABLE customer_contact(
         contact_id integer,
         customer_id integer,
         createdDate TEXT,
-        modifiedDate TEXT, `primary` integer,
+        modifiedDate TEXT, 
+        `primary` integer,
         FOREIGN KEY (contact_id) references contact(id),
         FOREIGN KEY (customer_id) references customer(id)
       );
@@ -112,6 +115,7 @@ CREATE UNIQUE INDEX customer_contacts_unq ON customer_contact(contact_id, custom
 CREATE TABLE supplier_contact(
         contact_id integer,
         supplier_id, integer,
+        `primary` integer,
         createdDate TEXT,
         modifiedDate TEXT,
         FOREIGN KEY (contact_id) references contact(id),
