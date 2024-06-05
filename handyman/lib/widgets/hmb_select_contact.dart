@@ -54,8 +54,8 @@ class HMBSelectContactState extends State<HMBSelectContact> {
                           ))
                       .toList(),
                   decoration: const InputDecoration(labelText: 'Contact'),
-                  validator: (value) =>
-                      value == null ? 'Please select a Contact' : null,
+                  // validator: (value) =>
+                  //     value == null ? 'Please select a Contact' : null,
                 ),
               ),
               HMBAddButton(

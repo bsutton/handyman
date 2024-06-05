@@ -160,24 +160,24 @@ class JobEditScreenState extends State<JobEditScreen>
 
   @override
   Future<Job> forUpdate(Job job) async => Job.forUpdate(
-        entity: job,
-        customerId: June.getState(SelectedCustomer.new).customerId,
-        summary: _summaryController.text,
-        description: jsonEncode(_descriptionController.document),
-        startDate: _selectedDate,
-        siteId: June.getState(SelectedSite.new).siteId,
-        contactId: June.getState(SelectedContact.new).contactId,
-      );
+      entity: job,
+      customerId: June.getState(SelectedCustomer.new).customerId,
+      summary: _summaryController.text,
+      description: jsonEncode(_descriptionController.document),
+      startDate: _selectedDate,
+      siteId: June.getState(SelectedSite.new).siteId,
+      contactId: June.getState(SelectedContact.new).contactId,
+      jobStatusId: June.getState(SelectJobStatus.new).jobStatusId);
 
   @override
   Future<Job> forInsert() async => Job.forInsert(
-        customerId: June.getState(SelectedCustomer.new).customerId,
-        summary: _summaryController.text,
-        description: jsonEncode(_descriptionController.document),
-        startDate: _selectedDate,
-        siteId: June.getState(SelectedSite.new).siteId,
-        contactId: June.getState(SelectedContact.new).contactId,
-      );
+      customerId: June.getState(SelectedCustomer.new).customerId,
+      summary: _summaryController.text,
+      description: jsonEncode(_descriptionController.document),
+      startDate: _selectedDate,
+      siteId: June.getState(SelectedSite.new).siteId,
+      contactId: June.getState(SelectedContact.new).contactId,
+      jobStatusId: June.getState(SelectJobStatus.new).jobStatusId);
 
   @override
   void dispose() {

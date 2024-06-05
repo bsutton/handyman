@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS "job"(
         startDate TEXT,
         summary TEXT,
         description TEXT,
-        address TEXT
-      , job_status integer);
+        address TEXT,
+       job_status_id integer);
 CREATE TABLE IF NOT EXISTS "task"(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         jobId INTEGER,
@@ -81,7 +81,7 @@ CREATE TABLE job_status(
         createdDate TEXT,
         modifiedDate TEXT
       );
-CREATE INDEX job_status_idx ON job(job_status);
+CREATE INDEX job_status_idx ON job(job_status_id);
 CREATE TABLE system(
         id INTEGER,
         fromEmail TEXT,

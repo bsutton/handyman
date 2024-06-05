@@ -9,6 +9,7 @@ class Job extends Entity<Job> {
     required this.startDate,
     required this.siteId,
     required this.contactId,
+    required this.jobStatusId,
     required super.createdDate,
     required super.modifiedDate,
   }) : super();
@@ -20,6 +21,7 @@ class Job extends Entity<Job> {
     required this.startDate,
     required this.siteId,
     required this.contactId,
+    required this.jobStatusId,
   }) : super.forInsert();
 
   Job.forUpdate({
@@ -30,6 +32,7 @@ class Job extends Entity<Job> {
     required this.startDate,
     required this.siteId,
     required this.contactId,
+    required this.jobStatusId,
   }) : super.forUpdate();
 
   factory Job.fromMap(Map<String, dynamic> map) => Job(
@@ -40,6 +43,7 @@ class Job extends Entity<Job> {
         startDate: DateTime.parse(map['startDate'] as String),
         siteId: map['site_id'] as int?,
         contactId: map['contact_id'] as int?,
+        jobStatusId: map['job_status_id'] as int?,
         createdDate: DateTime.parse(map['createdDate'] as String),
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
       );
@@ -52,6 +56,7 @@ class Job extends Entity<Job> {
         'description': description,
         'startDate': startDate.toIso8601String(),
         'site_id': siteId,
+        'job_status_id': jobStatusId,
         'contact_id': contactId,
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
@@ -63,4 +68,5 @@ class Job extends Entity<Job> {
   String description;
   int? siteId;
   int? contactId;
+  int? jobStatusId;
 }

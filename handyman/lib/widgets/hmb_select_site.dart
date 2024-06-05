@@ -54,8 +54,8 @@ class HMBSelectSiteState extends State<HMBSelectSite> {
                               ))
                           .toList(),
                       decoration: const InputDecoration(labelText: 'Site'),
-                      validator: (value) =>
-                          value == null ? 'Please select a Site' : null,
+                      // validator: (value) =>
+                      //     value == null ? 'Please select a Site' : null,
                     ),
                   ),
                   HMBAddButton(
