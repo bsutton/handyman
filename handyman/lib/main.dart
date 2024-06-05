@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 
 import 'crud/customer/customer_list_screen.dart';
-import 'crud/job/job_list_screen.dart'; // Import the JobListScreen
+import 'crud/job/job_list_screen.dart';
 import 'crud/supplier/supplier_list_screen.dart';
 import 'crud/system/system_edit_screen.dart';
 import 'dao/dao_system.dart';
-import 'dao/management/database_helper.dart';
+import 'database/management/database_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: const HomeWithDrawer(child: JobListScreen()),
+        home: const HomeWithDrawer(initialScreen: JobListScreen()),
       );
 }
 
@@ -46,10 +46,12 @@ class MyDrawer extends StatelessWidget {
     DrawerItem(title: 'Customers', screen: const CustomerListScreen()),
     DrawerItem(title: 'Suppliers', screen: const SupplierListScreen()),
     DrawerItem(
-        title: 'System',
-        screen: FutureBuilderEx(
-            future: DaoSystem().getById(1),
-            builder: (context, system) => SystemEditScreen(system: system!)))
+      title: 'System',
+      screen: FutureBuilderEx(
+        future: DaoSystem().getById(1),
+        builder: (context, system) => SystemEditScreen(system: system!),
+      ),
+    ),
   ];
 
   @override
@@ -59,11 +61,14 @@ class MyDrawer extends StatelessWidget {
           itemBuilder: (context, index) => ListTile(
             title: Text(drawerItems[index].title),
             onTap: () async {
-              Navigator.pop(context); // Close the drawer
-              await Navigator.push(
+              // Navigator.pop(context); // Close the drawer
+              await Navigator.pushReplacement(
                 context,
                 MaterialPageRoute<void>(
-                    builder: (context) => drawerItems[index].screen),
+                  builder: (context) => HomeWithDrawer(
+                    initialScreen: drawerItems[index].screen,
+                  ),
+                ),
               );
             },
           ),
@@ -72,8 +77,8 @@ class MyDrawer extends StatelessWidget {
 }
 
 class HomeWithDrawer extends StatelessWidget {
-  const HomeWithDrawer({required this.child, super.key});
-  final Widget child;
+  const HomeWithDrawer({required this.initialScreen, super.key});
+  final Widget initialScreen;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -81,6 +86,6 @@ class HomeWithDrawer extends StatelessWidget {
           title: const Text('Handyman'),
         ),
         drawer: MyDrawer(),
-        body: child,
+        body: initialScreen,
       );
 }
