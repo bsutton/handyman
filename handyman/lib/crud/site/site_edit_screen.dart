@@ -3,14 +3,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/dao_site.dart';
+import '../../dao/join_adaptors/dao_join_adaptor.dart';
 import '../../entity/customer.dart';
+import '../../entity/entity.dart';
 import '../../entity/site.dart';
 import '../base_nested/nested_edit_screen.dart';
 
-class SiteEditScreen extends StatefulWidget {
-  const SiteEditScreen({required this.customer, super.key, this.site});
-  final Customer customer;
+class SiteEditScreen<P extends Entity<P>> extends StatefulWidget {
+  const SiteEditScreen({
+    required this.parent,
+    required this.daoJoin,
+    super.key,
+    this.site,
+  });
+  final P parent;
   final Site? site;
+  final DaoJoinAdaptor<Site, P> daoJoin;
 
   @override
   _SiteEditScreenState createState() => _SiteEditScreenState();
@@ -48,7 +56,7 @@ class _SiteEditScreenState extends State<SiteEditScreen>
         dao: DaoSite(),
         entityState: this,
         onInsert: (site) async =>
-            DaoSite().insertForCustomer(site!, widget.customer),
+            widget.daoJoin.insertForParent(site!, widget.parent),
         editor: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

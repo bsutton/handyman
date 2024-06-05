@@ -1,32 +1,32 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/contact.dart';
-import '../entity/customer.dart';
+import '../entity/supplier.dart';
 import 'dao.dart';
 
-class DaoContactCustomer extends Dao<Contact> {
+class DaoContactSupplier extends Dao<Contact> {
   Future<void> createTable(Database db, int version) async {}
 
   @override
   Contact fromMap(Map<String, dynamic> map) => Contact.fromMap(map);
 
   @override
-  String get tableName => 'customer_contact';
+  String get tableName => 'supplier_contact';
 
-  Future<void> deleteJoin(Customer customer, Contact contact,
+  Future<void> deleteJoin(Supplier supplier, Contact contact,
       [Transaction? transaction]) async {
     await getDb(transaction).delete(
       tableName,
-      where: 'customer_id = ? and contact_id = ?',
-      whereArgs: [customer.id, contact.id],
+      where: 'supplier_id = ? and contact_id = ?',
+      whereArgs: [supplier.id, contact.id],
     );
   }
 
-  Future<void> insertJoin(Contact contact, Customer customer,
+  Future<void> insertJoin(Contact contact, Supplier supplier,
       [Transaction? transaction]) async {
     await getDb(transaction).insert(
       tableName,
-      {'customer_id': customer.id, 'contact_id': contact.id},
+      {'supplier_id': supplier.id, 'contact_id': contact.id},
     );
   }
 }

@@ -6,9 +6,15 @@ import 'package:june/june.dart';
 
 import '../../dao/dao_job.dart';
 import '../../entity/job.dart';
+import '../../widgets/hmb_button.dart';
+import '../../widgets/hmb_child_crud_card.dart';
+import '../../widgets/hmb_form_section.dart';
+import '../../widgets/hmb_text_field.dart';
 import '../../widgets/rich_editor.dart';
 import '../../widgets/select_customer.dart';
 import '../base_full_screen/entity_edit_screen.dart';
+import '../base_nested/nested_list_screen.dart';
+import '../task/task_list_screen.dart';
 
 class JobEditScreen extends StatefulWidget {
   const JobEditScreen({super.key, this.job});
@@ -24,6 +30,7 @@ class JobEditScreenState extends State<JobEditScreen>
   // late TextEditingController _descriptionController;
 
   late RichEditorController _descriptionController;
+  late FocusNode _descriptionFocusNode;
 
   late ParchmentDocument document;
 
@@ -40,8 +47,18 @@ class JobEditScreenState extends State<JobEditScreen>
 
     _descriptionController = RichEditorController(
         parchmentAsJsonString: widget.job?.description ?? '');
+    _descriptionFocusNode = FocusNode();
 
     _addressController = TextEditingController(text: widget.job?.address ?? '');
+  }
+
+  @override
+  void dispose() {
+    _summaryController.dispose();
+    _descriptionController.dispose();
+    _descriptionFocusNode.dispose();
+    _addressController.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,42 +68,34 @@ class JobEditScreenState extends State<JobEditScreen>
       dao: DaoJob(),
       entityState: this,
       editor: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        JuneBuilder(
-            () => SelectedCustomer()..customerId = widget.job?.customerId,
-            builder: (state) => SelectCustomer(selectedCustomer: state)),
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: SizedBox(
-            width: 120,
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 125, maxHeight: 64),
-              child: ElevatedButton(
-                onPressed: _selectDate,
-                child: Text(
-                  'Scheduled: ${_selectedDate.toLocal()}'.split(' ')[0],
-                ),
-              ),
-            ),
+        HMBFormSection(children: [
+          JuneBuilder(
+              () => SelectedCustomer()..customerId = widget.job?.customerId,
+              builder: (state) => SelectCustomer(selectedCustomer: state)),
+          HMBButton(
+            onPressed: _selectDate,
+            label: 'Scheduled: ${_selectedDate.toLocal()}'.split(' ')[0],
           ),
-        ),
-        TextFormField(
-          controller: _summaryController,
-          decoration: const InputDecoration(labelText: 'Summary'),
-        ),
-        // ExpandChild(
-        //     child:
-        SizedBox(
-          height: 200,
-          child: RichEditor(controller: _descriptionController
-              // controller: _descriptionController,
-              // decoration: const InputDecoration(labelText:
-              //   'Description'),
-              ),
-          // )
-        ),
-        TextFormField(
-          controller: _addressController,
-          decoration: const InputDecoration(labelText: 'Address'),
+          HMBTextField(
+            controller: _summaryController,
+            labelText: 'Summary',
+          ),
+          // SizedBox(
+          //   height: 200,
+          //   child: RichEditor(
+          //       controller: _descriptionController,
+          //       focusNode: _descriptionFocusNode,
+          //       key: UniqueKey()),
+          //   // )
+          // ),
+          HMBTextField(
+            controller: _addressController,
+            labelText: 'Address',
+          ),
+        ]),
+        HMBChildCrudCard(
+          headline: 'Tasks',
+          crudListScreen: TaskListScreen(parent: Parent(widget.job)),
         ),
       ]));
 

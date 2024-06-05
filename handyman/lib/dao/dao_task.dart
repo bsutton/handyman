@@ -3,6 +3,12 @@ import '../entity/task.dart';
 import 'dao.dart';
 
 class DaoTask extends Dao<Task> {
+  @override
+  Task fromMap(Map<String, dynamic> map) => Task.fromMap(map);
+
+  @override
+  String get tableName => 'task';
+
   Future<List<Task>> getTasksByJob(Job job) async {
     final db = getDb();
 
@@ -16,9 +22,13 @@ class DaoTask extends Dao<Task> {
     return tasks;
   }
 
-  @override
-  Task fromMap(Map<String, dynamic> map) => Task.fromMap(map);
+  // Future<void> deleteFromJob(Task task, Job job) async {
+  //   await DaoTaskJob().deleteJoin(job, task);
+  //   await delete(task.id);
+  // }
 
-  @override
-  String get tableName => 'task';
+  // Future<void> insertForJob(Task task, Job job) async {
+  //   await insert(task);
+  //   await DaoTaskJob().insertJoin(task, job);
+  // }
 }

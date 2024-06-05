@@ -8,6 +8,7 @@ import 'v11.dart';
 import 'v12.dart';
 import 'v13.dart';
 import 'v14.dart';
+import 'v15.dart';
 import 'v2.dart';
 import 'v3.dart';
 import 'v4.dart';
@@ -18,6 +19,7 @@ import 'v8.dart';
 import 'v9.dart';
 
 final Map<int, Future<void> Function(Database)?> upgradeDeltas = {
+  15: applyV15,
   14: applyV14,
   13: applyV13,
   12: applyV12,

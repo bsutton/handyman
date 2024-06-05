@@ -3,8 +3,8 @@ import 'package:strings/strings.dart';
 
 import 'dial_widget.dart';
 
-class PhoneText extends StatelessWidget {
-  const PhoneText({required this.label, required this.phoneNo, super.key});
+class HMBPhoneText extends StatelessWidget {
+  const HMBPhoneText({required this.label, required this.phoneNo, super.key});
   final String label;
   final String? phoneNo;
 

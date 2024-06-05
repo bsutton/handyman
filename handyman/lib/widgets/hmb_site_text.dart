@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../entity/site.dart';
 
-class TextSite extends StatelessWidget {
-  const TextSite({required this.label, required this.site, super.key});
+class HMBSiteText extends StatelessWidget {
+  const HMBSiteText({required this.label, required this.site, super.key});
   final String label;
   final Site? site;
 

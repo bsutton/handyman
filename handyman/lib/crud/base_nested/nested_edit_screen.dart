@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../dao/dao.dart';
 import '../../entity/entity.dart';
@@ -45,38 +44,35 @@ class NestedEntityEditScreenState<C extends Entity<C>, P extends Entity<P>>
       ),
       body: Padding(
           padding: const EdgeInsets.all(16),
-          child: onEnterKey(
-              onPressed: (context) async => _save(),
-              child: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            onPressed: _save,
-                            child:
-                                Text(widget.entity != null ? 'Update' : 'Add'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('Cancel'),
-                          ),
-                        ],
+                      ElevatedButton(
+                        onPressed: _save,
+                        child: Text(widget.entity != null ? 'Update' : 'Add'),
                       ),
-
-                      /// Inject the entity specific editor.
-                      widget.editor,
-
-                      /// Save /Cancel Buttons
-                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Cancel'),
+                      ),
                     ],
                   ),
-                ),
-              ))));
+
+                  /// Inject the entity specific editor.
+                  widget.editor,
+
+                  /// Save /Cancel Buttons
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          )));
 
   Future<void> _save() async {
     if (_formKey.currentState!.validate()) {
@@ -94,21 +90,4 @@ class NestedEntityEditScreenState<C extends Entity<C>, P extends Entity<P>>
       }
     }
   }
-
-  Widget onEnterKey(
-          {required Widget child,
-          required void Function(BuildContext context) onPressed}) =>
-      KeyboardListener(
-        focusNode: FocusNode(), // Ensure that the RawKeyboardListener
-        // receives key events
-        onKeyEvent: (event) {
-          if (event is KeyDownEvent &&
-              event.logicalKey == LogicalKeyboardKey.enter) {
-            // Handle Enter key press here
-            // For example, call onPressed for the RaisedButton
-            onPressed(context);
-          }
-        },
-        child: child,
-      );
 }

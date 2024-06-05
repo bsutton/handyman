@@ -3,7 +3,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/dao_customer.dart';
+import '../../dao/join_adaptors/customer_contact_join_adaptor.dart';
+import '../../dao/join_adaptors/customer_site_join_adaptor.dart';
 import '../../entity/customer.dart';
+import '../../widgets/hmb_child_crud_card.dart';
+import '../../widgets/hmb_droplist.dart';
+import '../../widgets/hmb_form_section.dart';
+import '../../widgets/hmb_switch.dart';
+import '../../widgets/hmb_text_field.dart';
 import '../base_full_screen/entity_edit_screen.dart';
 import '../base_nested/nested_list_screen.dart';
 import '../contact/contact_list_screen.dart';
@@ -57,102 +64,49 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'Customer Details',
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        const SizedBox(height: 16),
-                        TextFormField(
-                          autofocus: true,
-                          controller: _nameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Name',
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a name';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        SwitchListTile(
-                          title: const Text('Disbarred'),
-                          value: _disbarred,
-                          onChanged: (value) {
-                            setState(() {
-                              _disbarred = value;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        DropdownButtonFormField<CustomerType>(
-                          value: _selectedCustomerType,
-                          decoration: const InputDecoration(
-                            labelText: 'Customer Type',
-                            border: OutlineInputBorder(),
-                          ),
-                          items: _getCustomerTypeDropdownItems(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              _selectedCustomerType = newValue!;
-                            });
-                          },
-                        ),
-                      ],
+                HMBFormSection(
+                  children: [
+                    Text(
+                      'Customer Details',
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                  ),
-                ),
-                Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'Contacts',
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          height: 200,
-                          child: ContactListScreen(
-                              parent: Parent(widget.customer)),
-                        ),
-                      ],
+                    HMBTextField(
+                      autofocus: true,
+                      controller: _nameController,
+                      labelText: 'Name',
+                      required: true,
                     ),
-                  ),
+                    HMBSwitch(
+                        labelText: 'Disbarred',
+                        initialValue: _disbarred,
+                        onChanged: (value) {
+                          setState(() {
+                            _disbarred = value;
+                          });
+                        }),
+                    HMBDroplist<CustomerType>(
+                        initialValue: _selectedCustomerType,
+                        items: _getCustomerTypeDropdownItems(),
+                        labelText: 'Customer Type',
+                        onChange: (newValue) {
+                          setState(() {
+                            _selectedCustomerType = newValue!;
+                          });
+                        }),
+                  ],
                 ),
-                Card(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'Sites',
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          height: 200,
-                          child:
-                              SiteListScreen(parent: Parent(widget.customer)),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                HMBChildCrudCard(
+                    headline: 'Contacts',
+                    crudListScreen: ContactListScreen(
+                      pageTitle: 'Contacts',
+                      parent: Parent(widget.customer),
+                      daoJoin: CustomerContactJoinAdaptor(),
+                    )),
+                HMBChildCrudCard(
+                    headline: 'Sites',
+                    crudListScreen: SiteListScreen(
+                        daoJoin: CustomerSiteJoinAdaptor(),
+                        parent: Parent(widget.customer))),
               ],
             ),
           ],

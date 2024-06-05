@@ -3,8 +3,8 @@ import 'package:strings/strings.dart';
 
 import 'mail_to_icon.dart';
 
-class MailText extends StatelessWidget {
-  const MailText({required this.label, required this.email, super.key});
+class HBMMailText extends StatelessWidget {
+  const HBMMailText({required this.label, required this.email, super.key});
   final String label;
   final String? email;
 

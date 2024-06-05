@@ -2,15 +2,20 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/dao_contact.dart';
+import '../../dao/join_adaptors/dao_join_adaptor.dart';
 import '../../entity/contact.dart';
 import '../../entity/customer.dart';
-import '../../widgets/dial_widget.dart';
-import '../../widgets/mail_to_icon.dart';
+import '../../entity/entity.dart';
+import '../../widgets/hmb_email_field.dart';
+import '../../widgets/hmb_phone_field.dart';
+import '../../widgets/hmb_text_field.dart';
 import '../base_nested/nested_edit_screen.dart';
 
-class ContactEditScreen extends StatefulWidget {
-  const ContactEditScreen({required this.customer, super.key, this.contact});
-  final Customer customer;
+class ContactEditScreen<P extends Entity<P>> extends StatefulWidget {
+  const ContactEditScreen(
+      {required this.parent, required this.daoJoin, super.key, this.contact});
+  final DaoJoinAdaptor daoJoin;
+  final P parent;
   final Contact? contact;
 
   @override
@@ -75,17 +80,17 @@ class _ContactEditScreenState extends State<ContactEditScreen>
         entityName: 'Contact',
         dao: DaoContact(),
         onInsert: (contact) async =>
-            DaoContact().insertForCustomer(contact!, widget.customer),
+            widget.daoJoin.insertForParent(contact!, widget.parent),
         entityState: this,
         editor: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
+              HMBTextField(
                 controller: _firstNameController,
                 focusNode: _firstNameFocusNode,
-                decoration: const InputDecoration(labelText: 'First Name'),
+                labelText: 'First Name',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter the first name';
@@ -93,9 +98,9 @@ class _ContactEditScreenState extends State<ContactEditScreen>
                   return null;
                 },
               ),
-              TextFormField(
+              HMBTextField(
                 controller: _surnameController,
-                decoration: const InputDecoration(labelText: 'Surname'),
+                labelText: 'Surname',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter the surname';
@@ -103,12 +108,9 @@ class _ContactEditScreenState extends State<ContactEditScreen>
                   return null;
                 },
               ),
-              TextFormField(
+              HMBPhoneField(
                 controller: _mobileNumberController,
-                decoration: InputDecoration(
-                  labelText: 'Mobile Number',
-                  suffixIcon: DialWidget(_mobileNumberController.text),
-                ),
+                labelText: 'Mobile Number',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter the mobile number';
@@ -116,35 +118,14 @@ class _ContactEditScreenState extends State<ContactEditScreen>
                   return null;
                 },
               ),
-              TextFormField(
-                controller: _landlineController,
-                decoration: InputDecoration(
-                  labelText: 'Landline',
-                  suffixIcon: DialWidget(_landlineController.text),
-                ),
-              ),
-              TextFormField(
-                controller: _officeNumberController,
-                decoration: InputDecoration(
-                  labelText: 'Office Number',
-                  suffixIcon: DialWidget(_officeNumberController.text),
-                ),
-              ),
-              TextFormField(
+              HMBPhoneField(
+                  controller: _landlineController, labelText: 'Landline'),
+              HMBPhoneField(
+                  controller: _officeNumberController,
+                  labelText: 'Office Number'),
+              HMBEmailField(
                 controller: _emailaddressController,
-                decoration: InputDecoration(
-                  labelText: 'Email Address',
-                  suffixIcon: MailToIcon(_emailaddressController.text),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the email address';
-                  }
-                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                    return 'Please enter a valid email address';
-                  }
-                  return null;
-                },
+                labelText: 'Email',
               ),
             ],
           ),

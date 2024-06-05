@@ -2,40 +2,48 @@ import 'package:flutter/material.dart';
 import 'package:strings/strings.dart';
 
 import '../../dao/dao_contact.dart';
+import '../../dao/join_adaptors/dao_join_adaptor.dart';
 import '../../entity/contact.dart';
-import '../../entity/customer.dart';
-import '../../widgets/phone_text.dart';
+import '../../entity/entity.dart';
+import '../../widgets/hmb_phone_text.dart';
 import '../base_nested/nested_list_screen.dart';
 import 'contact_edit_screen.dart';
 
-class ContactListScreen extends StatelessWidget {
-  const ContactListScreen({required this.parent, super.key});
+class ContactListScreen<P extends Entity<P>> extends StatelessWidget {
+  const ContactListScreen({
+    required this.parent,
+    required this.pageTitle,
+    required this.daoJoin,
+    super.key,
+  });
 
-  final Parent<Customer> parent;
+  final Parent<P> parent;
+  final String pageTitle;
+  final DaoJoinAdaptor<Contact, P> daoJoin;
 
   @override
-  Widget build(BuildContext context) =>
-      NestedEntityListScreen<Contact, Customer>(
-          parent: parent,
-          pageTitle: 'Contacts',
-          dao: DaoContact(),
-          // ignore: discarded_futures
-          fetchList: () => DaoContact().getByCustomer(parent.parent),
-          title: (entity) => Text('${entity.firstName} ${entity.surname}'),
-          onEdit: (contact) =>
-              ContactEditScreen(customer: parent.parent!, contact: contact),
-          onDelete: (contact) async =>
-              DaoContact().deleteFromCustomer(contact!, parent.parent!),
-          onInsert: (contact) async =>
-              DaoContact().insertForCustomer(contact!, parent.parent!),
-          details: (entity) {
-            final customer = entity;
-            return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PhoneText(label: 'Mobile:', phoneNo: customer.mobileNumber),
-                  if (Strings.isNotBlank(customer.emailAddress))
-                    Text('Email: ${customer.emailAddress}'),
-                ]);
-          });
+  Widget build(BuildContext context) => NestedEntityListScreen<Contact, P>(
+      parent: parent,
+      pageTitle: pageTitle,
+      dao: DaoContact(),
+      // ignore: discarded_futures
+      fetchList: () => daoJoin.getByParent(parent.parent),
+      title: (entity) => Text('${entity.firstName} ${entity.surname}'),
+      onEdit: (contact) => ContactEditScreen(
+            parent: parent.parent!,
+            contact: contact,
+            daoJoin: daoJoin,
+          ),
+      onDelete: (contact) async =>
+          daoJoin.deleteFromParent(contact!, parent.parent!),
+      onInsert: (contact) async =>
+          daoJoin.insertForParent(contact!, parent.parent!),
+      details: (entity) {
+        final customer = entity;
+        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          HMBPhoneText(label: 'Mobile:', phoneNo: customer.mobileNumber),
+          if (Strings.isNotBlank(customer.emailAddress))
+            Text('Email: ${customer.emailAddress}'),
+        ]);
+      });
 }

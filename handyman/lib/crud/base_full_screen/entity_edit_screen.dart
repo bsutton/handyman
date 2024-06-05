@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../dao/dao.dart';
 import '../../entity/entity.dart';
+import '../../widgets/hmb_button.dart';
 
 abstract class EntityState<E extends Entity<E>> {
   Future<E> forInsert();
@@ -41,41 +41,36 @@ class EntityEditScreenState<E extends Entity<E>>
       ),
       body: Padding(
           padding: const EdgeInsets.all(16),
-          child: onEnterKey(
-              onPressed: (context) async => _save(),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                onPressed: _save,
-                                child: Text(
-                                    widget.entity != null ? 'Update' : 'Add'),
-                              ),
-                              ElevatedButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('Cancel'),
-                              ),
-                            ])),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          HMBButton(
+                              label: widget.entity != null ? 'Update' : 'Add',
+                              onPressed: _save),
+                          HMBButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            label: 'Cancel',
+                          ),
+                        ])),
 
-                    /// Inject the entity specific editor.
-                    Expanded(
-                      child: SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: widget.editor),
-                    ),
-
-                    /// Save /Cancel Buttons
-                    const SizedBox(height: 16),
-                  ],
+                /// Inject the entity specific editor.
+                Expanded(
+                  child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16), child: widget.editor),
                 ),
-              ))));
+
+                /// Save /Cancel Buttons
+                const SizedBox(height: 16),
+              ],
+            ),
+          )));
 
   Future<void> _save() async {
     if (_formKey.currentState!.validate()) {
@@ -93,21 +88,4 @@ class EntityEditScreenState<E extends Entity<E>>
       }
     }
   }
-
-  Widget onEnterKey(
-          {required Widget child,
-          required void Function(BuildContext context) onPressed}) =>
-      KeyboardListener(
-        focusNode: FocusNode(), // Ensure that the RawKeyboardListener
-        // receives key events
-        onKeyEvent: (event) {
-          if (event is KeyDownEvent &&
-              event.logicalKey == LogicalKeyboardKey.enter) {
-            // Handle Enter key press here
-            // For example, call onPressed for the RaisedButton
-            onPressed(context);
-          }
-        },
-        child: child,
-      );
 }

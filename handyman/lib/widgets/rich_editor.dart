@@ -31,7 +31,7 @@ class RichEditorController {
       controller = FleatherController(document: document);
       // ignore: avoid_catches_without_on_clauses
     } catch (err, st) {
-      print('Cannot read welcome.json: $err\n$st');
+      print('Unable to load parchment into RichEditor: $err\n$st');
       controller = FleatherController();
     }
   }
@@ -40,12 +40,18 @@ class RichEditorController {
       {TextSelection? selection}) {
     controller.replaceText(index, length, data, selection: selection);
   }
+
+  void dispose() {
+    controller.dispose();
+  }
 }
 
 class RichEditor extends StatefulWidget {
-  const RichEditor({required this.controller, super.key});
+  const RichEditor(
+      {required this.controller, required this.focusNode, super.key});
 
   final RichEditorController controller;
+  final FocusNode focusNode;
 
   @override
   State<RichEditor> createState() => _RichEditorState();
@@ -94,8 +100,6 @@ class RichEditor extends StatefulWidget {
 }
 
 class _RichEditorState extends State<RichEditor> {
-  final FocusNode _focusNode = FocusNode();
-
   @override
   void initState() {
     super.initState();
@@ -139,29 +143,38 @@ class _RichEditorState extends State<RichEditor> {
           },
           child: const Icon(Icons.add_a_photo),
         ),
-        body: Column(
-          children: [
-            FleatherToolbar.basic(controller: widget.controller.controller),
-            Divider(height: 1, thickness: 1, color: Colors.grey.shade200),
-            Expanded(
-              child: FleatherEditor(
-                controller: widget.controller.controller,
-                focusNode: _focusNode,
-                padding: EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  bottom: MediaQuery.of(context).padding.bottom,
+        body: GestureDetector(
+          onTap: () {
+            // widget.focusNode.requestFocus();
+          },
+          child: FocusScope(
+            node: FocusScopeNode(),
+            child: Column(
+              children: [
+                FleatherToolbar.basic(controller: widget.controller.controller),
+                Divider(height: 1, thickness: 1, color: Colors.grey.shade200),
+                Expanded(
+                  child: FleatherEditor(
+                    key: UniqueKey(),
+                    controller: widget.controller.controller,
+                    focusNode: widget.focusNode,
+                    padding: EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      bottom: MediaQuery.of(context).padding.bottom,
+                    ),
+                    onLaunchUrl: _launchUrl,
+                    embedBuilder: _embedBuilder,
+                    spellCheckConfiguration: _getSpellCheckService(context),
+                  ),
                 ),
-                onLaunchUrl: _launchUrl,
-                embedBuilder: _embedBuilder,
-                spellCheckConfiguration: _getSpellCheckService(context),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       );
 
-  /// Spell checker only supported on andriod and iOS.
+  /// Spell checker only supported on Android and iOS.
   SpellCheckConfiguration? _getSpellCheckService(BuildContext context) {
     if (Platform.isAndroid || Platform.isIOS) {
       return SpellCheckConfiguration(

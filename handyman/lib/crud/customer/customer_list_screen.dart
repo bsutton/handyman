@@ -6,9 +6,9 @@ import '../../dao/dao_contact.dart';
 import '../../dao/dao_site.dart';
 import '../../entity/customer.dart';
 import '../../widgets/contact_text.dart';
-import '../../widgets/mail_text.dart';
-import '../../widgets/phone_text.dart';
-import '../../widgets/text_site.dart';
+import '../../widgets/hmb_mail_text.dart';
+import '../../widgets/hmb_phone_text.dart';
+import '../../widgets/hmb_site_text.dart';
 import '../base_full_screen/entity_list_screen.dart';
 import 'customer_edit_screen.dart';
 
@@ -35,11 +35,11 @@ class CustomerListScreen extends StatelessWidget {
                           Text('Business Name: ${customer.name}'),
                           ContactText(
                               label: 'Primary Contact:', contact: contact),
-                          PhoneText(
+                          HMBPhoneText(
                               label: 'Mobile:', phoneNo: contact?.mobileNumber),
-                          MailText(
+                          HBMMailText(
                               label: 'Email', email: contact?.emailAddress),
-                          TextSite(label: 'Address', site: site)
+                          HMBSiteText(label: 'Address', site: site)
                         ])));
       });
 }
