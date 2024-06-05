@@ -56,7 +56,7 @@ class JobListScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Description: ${RichEditor.createParchment(job.description).toPlainText().split('\n').first}',
+                        '''Description: ${RichEditor.createParchment(job.description).toPlainText().split('\n').first}''',
                         style: TextStyle(fontSize: 14, color: Colors.grey[700]),
                       ),
                       const SizedBox(height: 8),
