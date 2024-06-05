@@ -15,7 +15,7 @@ class EntityListScreen<T extends Entity<T>> extends StatefulWidget {
     required this.pageTitle,
     required this.title,
     required this.details,
-    super.key, // Add key parameter here
+    super.key,
   });
 
   final String pageTitle;
@@ -35,7 +35,7 @@ class EntityListScreenState<T extends Entity<T>>
   @override
   void initState() {
     super.initState();
-    // ignore: discarded_futures
+     // ignore: discarded_futures
     entities = fetchList();
   }
 
@@ -52,26 +52,26 @@ class EntityListScreenState<T extends Entity<T>>
   Widget build(BuildContext context) => _buildList(context);
 
   Scaffold _buildList(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: Text(widget.pageTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            // add new entity
-            onPressed: () async {
-              if (context.mounted) {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                      builder: (context) => widget.onEdit(null)),
-                ).then((_) =>
-                    _refreshEntityList()); // Refresh list after adding/editing
-              }
-            },
-          )
-        ],
-      ),
-      body: FutureBuilderEx<List<T>>(
+        appBar: AppBar(
+          title: Text(widget.pageTitle),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+               // add new entity
+              onPressed: () async {
+                if (context.mounted) {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                        builder: (context) => widget.onEdit(null)),
+                  ).then((_) =>
+                      _refreshEntityList()); // Refresh list after adding/editing
+                }
+              },
+            )
+          ],
+        ),
+        body: FutureBuilderEx<List<T>>(
           future: entities,
           waitingBuilder: (_) =>
               const Center(child: CircularProgressIndicator()),
@@ -81,7 +81,9 @@ class EntityListScreenState<T extends Entity<T>>
             } else {
               return _buildListTiles(list);
             }
-          }));
+          },
+        ),
+      );
 
   Widget _buildListTiles(List<T> list) => ListView.builder(
         itemCount: list.length,
@@ -93,25 +95,48 @@ class EntityListScreenState<T extends Entity<T>>
             trailing: IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () async {
-                await _delete(entity);
+                await _confirmDelete(entity);
               },
             ),
-
-            /// Edit entity
             onTap: () async {
               if (context.mounted) {
                 await Navigator.push(
                   context,
                   MaterialPageRoute<void>(
                       builder: (context) => widget.onEdit(entity)),
-                ).then((_) =>
-                    // Refresh list after editing
-                    _refreshEntityList());
+                ).then(
+                    (_) => _refreshEntityList()); // Refresh list after editing
               }
             },
           );
         },
       );
+
+  Future<void> _confirmDelete(Entity<T> entity) async {
+    final deleteConfirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Confirmation'),
+        content: const Text('Are you sure you want to delete this item?'),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.of(context).pop(false), // User pressed No
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () =>
+                Navigator.of(context).pop(true), // User pressed Yes
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+
+    if (deleteConfirmed! == true) {
+      await _delete(entity);
+    }
+  }
 
   Future<void> _delete(Entity<T> entity) async {
     await widget.dao.delete(entity.id);
