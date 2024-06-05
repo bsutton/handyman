@@ -1,25 +1,30 @@
 import 'package:flutter/material.dart';
 
 class HMBTextArea extends StatelessWidget {
-  const HMBTextArea({
-    required TextEditingController descriptionController,
-    required FocusNode nameFocusNode,
-    required this.labelText,
-    super.key,
-  })  : _descriptionController = descriptionController,
-        _nameFocusNode = nameFocusNode;
+  const HMBTextArea(
+      {required this.controller,
+      required this.labelText,
+      this.maxLines = 6,
+      this.focusNode,
+      super.key});
 
-  final TextEditingController _descriptionController;
-  final FocusNode _nameFocusNode;
+  final TextEditingController controller;
+  final FocusNode? focusNode;
   final String labelText;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) => SizedBox(
         height: 200,
         child: TextFormField(
-          controller: _descriptionController,
-          focusNode: _nameFocusNode,
-          decoration: InputDecoration(labelText: labelText),
+          maxLines: maxLines,
+          keyboardType: TextInputType.multiline,
+          textInputAction: TextInputAction.newline,
+          controller: controller,
+          focusNode: focusNode,
+          decoration: InputDecoration(labelText: labelText,
+            border: const OutlineInputBorder(),
+          ),
         ),
       );
 }

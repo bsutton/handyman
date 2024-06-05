@@ -12,19 +12,17 @@ import 'contact_edit_screen.dart';
 class ContactListScreen<P extends Entity<P>> extends StatelessWidget {
   const ContactListScreen({
     required this.parent,
-    required this.pageTitle,
     required this.daoJoin,
     super.key,
   });
 
   final Parent<P> parent;
-  final String pageTitle;
   final DaoJoinAdaptor<Contact, P> daoJoin;
 
   @override
   Widget build(BuildContext context) => NestedEntityListScreen<Contact, P>(
       parent: parent,
-      pageTitle: pageTitle,
+      pageTitle: 'Contacts',
       dao: DaoContact(),
       // ignore: discarded_futures
       fetchList: () => daoJoin.getByParent(parent.parent),

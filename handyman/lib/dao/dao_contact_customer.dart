@@ -29,4 +29,14 @@ class DaoContactCustomer extends Dao<Contact> {
       {'customer_id': customer.id, 'contact_id': contact.id},
     );
   }
+
+  Future<void> setAsPrimary(Contact contact, Customer customer,
+      [Transaction? transaction]) async {
+    await getDb(transaction).update(
+      tableName,
+      {'primary': 1},
+      where: 'customer_id = ? and contact_id = ?',
+      whereArgs: [customer.id, contact.id],
+    );
+  }
 }

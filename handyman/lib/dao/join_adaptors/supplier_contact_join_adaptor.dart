@@ -20,4 +20,9 @@ class SupplierContactJoinAdaptor implements DaoJoinAdaptor<Contact, Supplier> {
   Future<void> insertForParent(Contact contact, Supplier supplier) async {
     await DaoContact().insertForSupplier(contact, supplier);
   }
+
+  @override
+  Future<void> setAsPrimary(Contact child, Supplier supplier) async {
+    await DaoContactSupplier().setAsPrimary(child, supplier);
+  }
 }

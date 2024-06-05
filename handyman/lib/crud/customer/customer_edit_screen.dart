@@ -6,15 +6,14 @@ import '../../dao/dao_customer.dart';
 import '../../dao/join_adaptors/customer_contact_join_adaptor.dart';
 import '../../dao/join_adaptors/customer_site_join_adaptor.dart';
 import '../../entity/customer.dart';
-import '../../widgets/hmb_child_crud_card.dart';
+import '../../widgets/hbm_crud_contact.dart';
+import '../../widgets/hmb_crud_site.dart';
 import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_form_section.dart';
 import '../../widgets/hmb_switch.dart';
 import '../../widgets/hmb_text_field.dart';
 import '../base_full_screen/entity_edit_screen.dart';
 import '../base_nested/nested_list_screen.dart';
-import '../contact/contact_list_screen.dart';
-import '../site/site_list_screen.dart';
 
 class CustomerEditScreen extends StatefulWidget {
   const CustomerEditScreen({super.key, this.customer});
@@ -95,18 +94,13 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                         }),
                   ],
                 ),
-                HMBChildCrudCard(
-                    headline: 'Contacts',
-                    crudListScreen: ContactListScreen(
-                      pageTitle: 'Contacts',
-                      parent: Parent(widget.customer),
-                      daoJoin: CustomerContactJoinAdaptor(),
-                    )),
-                HMBChildCrudCard(
-                    headline: 'Sites',
-                    crudListScreen: SiteListScreen(
-                        daoJoin: CustomerSiteJoinAdaptor(),
-                        parent: Parent(widget.customer))),
+                HMBCrudContact(
+                  parent: Parent(widget.customer),
+                  daoJoin: CustomerContactJoinAdaptor(),
+                ),
+                HBMCrudSite(
+                    daoJoin: CustomerSiteJoinAdaptor(),
+                    parent: Parent(widget.customer)),
               ],
             ),
           ],

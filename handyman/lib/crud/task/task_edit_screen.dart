@@ -82,8 +82,8 @@ class _TaskEditScreenState extends State<TaskEditScreen>
                 labelText: 'Summary',
               ),
               HMBTextArea(
-                descriptionController: _descriptionController,
-                nameFocusNode: _descriptionFocusNode,
+                controller: _descriptionController,
+                focusNode: _descriptionFocusNode,
                 labelText: 'Description',
               ),
               // SizedBox(

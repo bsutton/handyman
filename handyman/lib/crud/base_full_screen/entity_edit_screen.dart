@@ -84,7 +84,7 @@ class EntityEditScreenState<E extends Entity<E>>
       }
 
       if (mounted) {
-        Navigator.of(context).pop();
+        Navigator.of(context).pop(widget.entity);
       }
     }
   }

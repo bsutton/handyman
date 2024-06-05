@@ -62,4 +62,6 @@ class Contact extends Entity<Contact> {
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };
+
+  String abbreviated() => '$firstName $surname';
 }

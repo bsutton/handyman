@@ -1,10 +1,12 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/customer.dart';
+import '../entity/job.dart';
 import '../entity/site.dart';
 import '../entity/supplier.dart';
 import 'dao.dart';
 import 'dao_site_customer.dart';
+import 'dao_site_job.dart';
 import 'dao_site_supplier.dart';
 
 class DaoSite extends Dao<Site> {
@@ -96,6 +98,25 @@ where cu.id =?
     return toList(data);
   }
 
+  Future<List<Site>> getByJob(Job? job) async {
+    final db = getDb();
+
+    if (job == null) {
+      return [];
+    }
+    final data = await db.rawQuery('''
+select si.* 
+from site si
+join job_site js
+  on si.id = js.site_id
+join job jo
+  on js.job_id = jo.id
+where jo.id =? 
+''', [job.id]);
+
+    return toList(data);
+  }
+
   Future<void> deleteFromCustomer(Site site, Customer customer) async {
     await DaoSiteCustomer().deleteJoin(customer, site);
     await delete(site.id);
@@ -114,5 +135,15 @@ where cu.id =?
   Future<void> insertForSupplier(Site site, Supplier supplier) async {
     await insert(site);
     await DaoSiteSupplier().insertJoin(site, supplier);
+  }
+
+  Future<void> deleteFromJob(Site site, Job job) async {
+    await DaoSiteJob().deleteJoin(job, site);
+    await delete(site.id);
+  }
+
+  Future<void> insertForJob(Site site, Job job) async {
+    await insert(site);
+    await DaoSiteJob().insertJoin(site, job);
   }
 }

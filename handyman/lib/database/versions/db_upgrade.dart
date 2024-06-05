@@ -1,6 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:dcli/dcli.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -50,7 +50,7 @@ Future<int> getLatestVersion() async {
 }
 
 Future<void> _executeScript(Database db, String pathToScript) async {
-  final sql = read(pathToScript).toParagraph();
+  final sql = await File(pathToScript).readAsString();
 
   await db.execute(sql);
 }

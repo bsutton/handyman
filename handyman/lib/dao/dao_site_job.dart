@@ -1,43 +1,42 @@
 import 'package:sqflite/sqflite.dart';
 
+import '../entity/job.dart';
 import '../entity/site.dart';
-import '../entity/supplier.dart';
 import 'dao.dart';
 
-class DaoSiteSupplier extends Dao<Site> {
+class DaoSiteJob extends Dao<Site> {
   Future<void> createTable(Database db, int version) async {}
 
   @override
   Site fromMap(Map<String, dynamic> map) => Site.fromMap(map);
 
   @override
-  String get tableName => 'supplier_site';
+  String get tableName => 'job_site';
 
-  Future<void> deleteJoin(Supplier supplier, Site site,
+  Future<void> deleteJoin(Job job, Site site,
       [Transaction? transaction]) async {
     await getDb(transaction).delete(
       tableName,
-      where: 'supplier_id = ? and site_id = ?',
-      whereArgs: [supplier.id, site.id],
+      where: 'job_id = ? and site_id = ?',
+      whereArgs: [job.id, site.id],
     );
   }
 
-  Future<void> insertJoin(Site site, Supplier supplier,
+  Future<void> insertJoin(Site site, Job job,
       [Transaction? transaction]) async {
     await getDb(transaction).insert(
       tableName,
-      {'supplier_id': supplier.id, 'site_id': site.id},
+      {'job_id': job.id, 'site_id': site.id},
     );
   }
 
-
-  Future<void> setAsPrimary(Site site, Supplier supplier,
+  Future<void> setAsPrimary(Site site, Job job,
       [Transaction? transaction]) async {
     await getDb(transaction).update(
       tableName,
       {'primary': 1},
-      where: 'supplier_id = ? and site_id = ?',
-      whereArgs: [supplier.id, site.id],
+      where: 'job_id = ? and site_id = ?',
+      whereArgs: [job.id, site.id],
     );
   }
 }

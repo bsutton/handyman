@@ -56,4 +56,6 @@ class Site extends Entity<Site> {
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };
+
+  String abbreviated() => '$addressLine1, $suburb';
 }

@@ -3,13 +3,14 @@ import 'entity.dart';
 class Job extends Entity<Job> {
   Job({
     required super.id,
-    required super.createdDate,
-    required super.modifiedDate,
     required this.customerId,
-    required this.startDate,
     required this.summary,
     required this.description,
-    required this.address,
+    required this.startDate,
+    required this.siteId,
+    required this.contactId,
+    required super.createdDate,
+    required super.modifiedDate,
   }) : super();
 
   Job.forInsert({
@@ -17,7 +18,8 @@ class Job extends Entity<Job> {
     required this.summary,
     required this.description,
     required this.startDate,
-    required this.address,
+    required this.siteId,
+    required this.contactId,
   }) : super.forInsert();
 
   Job.forUpdate({
@@ -26,7 +28,8 @@ class Job extends Entity<Job> {
     required this.summary,
     required this.description,
     required this.startDate,
-    required this.address,
+    required this.siteId,
+    required this.contactId,
   }) : super.forUpdate();
 
   factory Job.fromMap(Map<String, dynamic> map) => Job(
@@ -35,7 +38,8 @@ class Job extends Entity<Job> {
         summary: map['summary'] as String,
         description: map['description'] as String,
         startDate: DateTime.parse(map['startDate'] as String),
-        address: map['address'] as String,
+        siteId: map['site_id'] as int?,
+        contactId: map['contact_id'] as int?,
         createdDate: DateTime.parse(map['createdDate'] as String),
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
       );
@@ -47,7 +51,8 @@ class Job extends Entity<Job> {
         'summary': summary,
         'description': description,
         'startDate': startDate.toIso8601String(),
-        'address': address,
+        'site_id': siteId,
+        'contact_id': contactId,
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };
@@ -56,5 +61,6 @@ class Job extends Entity<Job> {
   DateTime startDate;
   String summary;
   String description;
-  String address;
+  int? siteId;
+  int? contactId;
 }

@@ -6,13 +6,12 @@ import '../../dao/dao_supplier.dart';
 import '../../dao/join_adaptors/supplier_contact_join_adaptor.dart';
 import '../../dao/join_adaptors/supplier_site_join_adaptor.dart';
 import '../../entity/supplier.dart';
-import '../../widgets/hmb_child_crud_card.dart';
+import '../../widgets/hbm_crud_contact.dart';
+import '../../widgets/hmb_crud_site.dart';
 import '../../widgets/hmb_form_section.dart';
 import '../../widgets/hmb_text_field.dart';
 import '../base_full_screen/entity_edit_screen.dart';
 import '../base_nested/nested_list_screen.dart';
-import '../contact/contact_list_screen.dart';
-import '../site/site_list_screen.dart';
 
 class SupplierEditScreen extends StatefulWidget {
   const SupplierEditScreen({super.key, this.supplier});
@@ -63,17 +62,12 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
                     ),
                   ],
                 ),
-                HMBChildCrudCard(
-                    headline: 'Contacts',
-                    crudListScreen: ContactListScreen(
-                        pageTitle: 'Contacts',
-                        parent: Parent(widget.supplier),
-                        daoJoin: SupplierContactJoinAdaptor())),
-                HMBChildCrudCard(
-                    headline: 'Sites',
-                    crudListScreen: SiteListScreen(
-                        daoJoin: SupplierSiteJoinAdaptor(),
-                        parent: Parent(widget.supplier))),
+                HMBCrudContact(
+                    parent: Parent(widget.supplier),
+                    daoJoin: SupplierContactJoinAdaptor()),
+                HBMCrudSite(
+                    daoJoin: SupplierSiteJoinAdaptor(),
+                    parent: Parent(widget.supplier)),
               ],
             ),
           ],

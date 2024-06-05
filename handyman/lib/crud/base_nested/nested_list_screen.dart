@@ -7,6 +7,7 @@ import 'package:future_builder_ex/future_builder_ex.dart';
 
 import '../../dao/dao.dart';
 import '../../entity/entities.dart';
+import '../../widgets/hmb_add_button.dart';
 
 class Parent<P extends Entity<P>> {
   Parent(this.parent);
@@ -81,9 +82,8 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
           style: const TextStyle(fontSize: 18),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            // add new entity
+          HMBAddButton(
+            enabled: widget.parent.parent != null,
             onPressed: () async {
               if (context.mounted) {
                 await Navigator.push(
