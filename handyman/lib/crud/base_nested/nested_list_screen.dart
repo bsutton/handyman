@@ -52,14 +52,22 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
   void initState() {
     super.initState();
     // ignore: discarded_futures
-    entities = widget.fetchList();
+    entities = _fetchList();
   }
 
   Future<void> _refreshEntityList() async {
     setState(() {
       print('refreshing');
-      entities = widget.fetchList();
+      entities = _fetchList();
     });
+  }
+
+  Future<List<C>> _fetchList() async {
+    if (widget.parent.parent == null) {
+      return <C>[];
+    } else {
+      return widget.fetchList();
+    }
   }
 
   @override
