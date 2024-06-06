@@ -177,6 +177,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1-beta.4"
+  dev_build:
+    dependency: transitive
+    description:
+      name: dev_build
+      sha256: f93005b7842004fc87bf435dcb6f4ef8c2438cc6578ac3d4d1430b137914a918
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.16.7+1"
   diff_match_patch:
     dependency: transitive
     description:
@@ -664,6 +672,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  pool:
+    dependency: transitive
+    description:
+      name: pool
+      sha256: "20fe868b6314b322ea036ba325e6fc0711a22948856475e2c2b6306e8ab39c2a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.1"
   posix:
     dependency: transitive
     description:
@@ -672,6 +688,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.1"
+  process_run:
+    dependency: transitive
+    description:
+      name: process_run
+      sha256: "8d9c6198b98fbbfb511edd42e7364e24d85c163e47398919871b952dc86a423e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.2"
   provider:
     dependency: "direct main"
     description:
@@ -781,6 +805,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.3"
+  sqflite_common_ffi_web:
+    dependency: "direct main"
+    description:
+      name: sqflite_common_ffi_web
+      sha256: cfc9d1c61a3e06e5b2e96994a44b11125b4f451fee95b9fad8bd473b4613d592
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.3+1"
   sqlite3:
     dependency: transitive
     description:

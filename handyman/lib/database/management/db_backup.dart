@@ -14,6 +14,7 @@ Future<void> backupDatabase(String pathToDatabase,
   final dbFile = File(pathToDatabase);
   final backupFile = File(backupPath);
 
+
   if (dbFile.existsSync()) {
     await backupFile.writeAsBytes(await dbFile.readAsBytes());
     print('''

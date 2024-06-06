@@ -48,3 +48,17 @@ This script updates the asset/sql/upgrade_list.json file which is
 used at run time to identify the set of upgrade assets.
 
 
+# Web target
+When running handyman in a browser sqlite needs to have web support added to the package:
+
+Instructions are here:
+https://github.com/tekartik/sqflite/tree/master/packages_web/sqflite_common_ffi_web#setup-binaries
+
+As a convenience I've included the files it injects (the wasm binary)
+in the repo.
+
+If we upgrade sqlflite we need to upgrade the injected files as per the above link.
+
+Note: currenlty we are not backing up the db before doing schema upgrades
+as we don't know how to do this on the web.
+

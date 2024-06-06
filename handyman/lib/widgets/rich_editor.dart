@@ -65,7 +65,7 @@ class RichEditor extends StatefulWidget {
       json = null;
     } else {
       try {
-        json = jsonDecode(parchmentAsJsonString) as List<dynamic>;
+        json =jsonDecode(parchmentAsJsonString) as List<dynamic>;
       } on FormatException catch (err, _) {
         print('Error parsing json, err: $err  data: $parchmentAsJsonString');
       }
@@ -176,7 +176,7 @@ class _RichEditorState extends State<RichEditor> {
 
   /// Spell checker only supported on Android and iOS.
   SpellCheckConfiguration? _getSpellCheckService(BuildContext context) {
-    if (Platform.isAndroid || Platform.isIOS) {
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
       return SpellCheckConfiguration(
           spellCheckService: DefaultSpellCheckService(),
           misspelledSelectionColor: Colors.red,

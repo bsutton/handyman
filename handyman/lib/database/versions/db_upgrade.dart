@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -14,10 +14,14 @@ Future<void> upgradeDb(Database db, int oldVersion, int newVersion) async {
   if (oldVersion == 1) {
     print('Creating database');
   } else {
-    print('Backing up database prior to upgrade');
-    await backupDatabase(await DatabaseHelper.pathToDatabase(),
-        version: oldVersion);
-    print('Upgrade database from Version $oldVersion');
+    if (kIsWeb) {
+      print("Skipping web backup as we don't have a solution");
+    } else {
+      print('Backing up database prior to upgrade');
+      await backupDatabase(await DatabaseHelper.pathToDatabase(),
+          version: oldVersion);
+      print('Upgrade database from Version $oldVersion');
+    }
   }
   final upgradeAssets = await _loadPathsToUpgradeScriptAssets();
 
@@ -50,7 +54,7 @@ Future<int> getLatestVersion() async {
 }
 
 Future<void> _executeScript(Database db, String pathToScript) async {
-  final sql = await File(pathToScript).readAsString();
+  final sql = await rootBundle.loadString(pathToScript);
 
   await db.execute(sql);
 }
