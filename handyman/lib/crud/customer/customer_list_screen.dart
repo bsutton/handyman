@@ -20,7 +20,7 @@ class CustomerListScreen extends StatelessWidget {
       pageTitle: 'Customers',
       dao: DaoCustomer(),
       title: (entity) => Text(entity.name) as Widget,
-      fetchList: (filter) => DaoCustomer().getByFilter(filter),
+      fetchList: (filter) async => DaoCustomer().getByFilter(filter),
       onEdit: (customer) => CustomerEditScreen(customer: customer),
       details: (entity) {
         final customer = entity;
