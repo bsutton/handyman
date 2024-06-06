@@ -7,13 +7,16 @@ alter table task add column task_status_id integer;
 
 
 alter table job_status add column hidden integer; -- 1/0
+update job_status set hidden = 0;
+update job_status set hidden = 1 where description = 'Completed' or description = 'Rejected';
 
 alter table job add column hourly_rate integer; -- in cents
+alter table job add column call_out_fee integer; -- 
 alter table customer add column default_hourly_rate integer; -- in cents
+
 alter table system add column default_hourly_rate integer; -- in cents
 alter table system add column terms_url text; -- link to t&cs.
 alter table system add column default_call_out_fee integer; -- 
-alter table job add column call_out_fee integer; -- 
 
 
 CREATE TABLE task_status(
