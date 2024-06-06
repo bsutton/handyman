@@ -44,7 +44,6 @@ class EntityListScreenState<T extends Entity<T>>
   @override
   void initState() {
     super.initState();
-
     filterController = TextEditingController();
     // ignore: discarded_futures
     entities = widget._fetchList(null);
@@ -69,7 +68,6 @@ class EntityListScreenState<T extends Entity<T>>
                 onChanged: (newValue) async {
                   filterOption = newValue;
                   await _refreshEntityList();
-                  setState(() {});
                 },
               ),
             ),
@@ -79,7 +77,6 @@ class EntityListScreenState<T extends Entity<T>>
                 filterController.clear();
                 filterOption = null;
                 await _refreshEntityList();
-                setState(() {});
               },
             ),
             IconButton(
@@ -101,7 +98,7 @@ class EntityListScreenState<T extends Entity<T>>
           waitingBuilder: (_) =>
               const Center(child: CircularProgressIndicator()),
           builder: (context, list) {
-            if (list!.isEmpty) {
+            if (list == null || list.isEmpty) {
               return const Center(
                   child: Text(
                 'No records found.',
@@ -171,8 +168,8 @@ class EntityListScreenState<T extends Entity<T>>
 
   @override
   void dispose() {
-    super.dispose();
     filterController.dispose();
+    super.dispose();
   }
 
   Future<void> _delete(Entity<T> entity) async {
