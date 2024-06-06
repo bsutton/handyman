@@ -30,6 +30,7 @@ class DaoJob extends Dao<Job> {
   @override
   Job fromMap(Map<String, dynamic> map) => Job.fromMap(map);
 
+  /// search for jobs given a user supplied filter string.
   Future<List<Job>> getByFilter(String? filter) async {
     final db = getDb();
 
@@ -43,10 +44,13 @@ select *
 from job j
 join customer c
   on c.id = j.customer_id
+join job_status js
+  on j.job_status_id = js.id
 where j.summary like ?
 or j.description like ?
 or c.name like ?
-''', [likeArg, likeArg, likeArg]);
+or js.name like ?
+''', [likeArg, likeArg, likeArg, likeArg]);
 
     return toList(data);
   }
