@@ -22,7 +22,8 @@ class DaoContact extends Dao<Contact> {
   Future<Contact?> getPrimaryForCustomer(Customer customer) async {
     final db = getDb();
     final data = await db.rawQuery('''
-select co.* from contact co
+select co.* 
+from contact co
 join customer_contact cc
   on co.id = cc.contact_id
 join customer cu
@@ -59,7 +60,8 @@ where cu.id =?
   Future<Contact?> getPrimaryForSupplier(Supplier supplier) async {
     final db = getDb();
     final data = await db.rawQuery('''
-select co.* from contact co
+select co.* 
+from contact co
 join supplier_contact cc
   on co.id = cc.contact_id
 join supplier cu

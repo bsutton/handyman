@@ -14,6 +14,7 @@ class DaoCustomer extends Dao<Customer> {
   @override
   String get tableName => 'customer';
 
+  /// Get the customer passed on the passed job.
   Future<Customer?> getByJob(Job? job) async {
     final db = getDb();
 
@@ -21,7 +22,7 @@ class DaoCustomer extends Dao<Customer> {
       return null;
     }
     final data = await db.rawQuery('''
-select j.* 
+select c.* 
 from job j
 join customer c
   on c.id = job.customer_id
@@ -38,7 +39,7 @@ where j.id =?
       return getAll();
     }
     final data = await db.rawQuery('''
-select * 
+select c.* 
 from customer c
 where c.name like ?
 ''', ['''%$filter%''']);

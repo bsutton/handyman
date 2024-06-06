@@ -40,7 +40,7 @@ class DaoJob extends Dao<Job> {
 
     final likeArg = '''%$filter%''';
     final data = await db.rawQuery('''
-select * 
+select j.*
 from job j
 join customer c
   on c.id = j.customer_id

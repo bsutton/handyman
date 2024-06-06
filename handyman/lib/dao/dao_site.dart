@@ -26,7 +26,8 @@ class DaoSite extends Dao<Site> {
 
     final db = getDb();
     final data = await db.rawQuery('''
-select s.* from site s
+select s.* 
+from site s
 join customer_site sc
   on s.id = sc.site_id
 join customer cu
@@ -48,7 +49,8 @@ and sc.`primary` = 1''', [customer.id]);
 
     final db = getDb();
     final data = await db.rawQuery('''
-select s.* from site s
+select s.* 
+from site s
 join supplier_site sc
   on s.id = sc.site_id
 join supplier cu
@@ -69,7 +71,8 @@ and sc.`primary` = 1''', [supplier.id]);
       return [];
     }
     final data = await db.rawQuery('''
-select s.* from site s
+select s.* 
+from site s
 join customer_site sc
   on s.id = sc.site_id
 join customer cu
@@ -87,7 +90,8 @@ where cu.id =?
       return [];
     }
     final data = await db.rawQuery('''
-select s.* from site s
+select s.* 
+from site s
 join supplier_site sc
   on s.id = sc.site_id
 join supplier cu
