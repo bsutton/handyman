@@ -60,7 +60,9 @@ Future<void> _executeScript(Database db, String pathToScript) async {
   final statements = await parseSqlFile(sql);
 
   for (final statement in statements) {
-    if (Strings.isEmpty(statement)) continue;
+    if (Strings.isEmpty(statement)) {
+      continue;
+    }
     print('running: $statement');
     await db.transaction((txn) async => txn.execute(statement));
   }
