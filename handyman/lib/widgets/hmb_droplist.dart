@@ -13,14 +13,11 @@ class HMBDroplist<T> extends StatelessWidget {
     this.format,
   });
 
-  final T initialValue;
+  final T? initialValue;
   final String labelText;
   final List<T> items;
-
   final bool leadingSpace;
-
   final void Function(T? value) onChanged;
-
   final String Function(T value)? format;
 
   @override
@@ -28,13 +25,14 @@ class HMBDroplist<T> extends StatelessWidget {
         children: [
           if (leadingSpace) const SizedBox(height: 16),
           DropdownButtonFormField<T>(
-              value: initialValue,
-              decoration: InputDecoration(
-                labelText: labelText,
-                border: const OutlineInputBorder(),
-              ),
-              items: _getDropdownItems(items),
-              onChanged: onChanged),
+            value: initialValue,
+            decoration: InputDecoration(
+              labelText: labelText,
+              border: const OutlineInputBorder(),
+            ),
+            items: _getDropdownItems(items),
+            onChanged: onChanged,
+          ),
         ],
       );
 
