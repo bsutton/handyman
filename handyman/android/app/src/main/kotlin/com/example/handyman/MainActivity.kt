@@ -1,4 +1,4 @@
-package com.example.handyman
+package dev.onepub.handyman
 
 import io.flutter.embedding.android.FlutterActivity
 
