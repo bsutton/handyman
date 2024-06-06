@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:fleather/fleather.dart';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:june/june.dart';
@@ -37,9 +36,6 @@ class JobEditScreenState extends State<JobEditScreen>
   late TextEditingController _summaryController;
   late RichEditorController _descriptionController;
   late FocusNode _descriptionFocusNode;
-
-  late ParchmentDocument document;
-
   late DateTime _selectedDate;
 
   @override
@@ -47,10 +43,14 @@ class JobEditScreenState extends State<JobEditScreen>
     super.initState();
     _selectedDate = widget.job?.startDate ?? DateTime.now();
     _summaryController = TextEditingController(text: widget.job?.summary ?? '');
-
     _descriptionController = RichEditorController(
         parchmentAsJsonString: widget.job?.description ?? '');
     _descriptionFocusNode = FocusNode();
+
+    // Initialize SelectJobStatus state
+    if (widget.job != null) {
+      June.getState(SelectJobStatus.new).jobStatusId = widget.job!.jobStatusId;
+    }
   }
 
   @override
@@ -116,8 +116,12 @@ class JobEditScreenState extends State<JobEditScreen>
         selectedCustomer: June.getState(SelectedCustomer.new),
         onSelected: (customer) => setState(() {
           setState(() {
-            June.getState(SelectedSite.new).siteId = null;
             June.getState(SelectedCustomer.new).customerId = customer?.id;
+
+            /// we have changed customers so the site and contact lists
+            /// are no longer valid.
+            June.getState(SelectedSite.new).siteId = null;
+            June.getState(SelectedContact.new).contactId = null;
           });
         }),
       );
@@ -131,7 +135,11 @@ class JobEditScreenState extends State<JobEditScreen>
           initialValue: list.firstWhere(
               (element) =>
                   element.id == June.getState(SelectJobStatus.new).jobStatusId,
-              orElse: () => list[0]),
+              orElse: () {
+            final defaultState = list[0];
+            June.getState(SelectJobStatus.new).jobStatusId = defaultState.id;
+            return defaultState;
+          }),
           onChanged: (status) => setState(
                 () {
                   June.getState(SelectJobStatus.new).jobStatusId = status?.id;
