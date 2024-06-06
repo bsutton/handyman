@@ -47,6 +47,17 @@ tool/build.dart
 This script updates the asset/sql/upgrade_list.json file which is 
 used at run time to identify the set of upgrade assets.
 
+During development we try to keep the number of updates grouped 
+into a single version.
+This is not a hard rule.
+Essentially during a chunk of dev just agregate db updates into 
+a single vNN.sql file until you are ready to push code.
+This may required you to keep deleting your database (the start up code reports its location).
+You can just do a 'rm <path to db>' and the app will recreate the db.
+
+If another developer is actively working on the db version upgrades will need
+to be co-ordinated and this may require more frequent version number releases.
+
 
 # Web target
 When running handyman in a browser sqlite needs to have web support added to the package:
