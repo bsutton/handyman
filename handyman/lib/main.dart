@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
+import 'package:provider/provider.dart';
 
 import 'crud/customer/customer_list_screen.dart';
-import 'crud/job/job_list_screen.dart';
 import 'crud/supplier/supplier_list_screen.dart';
 import 'crud/system/system_edit_screen.dart';
 import 'dao/dao_system.dart';
 import 'database/management/database_helper.dart';
+import 'widgets/blocking_ui.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  runApp(const MyApp());
+}
+
+Future<void> _initDb() async {
   await DatabaseHelper.initDatabase();
 
-  print('Database located at: ${await DatabaseHelper.pathToDatabase()}');
+  // await Future.delayed(const Duration(seconds: 60), () {});
 
-  runApp(const MyApp());
+  print('Database located at: ${await DatabaseHelper.pathToDatabase()}');
 }
 
 class MyApp extends StatelessWidget {
@@ -23,13 +28,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        title: 'Handyman',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+      title: 'Handyman',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: ChangeNotifierProvider(
+        create: (_) => BlockingUI(),
+        child: Scaffold(
+          body: BlockingUIBuilder<void>(
+            future: _initDb,
+            stacktrace: StackTrace.current,
+            label: 'Upgrade your database.',
+            builder: (context, _) =>
+                const HomeWithDrawer(initialScreen: JobListScreen()),
+          ),
         ),
-        home: const HomeWithDrawer(initialScreen: JobListScreen()),
-      );
+      ));
 }
 
 class DrawerItem {
@@ -92,3 +107,19 @@ class HomeWithDrawer extends StatelessWidget {
         body: initialScreen,
       );
 }
+
+class JobListScreen extends StatelessWidget {
+  const JobListScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Jobs'),
+        ),
+        body: const Center(
+          child: Text('Job List Screen Content'),
+        ),
+      );
+}
+
+// Similarly, you can wrap CustomerListScreen, SupplierListScreen, and SystemEditScreen with Scaffold if they are not already.

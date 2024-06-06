@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  completer_ex: ^4.0.3
   date_time_format: ^2.0.1
   direct_caller_sim_choice: ^1.0.5
   email_validator: ^2.1.17
@@ -44,8 +45,10 @@ dependencies:
   parchment_delta: ^1.0.0
   path: ^1.9.0
   path_provider: ^2.0.0
+  provider: ^6.1.2
   sqflite: ^2.3.2
   sqflite_common_ffi: ^2.3.3
+  stacktrace_impl: ^2.3.0
   strings: ^3.1.1
   url_launcher: ^6.2.5
 
