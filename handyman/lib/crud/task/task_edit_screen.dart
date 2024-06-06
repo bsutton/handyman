@@ -6,13 +6,16 @@ import 'package:money2/money2.dart';
 
 import '../../dao/dao_task.dart';
 import '../../dao/dao_task_status.dart';
+import '../../dao/join_adaptors/job_site_join_adaptor copy.dart';
 import '../../entity/job.dart';
 import '../../entity/task.dart';
 import '../../entity/task_status.dart';
+import '../../widgets/hmb_crud_checklist.dart';
 import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_text_area.dart';
 import '../../widgets/hmb_text_field.dart';
 import '../base_nested/nested_edit_screen.dart';
+import '../base_nested/nested_list_screen.dart';
 
 class TaskEditScreen extends StatefulWidget {
   const TaskEditScreen({required this.job, super.key, this.task});
@@ -120,7 +123,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
               HMBTextField(
                 controller: _effortInHoursController,
                 focusNode: _effortInHoursFocusNode,
-                labelText: 'Effort',
+                labelText: 'Effort (decimal hours)',
                 keyboardType: TextInputType.number,
               ),
               FutureBuilderEx(
@@ -147,6 +150,10 @@ class _TaskEditScreenState extends State<TaskEditScreen>
                   });
                 },
               ),
+              /// Check List CRUD
+              HBMCrudCheckList<Task>(
+                  parent: Parent(widget.task),
+                  daoJoin: TaskCheckListJoinAdaptor())
             ],
           ),
         ),

@@ -1,0 +1,99 @@
+// ignore_for_file: library_private_types_in_public_api
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:june/june.dart';
+
+import '../../dao/dao_checklist.dart';
+import '../../dao/join_adaptors/dao_join_adaptor.dart';
+import '../../entity/check_list.dart';
+import '../../entity/customer.dart';
+import '../../entity/entity.dart';
+import '../../widgets/hmb_droplist.dart';
+import '../../widgets/hmb_text_field.dart';
+import '../base_nested/nested_edit_screen.dart';
+
+class CheckListEditScreen<P extends Entity<P>> extends StatefulWidget {
+  const CheckListEditScreen({
+    required this.parent,
+    required this.daoJoin,
+    super.key,
+    this.checklist,
+    this.checkListType,
+  });
+  final P parent;
+  final CheckList? checklist;
+  final DaoJoinAdaptor<CheckList, P> daoJoin;
+  final CheckListType? checkListType;
+
+  @override
+  _CheckListEditScreenState createState() => _CheckListEditScreenState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<CheckList?>('CheckList', checklist));
+  }
+}
+
+class _CheckListEditScreenState extends State<CheckListEditScreen>
+    implements NestedEntityState<CheckList> {
+  late TextEditingController _nameController;
+  late TextEditingController _descriptionController;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.checklist?.name);
+    _descriptionController =
+        TextEditingController(text: widget.checklist?.description);
+    June.getState(CheckListTypeStatus.new).checkListType =
+        widget.checkListType ?? CheckListType.global;
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      NestedEntityEditScreen<CheckList, Customer>(
+        entity: widget.checklist,
+        entityName: 'CheckList',
+        dao: DaoCheckList(),
+        entityState: this,
+        onInsert: (checklist) async =>
+            widget.daoJoin.insertForParent(checklist!, widget.parent),
+        editor: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Add other form fields for the new fields
+            HMBTextField(controller: _nameController, labelText: 'Name'),
+            HMBTextField(
+                controller: _descriptionController, labelText: 'Description'),
+            if (widget.checkListType == null)
+              HMBDroplist<CheckListType>(
+                  initialValue:
+                      widget.checklist?.listType ?? CheckListType.global,
+                  labelText: 'Checklist Type',
+                  items: CheckListType.values,
+                  onChanged: (item) => June.getState(CheckListTypeStatus.new)
+                      .checkListType = item!,
+                  format: (taskStatus) => taskStatus.name)
+          ],
+        ),
+      );
+
+  @override
+  Future<CheckList> forUpdate(CheckList checklist) async => CheckList.forUpdate(
+      entity: checklist,
+      name: _nameController.text,
+      description: _descriptionController.text,
+      listType: June.getState(CheckListTypeStatus.new).checkListType);
+
+  @override
+  Future<CheckList> forInsert() async => CheckList.forInsert(
+      name: _nameController.text,
+      description: _descriptionController.text,
+      listType: June.getState(CheckListTypeStatus.new).checkListType);
+}
+
+class CheckListTypeStatus {
+  CheckListTypeStatus();
+
+  CheckListType checkListType = CheckListType.owned;
+}

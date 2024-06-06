@@ -1,6 +1,12 @@
 import 'entity.dart';
 
-enum ListType { global, defaultList, owned }
+enum CheckListType {
+  owned, // owned by an entity such as task
+  global, // not attached to any entity
+  defaultList
+
+  /// Used to populate new checklists from a default set of items
+}
 
 class CheckList extends Entity<CheckList> {
   CheckList({
@@ -29,14 +35,14 @@ class CheckList extends Entity<CheckList> {
         id: map['id'] as int,
         name: map['name'] as String,
         description: map['description'] as String,
-        listType: ListType.values[(map['list_type'] as int) - 1],
+        listType: CheckListType.values[(map['list_type'] as int) - 1],
         createdDate: DateTime.parse(map['createdDate'] as String),
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
       );
 
   String name;
   String description;
-  ListType listType;
+  CheckListType listType;
 
   @override
   Map<String, dynamic> toMap() => {
