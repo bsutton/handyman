@@ -57,10 +57,12 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
   }
 
   Future<void> _refreshEntityList() async {
-    setState(() {
-      print('refreshing');
-      entities = _fetchList();
-    });
+    if (mounted) {
+      setState(() {
+        print('refreshing');
+        entities = _fetchList();
+      });
+    }
   }
 
   Future<List<C>> _fetchList() async {
