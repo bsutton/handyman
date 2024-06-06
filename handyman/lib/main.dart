@@ -3,6 +3,7 @@ import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:provider/provider.dart';
 
 import 'crud/customer/customer_list_screen.dart';
+import 'crud/job/job_list_screen.dart';
 import 'crud/supplier/supplier_list_screen.dart';
 import 'crud/system/system_edit_screen.dart';
 import 'dao/dao_system.dart';
@@ -108,18 +109,6 @@ class HomeWithDrawer extends StatelessWidget {
       );
 }
 
-class JobListScreen extends StatelessWidget {
-  const JobListScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Jobs'),
-        ),
-        body: const Center(
-          child: Text('Job List Screen Content'),
-        ),
-      );
-}
 
 // Similarly, you can wrap CustomerListScreen, SupplierListScreen, and SystemEditScreen with Scaffold if they are not already.
