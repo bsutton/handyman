@@ -3,8 +3,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/dao_customer.dart';
+import '../../dao/join_adaptors/customer_contact_join_adaptor.dart';
+import '../../dao/join_adaptors/customer_site_join_adaptor.dart';
 import '../../entity/customer.dart';
+import '../../util/money_ex.dart';
+import '../../widgets/hbm_crud_contact.dart';
+import '../../widgets/hmb_crud_site.dart';
+import '../../widgets/hmb_droplist.dart';
+import '../../widgets/hmb_form_section.dart';
+import '../../widgets/hmb_switch.dart';
+import '../../widgets/hmb_text_field.dart';
 import '../base_full_screen/entity_edit_screen.dart';
+import '../base_nested/nested_list_screen.dart';
 
 class CustomerEditScreen extends StatefulWidget {
   const CustomerEditScreen({super.key, this.customer});
@@ -22,17 +32,26 @@ class CustomerEditScreen extends StatefulWidget {
 class _CustomerEditScreenState extends State<CustomerEditScreen>
     implements EntityState<Customer> {
   late TextEditingController _nameController;
-  late TextEditingController _disbarredController;
-  late TextEditingController _customerTypeController;
+  late TextEditingController _hourlyRateController;
+  late bool _disbarred;
+  late CustomerType _selectedCustomerType;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.customer?.name);
-    _disbarredController =
-        TextEditingController(text: widget.customer?.disbarred.toString());
-    _customerTypeController =
-        TextEditingController(text: widget.customer?.customerType.toString());
+    _hourlyRateController = TextEditingController(
+        text: widget.customer?.hourlyRate.amount.toString() ?? '0');
+    _disbarred = widget.customer?.disbarred ?? false;
+    _selectedCustomerType =
+        widget.customer?.customerType ?? CustomerType.residential;
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _hourlyRateController.dispose();
+    super.dispose();
   }
 
   @override
@@ -44,25 +63,54 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
         editor: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextFormField(
-              autofocus: true,
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a name';
-                }
-                return null;
-              },
-            ),
-            // Add other form fields for the new fields
-            TextFormField(
-              controller: _disbarredController,
-              decoration: const InputDecoration(labelText: 'Disbarred'),
-            ),
-            TextFormField(
-              controller: _customerTypeController,
-              decoration: const InputDecoration(labelText: 'Customer Type'),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                HMBFormSection(
+                  children: [
+                    Text(
+                      'Customer Details',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    HMBTextField(
+                      autofocus: true,
+                      controller: _nameController,
+                      labelText: 'Name',
+                      required: true,
+                    ),
+                    HMBTextField(
+                      controller: _hourlyRateController,
+                      labelText: 'Hourly Rate (in cents)',
+                      keyboardType: TextInputType.number,
+                      required: true,
+                    ),
+                    HMBSwitch(
+                        labelText: 'Disbarred',
+                        initialValue: _disbarred,
+                        onChanged: (value) {
+                          setState(() {
+                            _disbarred = value;
+                          });
+                        }),
+                    HMBDroplist<CustomerType>(
+                        initialValue: _selectedCustomerType,
+                        items: CustomerType.values,
+                        labelText: 'Customer Type',
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectedCustomerType = newValue!;
+                          });
+                        }),
+                  ],
+                ),
+                HMBCrudContact(
+                  parent: Parent(widget.customer),
+                  daoJoin: CustomerContactJoinAdaptor(),
+                ),
+                HBMCrudSite(
+                    daoJoin: CustomerSiteJoinAdaptor(),
+                    parent: Parent(widget.customer)),
+              ],
             ),
           ],
         ),
@@ -72,12 +120,14 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
   Future<Customer> forUpdate(Customer customer) async => Customer.forUpdate(
       entity: customer,
       name: _nameController.text,
-      disbarred: _disbarredController.text.toLowerCase() == 'true',
-      customerType: CustomerType.residential);
+      disbarred: _disbarred,
+      customerType: _selectedCustomerType,
+      hourlyRate: MoneyEx.tryParse(_hourlyRateController.text));
 
   @override
   Future<Customer> forInsert() async => Customer.forInsert(
       name: _nameController.text,
-      disbarred: _disbarredController.text.toLowerCase() == 'true',
-      customerType: CustomerType.residential);
+      disbarred: _disbarred,
+      customerType: _selectedCustomerType,
+      hourlyRate: MoneyEx.tryParse(_hourlyRateController.text));
 }

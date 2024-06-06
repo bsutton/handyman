@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 
 class HMBChildCrudCard extends StatelessWidget {
   const HMBChildCrudCard({
-    required this.headline,
     required this.crudListScreen,
+    this.headline,
     super.key,
   });
 
   final Widget crudListScreen;
-  final String headline;
+  final String? headline;
 
   @override
   Widget build(BuildContext context) => Card(
@@ -20,10 +20,11 @@ class HMBChildCrudCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                headline,
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
+              if (headline != null)
+                Text(
+                  headline!,
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
               const SizedBox(height: 16),
               SizedBox(
                 height: 200,

@@ -1,3 +1,5 @@
+import 'package:money2/money2.dart';
+
 import 'entity.dart';
 
 class System extends Entity<System> {
@@ -16,6 +18,9 @@ class System extends Entity<System> {
     required this.officeNumber,
     required this.emailAddress,
     required this.webUrl,
+    required this.defaultHourlyRate,
+    required this.termsUrl,
+    required this.defaultCallOutFee,
     required super.createdDate,
     required super.modifiedDate,
   }) : super();
@@ -34,6 +39,9 @@ class System extends Entity<System> {
     required this.officeNumber,
     required this.emailAddress,
     required this.webUrl,
+    required this.defaultHourlyRate,
+    required this.termsUrl,
+    required this.defaultCallOutFee,
   }) : super.forInsert();
 
   System.forUpdate({
@@ -51,6 +59,9 @@ class System extends Entity<System> {
     required this.officeNumber,
     required this.emailAddress,
     required this.webUrl,
+    required this.defaultHourlyRate,
+    required this.termsUrl,
+    required this.defaultCallOutFee,
   }) : super.forUpdate();
 
   factory System.fromMap(Map<String, dynamic> map) => System(
@@ -68,6 +79,13 @@ class System extends Entity<System> {
         officeNumber: map['officeNumber'] as String?,
         emailAddress: map['emailAddress'] as String?,
         webUrl: map['webUrl'] as String?,
+        defaultHourlyRate: Money.fromInt(
+            map['default_hourly_rate'] as int? ?? 0,
+            isoCode: 'AUD'),
+        termsUrl: map['terms_url'] as String?,
+        defaultCallOutFee: Money.fromInt(
+            map['default_call_out_fee'] as int? ?? 0,
+            isoCode: 'AUD'),
         createdDate: DateTime.tryParse((map['createdDate']) as String? ?? '') ??
             DateTime.now(),
         modifiedDate:
@@ -88,6 +106,9 @@ class System extends Entity<System> {
   String? officeNumber;
   String? emailAddress;
   String? webUrl;
+  Money? defaultHourlyRate; // in cents
+  String? termsUrl; // link to terms and conditions
+  Money? defaultCallOutFee; // call out fee in cents
 
   @override
   Map<String, dynamic> toMap() => {
@@ -105,6 +126,9 @@ class System extends Entity<System> {
         'officeNumber': officeNumber,
         'emailAddress': emailAddress,
         'webUrl': webUrl,
+        'default_hourly_rate': defaultHourlyRate?.minorUnits.toInt(),
+        'terms_url': termsUrl,
+        'default_call_out_fee': defaultCallOutFee?.minorUnits.toInt(),
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };

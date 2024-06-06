@@ -1,9 +1,11 @@
+import 'package:money2/money2.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:strings/strings.dart';
 
 import '../entity/customer.dart';
 import '../entity/job.dart';
 import 'dao.dart';
+import 'dao_system.dart';
 
 class DaoCustomer extends Dao<Customer> {
   Future<void> createTable(Database db, int version) async {}
@@ -45,5 +47,18 @@ where c.name like ?
 ''', ['''%$filter%''']);
 
     return toList(data);
+  }
+
+  Future<Money> getHourlyRate(int customerId) async {
+    final customer = await getById(customerId);
+
+    Money hourlyRate;
+    if (customer?.hourlyRate == null) {
+      hourlyRate = (await DaoSystem().get())?.defaultHourlyRate ??
+          Money.fromInt(0, isoCode: 'AUD');
+    } else {
+      hourlyRate = customer?.hourlyRate ?? Money.fromInt(0, isoCode: 'AUD');
+    }
+    return hourlyRate;
   }
 }

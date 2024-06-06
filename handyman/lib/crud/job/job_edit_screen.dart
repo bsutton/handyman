@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:june/june.dart';
+import 'package:money2/money2.dart';
 
 import '../../dao/dao_customer.dart';
 import '../../dao/dao_job.dart';
@@ -35,7 +36,11 @@ class JobEditScreenState extends State<JobEditScreen>
     implements EntityState<Job> {
   late TextEditingController _summaryController;
   late RichEditorController _descriptionController;
+  late TextEditingController _hourlyRateController;
+  late TextEditingController _callOutFeeController;
   late FocusNode _descriptionFocusNode;
+  late FocusNode _hourlyRateFocusNode;
+  late FocusNode _callOutFeeFocusNode;
   late DateTime _selectedDate;
 
   @override
@@ -45,7 +50,13 @@ class JobEditScreenState extends State<JobEditScreen>
     _summaryController = TextEditingController(text: widget.job?.summary ?? '');
     _descriptionController = RichEditorController(
         parchmentAsJsonString: widget.job?.description ?? '');
+    _hourlyRateController =
+        TextEditingController(text: widget.job?.hourlyRate?.toString() ?? '');
+    _callOutFeeController =
+        TextEditingController(text: widget.job?.callOutFee?.toString() ?? '');
     _descriptionFocusNode = FocusNode();
+    _hourlyRateFocusNode = FocusNode();
+    _callOutFeeFocusNode = FocusNode();
 
     // Initialize SelectJobStatus state
     if (widget.job != null) {
@@ -74,6 +85,8 @@ class JobEditScreenState extends State<JobEditScreen>
                           _chooseStatus(),
                           _chooseDate(),
                           _showSummary(),
+                          _showHourlyRate(),
+                          _showCallOutFee(),
                           SizedBox(
                             height: 200,
                             child: RichEditor(
@@ -97,8 +110,22 @@ class JobEditScreenState extends State<JobEditScreen>
         labelText: 'Job Summary',
       );
 
+  Widget _showHourlyRate() => HMBTextField(
+        controller: _hourlyRateController,
+        focusNode: _hourlyRateFocusNode,
+        labelText: 'Hourly Rate',
+        keyboardType: TextInputType.number,
+      );
+
+  Widget _showCallOutFee() => HMBTextField(
+        controller: _callOutFeeController,
+        focusNode: _callOutFeeFocusNode,
+        labelText: 'Call Out Fee',
+        keyboardType: TextInputType.number,
+      );
+
   HMBChildCrudCard _manageTasks() => HMBChildCrudCard(
-        headline: 'Tasks',
+        // headline: 'Tasks',
         crudListScreen: TaskListScreen(parent: Parent(widget.job)),
       );
 
@@ -175,7 +202,9 @@ class JobEditScreenState extends State<JobEditScreen>
       startDate: _selectedDate,
       siteId: June.getState(SelectedSite.new).siteId,
       contactId: June.getState(SelectedContact.new).contactId,
-      jobStatusId: June.getState(SelectJobStatus.new).jobStatusId);
+      jobStatusId: June.getState(SelectJobStatus.new).jobStatusId,
+      hourlyRate: Money.tryParse(_hourlyRateController.text, isoCode: 'AUD'),
+      callOutFee: Money.tryParse(_callOutFeeController.text, isoCode: 'AUD'));
 
   @override
   Future<Job> forInsert() async => Job.forInsert(
@@ -185,13 +214,19 @@ class JobEditScreenState extends State<JobEditScreen>
       startDate: _selectedDate,
       siteId: June.getState(SelectedSite.new).siteId,
       contactId: June.getState(SelectedContact.new).contactId,
-      jobStatusId: June.getState(SelectJobStatus.new).jobStatusId);
+      jobStatusId: June.getState(SelectJobStatus.new).jobStatusId,
+      hourlyRate: Money.tryParse(_hourlyRateController.text, isoCode: 'AUD'),
+      callOutFee: Money.tryParse(_callOutFeeController.text, isoCode: 'AUD'));
 
   @override
   void dispose() {
     _summaryController.dispose();
     _descriptionController.dispose();
+    _hourlyRateController.dispose();
+    _callOutFeeController.dispose();
     _descriptionFocusNode.dispose();
+    _hourlyRateFocusNode.dispose();
+    _callOutFeeFocusNode.dispose();
     super.dispose();
   }
 }

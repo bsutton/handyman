@@ -1,3 +1,5 @@
+import 'package:money2/money2.dart';
+
 import 'entity.dart';
 
 enum CustomerType { residential, realestate, tradePartner, community }
@@ -8,6 +10,7 @@ class Customer extends Entity<Customer> {
     required this.name,
     required this.disbarred,
     required this.customerType,
+    required this.hourlyRate,
     required super.createdDate,
     required super.modifiedDate,
   }) : super();
@@ -16,6 +19,7 @@ class Customer extends Entity<Customer> {
     required this.name,
     required this.disbarred,
     required this.customerType,
+    required this.hourlyRate,
   }) : super.forInsert();
 
   Customer.forUpdate({
@@ -23,6 +27,7 @@ class Customer extends Entity<Customer> {
     required this.name,
     required this.disbarred,
     required this.customerType,
+    required this.hourlyRate,
   }) : super.forUpdate();
 
   factory Customer.fromMap(Map<String, dynamic> map) => Customer(
@@ -32,10 +37,14 @@ class Customer extends Entity<Customer> {
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
         disbarred: map['disbarred'] as int == 1,
         customerType: CustomerType.values[map['customerType'] as int],
+        hourlyRate: Money.fromInt(map['default_hourly_rate'] as int? ?? 0,
+            isoCode: 'AUD'),
       );
+
   String name;
   bool disbarred;
   CustomerType customerType;
+  Money hourlyRate;
 
   @override
   Map<String, dynamic> toMap() => {
@@ -45,5 +54,6 @@ class Customer extends Entity<Customer> {
         'modifiedDate': modifiedDate.toIso8601String(),
         'disbarred': disbarred ? 1 : 0,
         'customerType': customerType.index,
+        'default_hourly_rate': hourlyRate.minorUnits.toInt(),
       };
 }

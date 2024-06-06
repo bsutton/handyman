@@ -1,39 +1,33 @@
-import 'dart:ui';
-
 import 'entity.dart';
 
-class JobStatus extends Entity<JobStatus> {
-  JobStatus({
+class TaskStatus extends Entity<TaskStatus> {
+  TaskStatus({
     required super.id,
     required this.name,
     required this.description,
     required this.colorCode,
-    required this.hidden,
     required super.createdDate,
     required super.modifiedDate,
   }) : super();
 
-  JobStatus.forInsert({
+  TaskStatus.forInsert({
     required this.name,
     required this.description,
     required this.colorCode,
-    this.hidden = 0, // Default value for new entries
   }) : super.forInsert();
 
-  JobStatus.forUpdate({
+  TaskStatus.forUpdate({
     required super.entity,
     required this.name,
     required this.description,
     required this.colorCode,
-    required this.hidden,
   }) : super.forUpdate();
 
-  factory JobStatus.fromMap(Map<String, dynamic> map) => JobStatus(
+  factory TaskStatus.fromMap(Map<String, dynamic> map) => TaskStatus(
         id: map['id'] as int,
         name: map['name'] as String,
         description: map['description'] as String,
         colorCode: map['color_code'] as String,
-        hidden: map['hidden'] as int,
         createdDate: DateTime.parse(map['createdDate'] as String),
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
       );
@@ -41,7 +35,6 @@ class JobStatus extends Entity<JobStatus> {
   String name;
   String description;
   String colorCode;
-  int hidden;
 
   @override
   Map<String, dynamic> toMap() => {
@@ -49,21 +42,7 @@ class JobStatus extends Entity<JobStatus> {
         'name': name,
         'description': description,
         'color_code': colorCode,
-        'hidden': hidden,
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };
-
-  Color getColour() {
-    // Remove the leading `#` if present
-    var hex = colorCode.replaceAll('#', '');
-
-    // If the hex code is 6 characters long, add the opacity value (ff)
-    if (hex.length == 6) {
-      hex = 'ff$hex';
-    }
-
-    // Parse the hex string to an integer and create a Color object
-    return Color(int.parse(hex, radix: 16));
-  }
 }

@@ -1,9 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:future_builder_ex/future_builder_ex.dart';
+import 'package:june/june.dart';
+import 'package:money2/money2.dart';
 
 import '../../dao/dao_task.dart';
+import '../../dao/dao_task_status.dart';
 import '../../entity/job.dart';
 import '../../entity/task.dart';
+import '../../entity/task_status.dart';
+import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_text_area.dart';
 import '../../widgets/hmb_text_field.dart';
 import '../base_nested/nested_edit_screen.dart';
@@ -27,10 +33,16 @@ class _TaskEditScreenState extends State<TaskEditScreen>
     implements NestedEntityState<Task> {
   late TextEditingController _nameController;
   late TextEditingController _descriptionController;
-  // late RichEditorController _descriptionController;
+  late TextEditingController _estimatedCostController;
+  late TextEditingController _effortInHoursController;
+  late TextEditingController _taskStatusIdController;
   late bool _completed;
   late FocusNode _nameFocusNode;
   late FocusNode _descriptionFocusNode;
+  late FocusNode _costFocusNode;
+  late FocusNode _estimatedCostFocusNode;
+  late FocusNode _effortInHoursFocusNode;
+  late FocusNode _itemTypeIdFocusNode;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -38,17 +50,23 @@ class _TaskEditScreenState extends State<TaskEditScreen>
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.task?.name);
-
-    // _descriptionController = RichEditorController(
-    //     parchmentAsJsonString: widget.task?.description ?? '');
-
     _descriptionController =
         TextEditingController(text: widget.task?.description);
+    _estimatedCostController =
+        TextEditingController(text: widget.task?.estimatedCost.toString());
+    _effortInHoursController =
+        TextEditingController(text: widget.task?.effortInHours.toString());
+    _taskStatusIdController =
+        TextEditingController(text: widget.task?.taskStatusId.toString());
 
     _completed = widget.task?.completed ?? false;
 
     _nameFocusNode = FocusNode();
     _descriptionFocusNode = FocusNode();
+    _costFocusNode = FocusNode();
+    _estimatedCostFocusNode = FocusNode();
+    _effortInHoursFocusNode = FocusNode();
+    _itemTypeIdFocusNode = FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_nameFocusNode);
@@ -59,8 +77,15 @@ class _TaskEditScreenState extends State<TaskEditScreen>
   void dispose() {
     _nameController.dispose();
     _descriptionController.dispose();
+    _estimatedCostController.dispose();
+    _effortInHoursController.dispose();
+    _taskStatusIdController.dispose();
     _nameFocusNode.dispose();
     _descriptionFocusNode.dispose();
+    _costFocusNode.dispose();
+    _estimatedCostFocusNode.dispose();
+    _effortInHoursFocusNode.dispose();
+    _itemTypeIdFocusNode.dispose();
     super.dispose();
   }
 
@@ -86,14 +111,32 @@ class _TaskEditScreenState extends State<TaskEditScreen>
                 focusNode: _descriptionFocusNode,
                 labelText: 'Description',
               ),
-              // SizedBox(
-              //   height: 200,
-              //   child: RichEditor(
-              //     controller: _descriptionController,
-              //     key: UniqueKey(),
-              //     focusNode: _descriptionFocusNode,
-              //   ),
-              // ),
+              HMBTextField(
+                controller: _estimatedCostController,
+                focusNode: _estimatedCostFocusNode,
+                labelText: 'Estimated Cost',
+                keyboardType: TextInputType.number,
+              ),
+              HMBTextField(
+                controller: _effortInHoursController,
+                focusNode: _effortInHoursFocusNode,
+                labelText: 'Effort',
+                keyboardType: TextInputType.number,
+              ),
+              FutureBuilderEx(
+                  // ignore: discarded_futures
+                  future: DaoTaskStatus().getAll(),
+                  builder: (context, items) => FutureBuilderEx(
+                      future:
+                          // ignore: discarded_futures
+                          DaoTaskStatus().getById(widget.task?.taskStatusId),
+                      builder: (context, taskStatus) => HMBDroplist<TaskStatus>(
+                          initialValue: taskStatus ?? items!.first,
+                          labelText: 'Task Status',
+                          items: items!,
+                          onChanged: (item) =>
+                              June.getState(TaskStatusState.new).taskStatusId =
+                                  item?.id))),
               SwitchListTile(
                 title: const Text('Completed'),
                 value: _completed,
@@ -113,17 +156,29 @@ class _TaskEditScreenState extends State<TaskEditScreen>
         entity: task,
         jobId: widget.job.id,
         name: _nameController.text,
-        description: _descriptionController
-            .text, // jsonEncode(_descriptionController.document),
+        description: _descriptionController.text,
         completed: _completed,
+        estimatedCost:
+            Money.tryParse(_estimatedCostController.text, isoCode: 'AUD'),
+        effortInHours: Fixed.tryParse(_effortInHoursController.text),
+        taskStatusId: int.tryParse(_taskStatusIdController.text) ?? 0,
       );
 
   @override
   Future<Task> forInsert() async => Task.forInsert(
         jobId: widget.job.id,
         name: _nameController.text,
-        description: _descriptionController
-            .text, // jsonEncode(_descriptionController.document),
+        description: _descriptionController.text,
         completed: _completed,
+        estimatedCost:
+            Money.tryParse(_estimatedCostController.text, isoCode: 'AUD'),
+        effortInHours: Fixed.tryParse(_effortInHoursController.text),
+        taskStatusId: int.tryParse(_taskStatusIdController.text) ?? 0,
       );
+}
+
+class TaskStatusState {
+  TaskStatusState();
+
+  int? taskStatusId;
 }

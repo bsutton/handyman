@@ -4,6 +4,7 @@ class HMBTextField extends StatelessWidget {
   const HMBTextField(
       {required this.controller,
       required this.labelText,
+      this.keyboardType = TextInputType.text,
       this.required = false,
       this.validator,
       this.focusNode,
@@ -19,6 +20,7 @@ class HMBTextField extends StatelessWidget {
   final bool autofocus;
   final bool required;
   final bool leadingSpace;
+  final TextInputType keyboardType;
   final void Function(String?)? onChanged;
 
   @override
@@ -30,6 +32,7 @@ class HMBTextField extends StatelessWidget {
             controller: controller,
             focusNode: focusNode,
             autofocus: autofocus,
+            keyboardType: keyboardType,
             decoration: InputDecoration(
               labelText: labelText,
               border: const OutlineInputBorder(),

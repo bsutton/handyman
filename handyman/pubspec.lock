@@ -177,6 +177,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1-beta.4"
+  decimal:
+    dependency: transitive
+    description:
+      name: decimal
+      sha256: "24a261d5d5c87e86c7651c417a5dbdf8bcd7080dd592533910e8d0505a279f21"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.3"
   dev_build:
     dependency: transitive
     description:
@@ -273,6 +281,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+1"
+  fixed:
+    dependency: "direct main"
+    description:
+      name: fixed
+      sha256: "0d55e0a083026060f0b50c7f6e00d40a772d6a6b5e1812bc6e57c75ea58c21cc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.3.0"
   fixnum:
     dependency: transitive
     description:
@@ -568,6 +584,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  money2:
+    dependency: "direct main"
+    description:
+      name: money2
+      sha256: a2365771d74d58ae1ddf2f9588802d4442a3de021642674ed22ac2da60fd25ea
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.1"
   native_synchronization:
     dependency: transitive
     description:
@@ -736,6 +760,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  rational:
+    dependency: transitive
+    description:
+      name: rational
+      sha256: cb808fb6f1a839e6fc5f7d8cb3b0a10e1db48b3be102de73938c627f0b636336
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
   scope:
     dependency: transitive
     description:

@@ -189,8 +189,8 @@ class BlockingUIBuilder<T> extends StatelessWidget {
         // ignore: discarded_futures
         future: Future.delayed(
             // delay the call to run until the build is complete to
-            // avoid a flutter error that can occure if you call set state whilst
-            // a build is already running.
+            // avoid a flutter error that can occure if you call
+            //set state whilst a build is already running.
             Duration.zero,
             () async => BlockingUI().run(future, label: label)),
         waitingBuilder: (context) => const _BlockingUIWidget(),

@@ -33,6 +33,7 @@ dependencies:
   direct_caller_sim_choice: ^1.0.5
   email_validator: ^2.1.17
   equatable: ^2.0.0
+  fixed: ^4.3.0
   fleather: ^1.14.5+1
   flutter:
     sdk: flutter
@@ -42,6 +43,7 @@ dependencies:
   image_picker: ^1.1.1
   june: ^1.0.0+1
   mailto: ^2.0.0
+  money2: ^5.0.1
   parchment_delta: ^1.0.0
   path: ^1.9.0
   path_provider: ^2.0.0

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../dao/dao_system.dart';
 import '../../entity/system.dart';
+import '../../util/money_ex.dart';
+import '../../widgets/hmb_text_field.dart';
 
 class SystemEditScreen extends StatefulWidget {
   const SystemEditScreen({required this.system, super.key});
@@ -28,6 +30,9 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
   late TextEditingController _officeNumberController;
   late TextEditingController _emailAddressController;
   late TextEditingController _webUrlController;
+  late TextEditingController _termsUrlController;
+  late TextEditingController _defaultHourlyRateController;
+  late TextEditingController _defaultCallOutFeeController;
 
   @override
   void initState() {
@@ -50,6 +55,11 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
     _emailAddressController =
         TextEditingController(text: widget.system.emailAddress);
     _webUrlController = TextEditingController(text: widget.system.webUrl);
+    _termsUrlController = TextEditingController(text: widget.system.termsUrl);
+    _defaultHourlyRateController =
+        TextEditingController(text: widget.system.defaultHourlyRate.toString());
+    _defaultCallOutFeeController =
+        TextEditingController(text: widget.system.defaultCallOutFee.toString());
   }
 
   @override
@@ -67,6 +77,9 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
     _officeNumberController.dispose();
     _emailAddressController.dispose();
     _webUrlController.dispose();
+    _termsUrlController.dispose();
+    _defaultHourlyRateController.dispose();
+    _defaultCallOutFeeController.dispose();
     super.dispose();
   }
 
@@ -86,6 +99,11 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
       widget.system.officeNumber = _officeNumberController.text;
       widget.system.emailAddress = _emailAddressController.text;
       widget.system.webUrl = _webUrlController.text;
+      widget.system.termsUrl = _termsUrlController.text;
+      widget.system.defaultHourlyRate =
+          MoneyEx.tryParse(_defaultHourlyRateController.text);
+      widget.system.defaultCallOutFee =
+          MoneyEx.tryParse(_defaultCallOutFeeController.text);
 
       await DaoSystem().update(widget.system);
 
@@ -112,9 +130,9 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
             key: _formKey,
             child: ListView(
               children: [
-                TextFormField(
+                HMBTextField(
                   controller: _fromEmailController,
-                  decoration: const InputDecoration(labelText: 'From Email'),
+                  labelText: 'From Email',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a from email';
@@ -122,57 +140,57 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
                     return null;
                   },
                 ),
-                TextFormField(
-                  controller: _bsbController,
-                  decoration: const InputDecoration(labelText: 'BSB'),
+                HMBTextField(controller: _bsbController, labelText: 'BSB'),
+                HMBTextField(
+                    controller: _accountNoController,
+                    labelText: 'Account Number'),
+                HMBTextField(
+                    controller: _addressLine1Controller,
+                    labelText: 'Address Line 1'),
+                HMBTextField(
+                    controller: _addressLine2Controller,
+                    labelText: 'Address Line 2'),
+                HMBTextField(
+                    controller: _suburbController, labelText: 'Suburb'),
+                HMBTextField(controller: _stateController, labelText: 'State'),
+                HMBTextField(
+                    controller: _postcodeController, labelText: 'Postcode'),
+                HMBTextField(
+                    controller: _mobileNumberController,
+                    labelText: 'Mobile Number'),
+                HMBTextField(
+                    controller: _landLineController, labelText: 'Land Line'),
+                HMBTextField(
+                    controller: _officeNumberController,
+                    labelText: 'Office Number'),
+                HMBTextField(
+                    controller: _emailAddressController,
+                    labelText: 'To Email Address'),
+                HMBTextField(
+                    controller: _webUrlController, labelText: 'Web URL'),
+                HMBTextField(
+                    controller: _termsUrlController, labelText: 'Terms URL'),
+                HMBTextField(
+                  controller: _defaultHourlyRateController,
+                  labelText: 'Default Hourly Rate',
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a default hourly rate';
+                    }
+                    return null;
+                  },
                 ),
-                TextFormField(
-                  controller: _accountNoController,
-                  decoration:
-                      const InputDecoration(labelText: 'Account Number'),
-                ),
-                TextFormField(
-                  controller: _addressLine1Controller,
-                  decoration:
-                      const InputDecoration(labelText: 'Address Line 1'),
-                ),
-                TextFormField(
-                  controller: _addressLine2Controller,
-                  decoration:
-                      const InputDecoration(labelText: 'Address Line 2'),
-                ),
-                TextFormField(
-                  controller: _suburbController,
-                  decoration: const InputDecoration(labelText: 'Suburb'),
-                ),
-                TextFormField(
-                  controller: _stateController,
-                  decoration: const InputDecoration(labelText: 'State'),
-                ),
-                TextFormField(
-                  controller: _postcodeController,
-                  decoration: const InputDecoration(labelText: 'Postcode'),
-                ),
-                TextFormField(
-                  controller: _mobileNumberController,
-                  decoration: const InputDecoration(labelText: 'Mobile Number'),
-                ),
-                TextFormField(
-                  controller: _landLineController,
-                  decoration: const InputDecoration(labelText: 'Land Line'),
-                ),
-                TextFormField(
-                  controller: _officeNumberController,
-                  decoration: const InputDecoration(labelText: 'Office Number'),
-                ),
-                TextFormField(
-                  controller: _emailAddressController,
-                  decoration:
-                      const InputDecoration(labelText: 'To Email Address'),
-                ),
-                TextFormField(
-                  controller: _webUrlController,
-                  decoration: const InputDecoration(labelText: 'Web URL'),
+                HMBTextField(
+                  controller: _defaultCallOutFeeController,
+                  labelText: 'Default Call Out Fee',
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a default call out fee';
+                    }
+                    return null;
+                  },
                 ),
               ],
             ),

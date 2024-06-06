@@ -6,6 +6,7 @@ import '../../dao/dao_customer.dart';
 import '../../dao/join_adaptors/customer_contact_join_adaptor.dart';
 import '../../dao/join_adaptors/customer_site_join_adaptor.dart';
 import '../../entity/customer.dart';
+import '../../util/money_ex.dart';
 import '../../widgets/hbm_crud_contact.dart';
 import '../../widgets/hmb_crud_site.dart';
 import '../../widgets/hmb_droplist.dart';
@@ -31,6 +32,7 @@ class CustomerEditScreen extends StatefulWidget {
 class _CustomerEditScreenState extends State<CustomerEditScreen>
     implements EntityState<Customer> {
   late TextEditingController _nameController;
+  late TextEditingController _hourlyRateController;
   late bool _disbarred;
   late CustomerType _selectedCustomerType;
 
@@ -38,9 +40,18 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.customer?.name);
+    _hourlyRateController = TextEditingController(
+        text: widget.customer?.hourlyRate.amount.toString() ?? '0');
     _disbarred = widget.customer?.disbarred ?? false;
     _selectedCustomerType =
         widget.customer?.customerType ?? CustomerType.residential;
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _hourlyRateController.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,6 +76,12 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                       autofocus: true,
                       controller: _nameController,
                       labelText: 'Name',
+                      required: true,
+                    ),
+                    HMBTextField(
+                      controller: _hourlyRateController,
+                      labelText: 'Hourly Rate',
+                      keyboardType: TextInputType.number,
                       required: true,
                     ),
                     HMBSwitch(
@@ -104,11 +121,13 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
       entity: customer,
       name: _nameController.text,
       disbarred: _disbarred,
-      customerType: _selectedCustomerType);
+      customerType: _selectedCustomerType,
+      hourlyRate: MoneyEx.tryParse(_hourlyRateController.text));
 
   @override
   Future<Customer> forInsert() async => Customer.forInsert(
       name: _nameController.text,
       disbarred: _disbarred,
-      customerType: _selectedCustomerType);
+      customerType: _selectedCustomerType,
+      hourlyRate: MoneyEx.tryParse(_hourlyRateController.text));
 }

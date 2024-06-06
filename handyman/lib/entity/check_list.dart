@@ -1,69 +1,50 @@
-import 'dart:ui';
-
 import 'entity.dart';
 
-class JobStatus extends Entity<JobStatus> {
-  JobStatus({
+enum ListType { global, defaultList, owned }
+
+class CheckList extends Entity<CheckList> {
+  CheckList({
     required super.id,
     required this.name,
     required this.description,
-    required this.colorCode,
-    required this.hidden,
+    required this.listType,
     required super.createdDate,
     required super.modifiedDate,
   }) : super();
 
-  JobStatus.forInsert({
+  CheckList.forInsert({
     required this.name,
     required this.description,
-    required this.colorCode,
-    this.hidden = 0, // Default value for new entries
+    required this.listType,
   }) : super.forInsert();
 
-  JobStatus.forUpdate({
+  CheckList.forUpdate({
     required super.entity,
     required this.name,
     required this.description,
-    required this.colorCode,
-    required this.hidden,
+    required this.listType,
   }) : super.forUpdate();
 
-  factory JobStatus.fromMap(Map<String, dynamic> map) => JobStatus(
+  factory CheckList.fromMap(Map<String, dynamic> map) => CheckList(
         id: map['id'] as int,
         name: map['name'] as String,
         description: map['description'] as String,
-        colorCode: map['color_code'] as String,
-        hidden: map['hidden'] as int,
+        listType: ListType.values[(map['list_type'] as int) - 1],
         createdDate: DateTime.parse(map['createdDate'] as String),
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
       );
 
   String name;
   String description;
-  String colorCode;
-  int hidden;
+  ListType listType;
 
   @override
   Map<String, dynamic> toMap() => {
         'id': id,
         'name': name,
         'description': description,
-        'color_code': colorCode,
-        'hidden': hidden,
+        'list_type': listType.index + 1,
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };
-
-  Color getColour() {
-    // Remove the leading `#` if present
-    var hex = colorCode.replaceAll('#', '');
-
-    // If the hex code is 6 characters long, add the opacity value (ff)
-    if (hex.length == 6) {
-      hex = 'ff$hex';
-    }
-
-    // Parse the hex string to an integer and create a Color object
-    return Color(int.parse(hex, radix: 16));
-  }
 }

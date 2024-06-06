@@ -1,3 +1,5 @@
+import 'package:money2/money2.dart';
+
 import 'entity.dart';
 
 class Job extends Entity<Job> {
@@ -10,6 +12,8 @@ class Job extends Entity<Job> {
     required this.siteId,
     required this.contactId,
     required this.jobStatusId,
+    required this.hourlyRate,
+    required this.callOutFee,
     required super.createdDate,
     required super.modifiedDate,
   }) : super();
@@ -22,6 +26,8 @@ class Job extends Entity<Job> {
     required this.siteId,
     required this.contactId,
     required this.jobStatusId,
+    required this.hourlyRate,
+    required this.callOutFee,
   }) : super.forInsert();
 
   Job.forUpdate({
@@ -33,6 +39,8 @@ class Job extends Entity<Job> {
     required this.siteId,
     required this.contactId,
     required this.jobStatusId,
+    required this.hourlyRate,
+    required this.callOutFee,
   }) : super.forUpdate();
 
   factory Job.fromMap(Map<String, dynamic> map) => Job(
@@ -44,6 +52,10 @@ class Job extends Entity<Job> {
         siteId: map['site_id'] as int?,
         contactId: map['contact_id'] as int?,
         jobStatusId: map['job_status_id'] as int?,
+        hourlyRate:
+            Money.fromInt(map['hourly_rate'] as int? ?? 0, isoCode: 'AUD'),
+        callOutFee:
+            Money.fromInt(map['call_out_fee'] as int? ?? 0, isoCode: 'AUD'),
         createdDate: DateTime.parse(map['createdDate'] as String),
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
       );
@@ -58,6 +70,8 @@ class Job extends Entity<Job> {
         'site_id': siteId,
         'job_status_id': jobStatusId,
         'contact_id': contactId,
+        'hourly_rate': hourlyRate?.minorUnits.toInt(),
+        'call_out_fee': callOutFee?.minorUnits.toInt(),
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };
@@ -69,4 +83,6 @@ class Job extends Entity<Job> {
   int? siteId;
   int? contactId;
   int? jobStatusId;
+  Money? hourlyRate;
+  Money? callOutFee;
 }

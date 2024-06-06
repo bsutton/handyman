@@ -108,7 +108,3 @@ class HomeWithDrawer extends StatelessWidget {
         body: initialScreen,
       );
 }
-
-
-
-// Similarly, you can wrap CustomerListScreen, SupplierListScreen, and SystemEditScreen with Scaffold if they are not already.
