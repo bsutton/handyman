@@ -38,7 +38,7 @@ class HMBTextField extends StatelessWidget {
               border: const OutlineInputBorder(),
             ),
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              if (required && (value == null || value.isEmpty)) {
                 return 'Please enter a $labelText';
               }
               return validator?.call(value);
