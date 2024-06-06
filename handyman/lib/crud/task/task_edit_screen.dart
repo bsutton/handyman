@@ -124,19 +124,20 @@ class _TaskEditScreenState extends State<TaskEditScreen>
                 keyboardType: TextInputType.number,
               ),
               FutureBuilderEx(
-                  // ignore: discarded_futures
-                  future: DaoTaskStatus().getAll(),
-                  builder: (context, items) => FutureBuilderEx(
-                      future:
-                          // ignore: discarded_futures
-                          DaoTaskStatus().getById(widget.task?.taskStatusId),
-                      builder: (context, taskStatus) => HMBDroplist<TaskStatus>(
-                          initialValue: taskStatus ?? items!.first,
-                          labelText: 'Task Status',
-                          items: items!,
-                          onChanged: (item) =>
-                              June.getState(TaskStatusState.new).taskStatusId =
-                                  item?.id))),
+                // ignore: discarded_futures
+                future: DaoTaskStatus().getAll(),
+                builder: (context, items) => FutureBuilderEx(
+                    future:
+                        // ignore: discarded_futures
+                        DaoTaskStatus().getById(widget.task?.taskStatusId),
+                    builder: (context, taskStatus) => HMBDroplist<TaskStatus>(
+                        initialValue: taskStatus ?? items!.first,
+                        labelText: 'Task Status',
+                        items: items!,
+                        onChanged: (item) => June.getState(TaskStatusState.new)
+                            .taskStatusId = item?.id,
+                        format: (taskStatus) => taskStatus.name)),
+              ),
               SwitchListTile(
                 title: const Text('Completed'),
                 value: _completed,
