@@ -5,12 +5,15 @@ import 'package:june/june.dart';
 
 import '../../dao/dao_checklist.dart';
 import '../../dao/join_adaptors/dao_join_adaptor.dart';
+import '../../dao/join_adaptors/join_adaptor_check_list_item.dart';
 import '../../entity/check_list.dart';
 import '../../entity/customer.dart';
 import '../../entity/entity.dart';
+import '../../widgets/hmb_crud_checklist_item.dart';
 import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_text_field.dart';
 import '../base_nested/nested_edit_screen.dart';
+import '../base_nested/nested_list_screen.dart';
 
 class CheckListEditScreen<P extends Entity<P>> extends StatefulWidget {
   const CheckListEditScreen({
@@ -73,7 +76,12 @@ class _CheckListEditScreenState extends State<CheckListEditScreen>
                   items: CheckListType.values,
                   onChanged: (item) => June.getState(CheckListTypeStatus.new)
                       .checkListType = item!,
-                  format: (taskStatus) => taskStatus.name)
+                  format: (taskStatus) => taskStatus.name),
+
+            HBMCrudCheckListItem<CheckList>(
+              parent: Parent(widget.checklist),
+              daoJoin: JoinAdaptorCheckListCheckListItem(),
+            ),
           ],
         ),
       );
