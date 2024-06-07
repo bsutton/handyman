@@ -97,9 +97,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                         items: CustomerType.values,
                         labelText: 'Customer Type',
                         onChanged: (newValue) {
-                          setState(() {
-                            _selectedCustomerType = newValue!;
-                          });
+                          _selectedCustomerType = newValue!;
                         }),
                   ],
                 ),
