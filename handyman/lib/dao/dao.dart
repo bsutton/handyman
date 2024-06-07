@@ -17,10 +17,12 @@ abstract class Dao<T extends Entity<T>> {
     return id;
   }
 
-  Future<List<T>> getAll( [Transaction? transaction]) async {
+  Future<List<T>> getAll([Transaction? transaction]) async {
     final db = getDb(transaction);
     final List<Map<String, dynamic>> maps = await db.query(tableName);
-    return List.generate(maps.length, (i) => fromMap(maps[i]));
+    final list = List.generate(maps.length, (i) => fromMap(maps[i]));
+
+    return list;
   }
 
   Future<T?> getById(int? entityId) {
@@ -30,7 +32,8 @@ abstract class Dao<T extends Entity<T>> {
       if (value.isEmpty) {
         return null;
       }
-      return fromMap(value.first);
+      final entity = fromMap(value.first);
+      return entity;
     });
   }
 
