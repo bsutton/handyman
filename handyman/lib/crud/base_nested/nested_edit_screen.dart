@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../dao/dao.dart';
 import '../../entity/entity.dart';
+import '../../widgets/hmb_button.dart';
 
 abstract class NestedEntityState<E extends Entity<E>> {
   Future<E> forInsert();
@@ -53,13 +54,18 @@ class NestedEntityEditScreenState<C extends Entity<C>, P extends Entity<P>>
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      ElevatedButton(
+                      HMBButton(
+                          label: 'Save & Close',
+                          onPressed: () async => _save(close: true)),
+                      const SizedBox(width: 5),
+                      HMBButton(
                         onPressed: _save,
-                        child: Text(widget.entity != null ? 'Update' : 'Add'),
+                        label: 'Save',
                       ),
-                      ElevatedButton(
+                      const SizedBox(width: 5),
+                      HMBButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Cancel'),
+                        label: 'Cancel',
                       ),
                     ],
                   ),
@@ -74,19 +80,22 @@ class NestedEntityEditScreenState<C extends Entity<C>, P extends Entity<P>>
             ),
           )));
 
-  Future<void> _save() async {
+  Future<void> _save({bool close = false}) async {
     if (_formKey.currentState!.validate()) {
+      final C entity;
       if (widget.entity != null) {
-        final entity = await widget.entityState.forUpdate(widget.entity!);
+        entity = await widget.entityState.forUpdate(widget.entity!);
 
         await widget.dao.update(entity);
       } else {
-        final entity = await widget.entityState.forInsert();
+        entity = await widget.entityState.forInsert();
         await widget.onInsert(entity);
       }
 
-      if (mounted) {
-        Navigator.of(context).pop();
+      if (close && mounted) {
+        Navigator.of(context).pop(entity);
+      } else {
+        setState(() {});
       }
     }
   }

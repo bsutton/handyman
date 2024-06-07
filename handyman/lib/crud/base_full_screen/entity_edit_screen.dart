@@ -52,8 +52,14 @@ class EntityEditScreenState<E extends Entity<E>>
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           HMBButton(
-                              label: widget.entity != null ? 'Update' : 'Add',
-                              onPressed: _save),
+                              label: 'Save & Close',
+                              onPressed: () async => _save(close: true)),
+                          const SizedBox(width: 5),
+                          HMBButton(
+                            onPressed: _save,
+                            label: 'Save',
+                          ),
+                          const SizedBox(width: 5),
                           HMBButton(
                             onPressed: () => Navigator.of(context).pop(),
                             label: 'Cancel',
@@ -72,7 +78,7 @@ class EntityEditScreenState<E extends Entity<E>>
             ),
           )));
 
-  Future<void> _save() async {
+  Future<void> _save({bool close = false}) async {
     if (_formKey.currentState!.validate()) {
       if (widget.entity != null) {
         final entity = await widget.entityState.forUpdate(widget.entity!);
@@ -83,8 +89,10 @@ class EntityEditScreenState<E extends Entity<E>>
         await widget.dao.insert(entity);
       }
 
-      if (mounted) {
+      if (close && mounted) {
         Navigator.of(context).pop(widget.entity);
+      } else {
+        setState(() {});
       }
     }
   }

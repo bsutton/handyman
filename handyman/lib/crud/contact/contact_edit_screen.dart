@@ -38,8 +38,6 @@ class _ContactEditScreenState extends State<ContactEditScreen>
   late TextEditingController _emailaddressController;
   late FocusNode _firstNameFocusNode;
 
-  final _formKey = GlobalKey<FormState>();
-
   @override
   void initState() {
     super.initState();
@@ -82,53 +80,50 @@ class _ContactEditScreenState extends State<ContactEditScreen>
         onInsert: (contact) async =>
             widget.daoJoin.insertForParent(contact!, widget.parent),
         entityState: this,
-        editor: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              HMBTextField(
-                controller: _firstNameController,
-                focusNode: _firstNameFocusNode,
-                labelText: 'First Name',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the first name';
-                  }
-                  return null;
-                },
-              ),
-              HMBTextField(
-                controller: _surnameController,
-                labelText: 'Surname',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the surname';
-                  }
-                  return null;
-                },
-              ),
-              HMBPhoneField(
-                controller: _mobileNumberController,
-                labelText: 'Mobile Number',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the mobile number';
-                  }
-                  return null;
-                },
-              ),
-              HMBPhoneField(
-                  controller: _landlineController, labelText: 'Landline'),
-              HMBPhoneField(
-                  controller: _officeNumberController,
-                  labelText: 'Office Number'),
-              HMBEmailField(
-                controller: _emailaddressController,
-                labelText: 'Email',
-              ),
-            ],
-          ),
+        editor: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            HMBTextField(
+              controller: _firstNameController,
+              focusNode: _firstNameFocusNode,
+              labelText: 'First Name',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter the first name';
+                }
+                return null;
+              },
+            ),
+            HMBTextField(
+              controller: _surnameController,
+              labelText: 'Surname',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter the surname';
+                }
+                return null;
+              },
+            ),
+            HMBPhoneField(
+              controller: _mobileNumberController,
+              labelText: 'Mobile Number',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter the mobile number';
+                }
+                return null;
+              },
+            ),
+            HMBPhoneField(
+                controller: _landlineController, labelText: 'Landline'),
+            HMBPhoneField(
+                controller: _officeNumberController,
+                labelText: 'Office Number'),
+            HMBEmailField(
+              controller: _emailaddressController,
+              labelText: 'Email',
+            ),
+          ],
         ),
       );
 
