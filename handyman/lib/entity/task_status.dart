@@ -45,4 +45,33 @@ class TaskStatus extends Entity<TaskStatus> {
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is TaskStatus &&
+        other.id == id &&
+        other.name == name &&
+        other.description == description &&
+        other.colorCode == colorCode &&
+        other.createdDate == createdDate &&
+        other.modifiedDate == modifiedDate;
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      description.hashCode ^
+      colorCode.hashCode ^
+      createdDate.hashCode ^
+      modifiedDate.hashCode;
+
+  @override
+  String toString() => 'name: $name, description: $description';
 }

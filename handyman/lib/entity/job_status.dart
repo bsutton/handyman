@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
+
 import 'dart:ui';
 
 import 'entity.dart';
@@ -66,4 +68,33 @@ class JobStatus extends Entity<JobStatus> {
     // Parse the hex string to an integer and create a Color object
     return Color(int.parse(hex, radix: 16));
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) {
+      return true;
+    }
+
+    return other is JobStatus &&
+        other.id == id &&
+        other.name == name &&
+        other.description == description &&
+        other.colorCode == colorCode &&
+        other.hidden == hidden &&
+        other.createdDate == createdDate &&
+        other.modifiedDate == modifiedDate;
+  }
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      description.hashCode ^
+      colorCode.hashCode ^
+      hidden.hashCode ^
+      createdDate.hashCode ^
+      modifiedDate.hashCode;
+
+  @override
+  String toString() => 'id: $id, name: $name, description: $description';
 }
