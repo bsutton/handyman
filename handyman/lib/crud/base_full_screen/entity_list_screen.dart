@@ -50,9 +50,11 @@ class EntityListScreenState<T extends Entity<T>>
   }
 
   Future<void> _refreshEntityList() async {
-    setState(() {
-      entities = widget._fetchList(filterOption);
-    });
+    if (mounted) {
+      setState(() {
+        entities = widget._fetchList(filterOption);
+      });
+    }
   }
 
   @override
