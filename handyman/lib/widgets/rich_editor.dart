@@ -143,33 +143,28 @@ class _RichEditorState extends State<RichEditor> {
           },
           child: const Icon(Icons.add_a_photo),
         ),
-        body: GestureDetector(
-          onTap: () {
-            // widget.focusNode.requestFocus();
-          },
-          child: FocusScope(
-            node: FocusScopeNode(),
-            child: Column(
-              children: [
-                FleatherToolbar.basic(controller: widget.controller.controller),
-                Divider(height: 1, thickness: 1, color: Colors.grey.shade200),
-                Expanded(
-                  child: FleatherEditor(
-                    key: UniqueKey(),
-                    controller: widget.controller.controller,
-                    focusNode: widget.focusNode,
-                    padding: EdgeInsets.only(
-                      left: 16,
-                      right: 16,
-                      bottom: MediaQuery.of(context).padding.bottom,
-                    ),
-                    onLaunchUrl: _launchUrl,
-                    embedBuilder: _embedBuilder,
-                    spellCheckConfiguration: _getSpellCheckService(context),
+        body: FocusScope(
+          node: FocusScopeNode(),
+          child: Column(
+            children: [
+              FleatherToolbar.basic(controller: widget.controller.controller),
+              Divider(height: 1, thickness: 1, color: Colors.grey.shade200),
+              Expanded(
+                child: FleatherEditor(
+                  key: UniqueKey(),
+                  controller: widget.controller.controller,
+                  focusNode: widget.focusNode,
+                  padding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: MediaQuery.of(context).padding.bottom,
                   ),
+                  onLaunchUrl: _launchUrl,
+                  embedBuilder: _embedBuilder,
+                  spellCheckConfiguration: _getSpellCheckService(context),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
