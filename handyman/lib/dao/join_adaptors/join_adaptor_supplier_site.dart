@@ -6,7 +6,7 @@ import '../dao_site.dart';
 import '../dao_site_supplier.dart';
 import 'dao_join_adaptor.dart';
 
-class SupplierSiteJoinAdaptor implements DaoJoinAdaptor<Site, Supplier> {
+class JoinAdaptorSupplierSite implements DaoJoinAdaptor<Site, Supplier> {
   @override
   Future<void> deleteFromParent(Site site, Supplier supplier) async {
     await DaoSite().deleteFromSupplier(site, supplier);
@@ -21,7 +21,7 @@ class SupplierSiteJoinAdaptor implements DaoJoinAdaptor<Site, Supplier> {
     await DaoSite().insertForSupplier(contact, supplier);
   }
 
-      @override
+  @override
   Future<void> setAsPrimary(Site child, Supplier supplier) async {
     await DaoSiteSupplier().setAsPrimary(child, supplier);
   }

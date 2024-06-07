@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:june/june.dart';
-import 'package:money2/money2.dart';
 
 import '../../dao/dao_customer.dart';
 import '../../dao/dao_job.dart';
@@ -11,6 +10,7 @@ import '../../dao/dao_job_status.dart';
 import '../../entity/customer.dart';
 import '../../entity/job.dart';
 import '../../entity/job_status.dart';
+import '../../util/money_ex.dart';
 import '../../widgets/hmb_button.dart';
 import '../../widgets/hmb_child_crud_card.dart';
 import '../../widgets/hmb_droplist.dart';
@@ -203,8 +203,8 @@ class JobEditScreenState extends State<JobEditScreen>
       siteId: June.getState(SelectedSite.new).siteId,
       contactId: June.getState(SelectedContact.new).contactId,
       jobStatusId: June.getState(SelectJobStatus.new).jobStatusId,
-      hourlyRate: Money.tryParse(_hourlyRateController.text, isoCode: 'AUD'),
-      callOutFee: Money.tryParse(_callOutFeeController.text, isoCode: 'AUD'));
+      hourlyRate: MoneyEx.tryParse(_hourlyRateController.text),
+      callOutFee: MoneyEx.tryParse(_callOutFeeController.text));
 
   @override
   Future<Job> forInsert() async => Job.forInsert(
@@ -215,8 +215,8 @@ class JobEditScreenState extends State<JobEditScreen>
       siteId: June.getState(SelectedSite.new).siteId,
       contactId: June.getState(SelectedContact.new).contactId,
       jobStatusId: June.getState(SelectJobStatus.new).jobStatusId,
-      hourlyRate: Money.tryParse(_hourlyRateController.text, isoCode: 'AUD'),
-      callOutFee: Money.tryParse(_callOutFeeController.text, isoCode: 'AUD'));
+      hourlyRate: MoneyEx.tryParse(_hourlyRateController.text),
+      callOutFee: MoneyEx.tryParse(_callOutFeeController.text));
 
   @override
   void dispose() {

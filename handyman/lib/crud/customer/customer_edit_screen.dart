@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/dao_customer.dart';
-import '../../dao/join_adaptors/customer_contact_join_adaptor.dart';
-import '../../dao/join_adaptors/customer_site_join_adaptor.dart';
+import '../../dao/join_adaptors/join_adaptor_customer_contact.dart';
+import '../../dao/join_adaptors/join_adaptor_customer_site.dart';
 import '../../entity/customer.dart';
 import '../../util/money_ex.dart';
 import '../../widgets/hbm_crud_contact.dart';
@@ -105,10 +105,10 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                 ),
                 HMBCrudContact(
                   parent: Parent(widget.customer),
-                  daoJoin: CustomerContactJoinAdaptor(),
+                  daoJoin: JoinAdaptorCustomerContact(),
                 ),
                 HBMCrudSite(
-                    daoJoin: CustomerSiteJoinAdaptor(),
+                    daoJoin: JoinAdaptorCustomerSite(),
                     parent: Parent(widget.customer)),
               ],
             ),

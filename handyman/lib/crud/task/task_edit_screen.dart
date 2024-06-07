@@ -6,10 +6,12 @@ import 'package:money2/money2.dart';
 
 import '../../dao/dao_task.dart';
 import '../../dao/dao_task_status.dart';
-import '../../dao/join_adaptors/job_site_join_adaptor copy.dart';
+import '../../dao/join_adaptors/join_adaptor_check_list.dart';
 import '../../entity/job.dart';
 import '../../entity/task.dart';
 import '../../entity/task_status.dart';
+import '../../util/fixed_ex.dart';
+import '../../util/money_ex.dart';
 import '../../widgets/hmb_crud_checklist.dart';
 import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_text_area.dart';
@@ -150,10 +152,11 @@ class _TaskEditScreenState extends State<TaskEditScreen>
                   });
                 },
               ),
+
               /// Check List CRUD
               HBMCrudCheckList<Task>(
                   parent: Parent(widget.task),
-                  daoJoin: TaskCheckListJoinAdaptor())
+                  daoJoin: JoinAdaptorTaskCheckList())
             ],
           ),
         ),
@@ -166,8 +169,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
         name: _nameController.text,
         description: _descriptionController.text,
         completed: _completed,
-        estimatedCost:
-            Money.tryParse(_estimatedCostController.text, isoCode: 'AUD'),
+        estimatedCost: MoneyEx.tryParse(_estimatedCostController.text),
         effortInHours: Fixed.tryParse(_effortInHoursController.text),
         taskStatusId: int.tryParse(_taskStatusIdController.text) ?? 0,
       );
@@ -178,9 +180,8 @@ class _TaskEditScreenState extends State<TaskEditScreen>
         name: _nameController.text,
         description: _descriptionController.text,
         completed: _completed,
-        estimatedCost:
-            Money.tryParse(_estimatedCostController.text, isoCode: 'AUD'),
-        effortInHours: Fixed.tryParse(_effortInHoursController.text),
+        estimatedCost: MoneyEx.tryParse(_estimatedCostController.text),
+        effortInHours: FixedEx.tryParse(_effortInHoursController.text),
         taskStatusId: int.tryParse(_taskStatusIdController.text) ?? 0,
       );
 }

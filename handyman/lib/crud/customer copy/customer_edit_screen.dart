@@ -3,14 +3,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/dao_customer.dart';
-import '../../dao/join_adaptors/customer_contact_join_adaptor.dart';
-import '../../dao/join_adaptors/customer_site_join_adaptor.dart';
+import '../../dao/join_adaptors/join_adaptor_customer_contact.dart';
+import '../../dao/join_adaptors/join_adaptor_customer_site.dart';
 import '../../entity/customer.dart';
 import '../../util/money_ex.dart';
 import '../../widgets/hbm_crud_contact.dart';
 import '../../widgets/hmb_crud_site.dart';
 import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_form_section.dart';
+import '../../widgets/hmb_money_editing_controller.dart';
+import '../../widgets/hmb_money_field.dart';
 import '../../widgets/hmb_switch.dart';
 import '../../widgets/hmb_text_field.dart';
 import '../base_full_screen/entity_edit_screen.dart';
@@ -32,7 +34,7 @@ class CustomerEditScreen extends StatefulWidget {
 class _CustomerEditScreenState extends State<CustomerEditScreen>
     implements EntityState<Customer> {
   late TextEditingController _nameController;
-  late TextEditingController _hourlyRateController;
+  late HMBMoneyEditingController _hourlyRateController;
   late bool _disbarred;
   late CustomerType _selectedCustomerType;
 
@@ -40,8 +42,8 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.customer?.name);
-    _hourlyRateController = TextEditingController(
-        text: widget.customer?.hourlyRate.amount.toString() ?? '0');
+    _hourlyRateController =
+        HMBMoneyEditingController(money: widget.customer?.hourlyRate);
     _disbarred = widget.customer?.disbarred ?? false;
     _selectedCustomerType =
         widget.customer?.customerType ?? CustomerType.residential;
@@ -78,7 +80,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                       labelText: 'Name',
                       required: true,
                     ),
-                    HMBTextField(
+                    HMBMoneyField(
                       controller: _hourlyRateController,
                       labelText: 'Hourly Rate (in cents)',
                       keyboardType: TextInputType.number,
@@ -105,10 +107,10 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                 ),
                 HMBCrudContact(
                   parent: Parent(widget.customer),
-                  daoJoin: CustomerContactJoinAdaptor(),
+                  daoJoin: JoinAdaptorCustomerContact(),
                 ),
                 HBMCrudSite(
-                    daoJoin: CustomerSiteJoinAdaptor(),
+                    daoJoin: JoinAdaptorCustomerSite(),
                     parent: Parent(widget.customer)),
               ],
             ),
@@ -122,12 +124,12 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
       name: _nameController.text,
       disbarred: _disbarred,
       customerType: _selectedCustomerType,
-      hourlyRate: MoneyEx.tryParse(_hourlyRateController.text));
+      hourlyRate: _hourlyRateController.money ?? MoneyEx.zero);
 
   @override
   Future<Customer> forInsert() async => Customer.forInsert(
       name: _nameController.text,
       disbarred: _disbarred,
       customerType: _selectedCustomerType,
-      hourlyRate: MoneyEx.tryParse(_hourlyRateController.text));
+      hourlyRate: _hourlyRateController.money ?? MoneyEx.zero);
 }

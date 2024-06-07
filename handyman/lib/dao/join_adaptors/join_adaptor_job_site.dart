@@ -6,7 +6,7 @@ import '../dao_site.dart';
 import '../dao_site_job.dart';
 import 'dao_join_adaptor.dart';
 
-class JobSiteJoinAdaptor implements DaoJoinAdaptor<Site, Job> {
+class JoinAdaptorJobSite implements DaoJoinAdaptor<Site, Job> {
   @override
   Future<void> deleteFromParent(Site site, Job job) async {
     await DaoSiteJob().deleteJoin(job, site);

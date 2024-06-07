@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/dao_supplier.dart';
-import '../../dao/join_adaptors/supplier_contact_join_adaptor.dart';
-import '../../dao/join_adaptors/supplier_site_join_adaptor.dart';
+import '../../dao/join_adaptors/join_adaptor_supplier_contact.dart';
+import '../../dao/join_adaptors/join_adaptor_supplier_site.dart';
 import '../../entity/supplier.dart';
 import '../../widgets/hbm_crud_contact.dart';
 import '../../widgets/hmb_crud_site.dart';
@@ -64,9 +64,9 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
                 ),
                 HMBCrudContact(
                     parent: Parent(widget.supplier),
-                    daoJoin: SupplierContactJoinAdaptor()),
+                    daoJoin: JoinAdaptorSupplierContact()),
                 HBMCrudSite(
-                    daoJoin: SupplierSiteJoinAdaptor(),
+                    daoJoin: JoinAdaptorSupplierSite(),
                     parent: Parent(widget.supplier)),
               ],
             ),

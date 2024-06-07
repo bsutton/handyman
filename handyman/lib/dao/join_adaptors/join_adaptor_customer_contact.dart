@@ -6,7 +6,7 @@ import '../dao_contact.dart';
 import '../dao_contact_customer.dart';
 import 'dao_join_adaptor.dart';
 
-class CustomerContactJoinAdaptor implements DaoJoinAdaptor<Contact, Customer> {
+class JoinAdaptorCustomerContact implements DaoJoinAdaptor<Contact, Customer> {
   @override
   Future<void> deleteFromParent(Contact contact, Customer customer) async {
     await DaoContactCustomer().deleteJoin(customer, contact);

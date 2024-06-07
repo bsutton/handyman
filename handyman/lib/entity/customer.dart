@@ -1,5 +1,6 @@
 import 'package:money2/money2.dart';
 
+import '../util/money_ex.dart';
 import 'entity.dart';
 
 enum CustomerType { residential, realestate, tradePartner, community }
@@ -37,8 +38,7 @@ class Customer extends Entity<Customer> {
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
         disbarred: map['disbarred'] as int == 1,
         customerType: CustomerType.values[map['customerType'] as int],
-        hourlyRate: Money.fromInt(map['default_hourly_rate'] as int? ?? 0,
-            isoCode: 'AUD'),
+        hourlyRate: MoneyEx.fromInt(map['default_hourly_rate'] as int?),
       );
 
   String name;

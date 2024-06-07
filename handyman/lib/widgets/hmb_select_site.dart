@@ -4,7 +4,7 @@ import 'package:june/june.dart';
 
 import '../crud/site/site_edit_screen.dart';
 import '../dao/dao_site.dart';
-import '../dao/join_adaptors/customer_site_join_adaptor.dart';
+import '../dao/join_adaptors/join_adaptor_customer_site.dart';
 import '../entity/customer.dart';
 import '../entity/site.dart';
 import 'hmb_add_button.dart';
@@ -66,7 +66,7 @@ class HMBSelectSiteState extends State<HMBSelectSite> {
                           MaterialPageRoute<Site>(
                               builder: (context) => SiteEditScreen<Customer>(
                                   parent: widget.customer!,
-                                  daoJoin: CustomerSiteJoinAdaptor())),
+                                  daoJoin: JoinAdaptorCustomerSite())),
                         );
                         setState(() {
                           widget.initialSite.siteId = customer?.id;

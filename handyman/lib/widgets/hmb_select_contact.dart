@@ -4,7 +4,7 @@ import 'package:june/june.dart';
 
 import '../crud/contact/contact_edit_screen.dart';
 import '../dao/dao_contact.dart';
-import '../dao/join_adaptors/customer_contact_join_adaptor.dart';
+import '../dao/join_adaptors/join_adaptor_customer_contact.dart';
 import '../entity/contact.dart';
 import '../entity/customer.dart';
 import 'hmb_add_button.dart';
@@ -66,7 +66,7 @@ class HMBSelectContactState extends State<HMBSelectContact> {
                       MaterialPageRoute<Contact>(
                           builder: (context) => ContactEditScreen<Customer>(
                               parent: widget.customer!,
-                              daoJoin: CustomerContactJoinAdaptor())),
+                              daoJoin: JoinAdaptorCustomerContact())),
                     );
                     setState(() {
                       widget.initialContact.contactId = customer?.id;
