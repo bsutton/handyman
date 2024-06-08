@@ -12,6 +12,7 @@ class EntityListScreen<T extends Entity<T>> extends StatefulWidget {
     required this.pageTitle,
     required this.title,
     required this.details,
+    this.background,
     Future<List<T>> Function(String? filter)? fetchList,
     super.key,
   }) {
@@ -22,6 +23,7 @@ class EntityListScreen<T extends Entity<T>> extends StatefulWidget {
   final Widget Function(T entity) title;
   final Widget Function(T entity) details;
   final Widget Function(T? entity) onEdit;
+  final Future<Color> Function(T entity)? background;
 
   late final Future<List<T>> Function(String? filter) _fetchList;
   final Dao<T> dao;
@@ -55,40 +57,7 @@ class EntityListScreenState<T extends Entity<T>>
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(widget.pageTitle),
-          actions: [
-            SizedBox(
-              width: 250,
-              child: HMBTextField(
-                leadingSpace: false,
-                labelText: 'Filter',
-                controller: filterController,
-                onChanged: (newValue) async {
-                  filterOption = newValue;
-                  await _refreshEntityList();
-                },
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.clear),
-              onPressed: () async {
-                filterController.clear();
-                filterOption = null;
-                await _refreshEntityList();
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () async {
-                if (context.mounted) {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                        builder: (context) => widget.onEdit(null)),
-                  ).then((_) => _refreshEntityList());
-                }
-              },
-            ),
-          ],
+          actions: _commands(),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8),
@@ -117,31 +86,72 @@ class EntityListScreenState<T extends Entity<T>>
         itemCount: list.length,
         itemBuilder: (context, index) {
           final entity = list[index];
-          return Card(
-            // margin: const EdgeInsets.symmetric(vertical: 8),
-            elevation: 2,
-            child: ListTile(
-              // widget.title(entity),
-              subtitle: widget.details(entity),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: () async {
-                  await _confirmDelete(entity);
-                },
-              ),
-              onTap: () async {
-                if (context.mounted) {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                        builder: (context) => widget.onEdit(entity)),
-                  ).then((_) => _refreshEntityList());
-                }
-              },
-            ),
-          );
+          return FutureBuilderEx(
+              // ignore: discarded_futures
+              future:
+                  // ignore: discarded_futures
+                  widget.background?.call(entity) ?? Future.value(Colors.white),
+              builder: (context, color) => Card(
+                    color: color,
+                    // margin: const EdgeInsets.symmetric(vertical: 8),
+                    elevation: 2,
+                    child: ListTile(
+                      // widget.title(entity),
+                      subtitle: widget.details(entity),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () async {
+                          await _confirmDelete(entity);
+                        },
+                      ),
+                      onTap: () async {
+                        if (context.mounted) {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                                builder: (context) => widget.onEdit(entity)),
+                          ).then((_) => _refreshEntityList());
+                        }
+                      },
+                    ),
+                  ));
         },
       );
+
+  List<Widget> _commands() => [
+        SizedBox(
+          width: 250,
+          child: HMBTextField(
+            leadingSpace: false,
+            labelText: 'Filter',
+            controller: filterController,
+            onChanged: (newValue) async {
+              filterOption = newValue;
+              await _refreshEntityList();
+            },
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () async {
+            filterController.clear();
+            filterOption = null;
+            await _refreshEntityList();
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () async {
+            if (context.mounted) {
+              await Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                    builder: (context) => widget.onEdit(null)),
+              ).then((_) => _refreshEntityList());
+            }
+          },
+        )
+      ];
 
   Future<void> _confirmDelete(Entity<T> entity) async {
     final deleteConfirmed = await showDialog<bool>(

@@ -27,39 +27,32 @@ class JobListScreen extends StatelessWidget {
           job.summary,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
+        background: (job) async =>
+            (await DaoJobStatus().getById(job.jobStatusId))?.getColour() ??
+            Colors.white,
         details: (entity) {
           final job = entity;
           return FutureBuilderEx(
               // ignore: discarded_futures
               future: DaoJobStatus().getById(job.jobStatusId),
-              builder: (context, jobStatus) => Card(
-                    color: jobStatus?.getColour(),
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: FutureBuilderEx<Customer?>(
-                        // ignore: discarded_futures
-                        future: DaoCustomer().getById(job.customerId),
-                        builder: (context, customer) => FutureBuilderEx(
-                          // ignore: discarded_futures
-                          future: DaoSite().getByJob(job),
-                          builder: (context, site) => Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              HMBText(
-                                  'Customer: ${customer?.name ?? 'Not Set'}'),
-                              HMBText('Status: ${jobStatus?.name}'),
-                              HMBText(
-                                  'Scheduled: ${formatDate(job.startDate)}'),
-                              HMBText('Summary: ${job.summary}'),
-                              HMBText(
-                                '''Description: ${RichEditor.createParchment(job.description).toPlainText().split('\n').first}''',
-                              ),
-                              HMBSiteText(label: 'Address:', site: site),
-                            ],
+              builder: (context, jobStatus) => FutureBuilderEx<Customer?>(
+                    // ignore: discarded_futures
+                    future: DaoCustomer().getById(job.customerId),
+                    builder: (context, customer) => FutureBuilderEx(
+                      // ignore: discarded_futures
+                      future: DaoSite().getByJob(job),
+                      builder: (context, site) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          HMBText('Customer: ${customer?.name ?? 'Not Set'}'),
+                          HMBText('Status: ${jobStatus?.name}'),
+                          HMBText('Scheduled: ${formatDate(job.startDate)}'),
+                          HMBText('Summary: ${job.summary}'),
+                          HMBText(
+                            '''Description: ${RichEditor.createParchment(job.description).toPlainText().split('\n').first}''',
                           ),
-                        ),
+                          HMBSiteText(label: 'Address:', site: site),
+                        ],
                       ),
                     ),
                   ));
