@@ -97,22 +97,10 @@ class _ContactEditScreenState extends State<ContactEditScreen>
             HMBTextField(
               controller: _surnameController,
               labelText: 'Surname',
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter the surname';
-                }
-                return null;
-              },
             ),
             HMBPhoneField(
               controller: _mobileNumberController,
               labelText: 'Mobile Number',
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter the mobile number';
-                }
-                return null;
-              },
             ),
             HMBPhoneField(
                 controller: _landlineController, labelText: 'Landline'),
