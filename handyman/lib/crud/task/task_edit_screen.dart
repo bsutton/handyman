@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:june/june.dart';
 import 'package:money2/money2.dart';
 
@@ -42,31 +41,32 @@ class _TaskEditScreenState extends State<TaskEditScreen>
   late TextEditingController _effortInHoursController;
   late TextEditingController _taskStatusIdController;
   late bool _completed;
-  late FocusNode _nameFocusNode;
+  late FocusNode _summaryFocusNode;
   late FocusNode _descriptionFocusNode;
   late FocusNode _costFocusNode;
   late FocusNode _estimatedCostFocusNode;
   late FocusNode _effortInHoursFocusNode;
   late FocusNode _itemTypeIdFocusNode;
 
-  final _formKey = GlobalKey<FormState>();
+  Task? task;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController(text: widget.task?.name);
-    _descriptionController =
-        TextEditingController(text: widget.task?.description);
+
+    task = widget.task;
+    _nameController = TextEditingController(text: task?.name);
+    _descriptionController = TextEditingController(text: task?.description);
     _estimatedCostController =
-        TextEditingController(text: widget.task?.estimatedCost.toString());
+        TextEditingController(text: task?.estimatedCost.toString());
     _effortInHoursController =
-        TextEditingController(text: widget.task?.effortInHours.toString());
+        TextEditingController(text: task?.effortInHours.toString());
     _taskStatusIdController =
-        TextEditingController(text: widget.task?.taskStatusId.toString());
+        TextEditingController(text: task?.taskStatusId.toString());
 
-    _completed = widget.task?.completed ?? false;
+    _completed = task?.completed ?? false;
 
-    _nameFocusNode = FocusNode();
+    _summaryFocusNode = FocusNode();
     _descriptionFocusNode = FocusNode();
     _costFocusNode = FocusNode();
     _estimatedCostFocusNode = FocusNode();
@@ -74,7 +74,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
     _itemTypeIdFocusNode = FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(_nameFocusNode);
+      FocusScope.of(context).requestFocus(_summaryFocusNode);
     });
   }
 
@@ -85,7 +85,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
     _estimatedCostController.dispose();
     _effortInHoursController.dispose();
     _taskStatusIdController.dispose();
-    _nameFocusNode.dispose();
+    _summaryFocusNode.dispose();
     _descriptionFocusNode.dispose();
     _costFocusNode.dispose();
     _estimatedCostFocusNode.dispose();
@@ -96,71 +96,54 @@ class _TaskEditScreenState extends State<TaskEditScreen>
 
   @override
   Widget build(BuildContext context) => NestedEntityEditScreen<Task, Job>(
-        entity: widget.task,
+        entity: task,
         entityName: 'Task',
         dao: DaoTask(),
         onInsert: (task) async => DaoTask().insert(task!),
         entityState: this,
-        editor: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              HMBTextField(
-                controller: _nameController,
-                focusNode: _nameFocusNode,
-                labelText: 'Summary',
-              ),
-              HMBTextArea(
-                controller: _descriptionController,
-                focusNode: _descriptionFocusNode,
-                labelText: 'Description',
-              ),
-              HMBTextField(
-                controller: _estimatedCostController,
-                focusNode: _estimatedCostFocusNode,
-                labelText: 'Estimated Cost',
-                keyboardType: TextInputType.number,
-              ),
-              HMBTextField(
-                controller: _effortInHoursController,
-                focusNode: _effortInHoursFocusNode,
-                labelText: 'Effort (decimal hours)',
-                keyboardType: TextInputType.number,
-              ),
-              FutureBuilderEx(
-                // ignore: discarded_futures
-                future: DaoTaskStatus().getAll(),
-                builder: (context, items) => FutureBuilderEx(
-                    future:
-                        // ignore: discarded_futures
-                        DaoTaskStatus().getById(widget.task?.taskStatusId),
-                    builder: (context, taskStatus) => HMBDroplist<TaskStatus>(
-                        initialValue: taskStatus ?? items!.first,
-                        labelText: 'Task Status',
-                        items: items!,
-                        onChanged: (item) => June.getState(TaskStatusState.new)
-                            .taskStatusId = item?.id,
-                        format: (taskStatus) => taskStatus.name)),
-              ),
-              SwitchListTile(
-                title: const Text('Completed'),
-                value: _completed,
-                onChanged: (value) {
-                  setState(() {
-                    _completed = value;
-                  });
-                },
-              ),
+        editor: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            HMBTextField(
+              controller: _nameController,
+              focusNode: _summaryFocusNode,
+              labelText: 'Summary',
+              required: true,
+            ),
+            HMBTextArea(
+              controller: _descriptionController,
+              focusNode: _descriptionFocusNode,
+              labelText: 'Description',
+            ),
+            HMBTextField(
+              controller: _estimatedCostController,
+              focusNode: _estimatedCostFocusNode,
+              labelText: 'Estimated Cost',
+              keyboardType: TextInputType.number,
+            ),
+            HMBTextField(
+              controller: _effortInHoursController,
+              focusNode: _effortInHoursFocusNode,
+              labelText: 'Effort (decimal hours)',
+              keyboardType: TextInputType.number,
+            ),
+            _chooseTaskStatus(),
 
-              /// Check List CRUD
-              HBMCrudCheckList<Task>(
-                  parent: Parent(widget.task),
-                  daoJoin: JoinAdaptorTaskCheckList())
-            ],
-          ),
+            /// Check List CRUD
+            HBMCrudCheckList<Task>(
+                parent: Parent(task), daoJoin: JoinAdaptorTaskCheckList())
+          ],
         ),
       );
+
+  Widget _chooseTaskStatus() => HMBDroplist<TaskStatus>(
+      title: 'Set the Task Status',
+      initialItem: () async => DaoTaskStatus().getById(task?.taskStatusId ?? 1),
+      items: (filter) async => DaoTaskStatus().getByFilter(filter),
+      format: (item) => item.description,
+      onChanged: (item) {
+        June.getState(TaskStatusState.new).taskStatusId = item.id;
+      });
 
   @override
   Future<Task> forUpdate(Task task) async => Task.forUpdate(

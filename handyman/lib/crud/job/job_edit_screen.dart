@@ -153,26 +153,13 @@ class JobEditScreenState extends State<JobEditScreen>
         }),
       );
 
-  Widget _chooseStatus() => FutureBuilderEx(
-      // ignore: discarded_futures
-      future: DaoJobStatus().getAll(),
-      builder: (context, list) => HMBDroplist<JobStatus>(
-          labelText: 'Status',
-          items: list!,
-          initialValue: list.firstWhere(
-              (element) =>
-                  element.id == June.getState(SelectJobStatus.new).jobStatusId,
-              orElse: () {
-            final defaultState = list[0];
-            June.getState(SelectJobStatus.new).jobStatusId = defaultState.id;
-            return defaultState;
-          }),
-          onChanged: (status) => setState(
-                () {
-                  June.getState(SelectJobStatus.new).jobStatusId = status?.id;
-                },
-              ),
-          format: (value) => value.name));
+  Widget _chooseStatus() => HMBDroplist<JobStatus>(
+      title: 'Status',
+      items: (filter) async => DaoJobStatus().getAll(),
+      initialItem: () async => DaoJobStatus().getById(widget.job?.jobStatusId),
+      onChanged: (status) =>
+          June.getState(SelectJobStatus.new).jobStatusId = status.id,
+      format: (value) => value.name);
 
   HMBButton _chooseDate() => HMBButton(
         onPressed: _selectDate,

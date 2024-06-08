@@ -1,45 +1,90 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 
-class HMBDroplist<T> extends StatelessWidget {
-  const HMBDroplist({
-    required this.labelText,
-    required this.initialValue,
-    required this.items,
-    required this.onChanged,
-    this.leadingSpace = true,
-    super.key,
-    this.format,
-  });
+import 'hmb_droplist_dialog.dart';
 
-  final T? initialValue;
-  final String labelText;
-  final List<T> items;
-  final bool leadingSpace;
-  final void Function(T? value) onChanged;
-  final String Function(T value)? format;
+class HMBDroplist<T> extends StatefulWidget {
+  const HMBDroplist({
+    required this.initialItem,
+    required this.items,
+    required this.format,
+    required this.onChanged,
+    required this.title,
+    super.key,
+  });
+  final Future<T?> Function() initialItem;
+  final Future<List<T>> Function(String? filter) items;
+  final String Function(T) format;
+  final void Function(T) onChanged;
+  final String title;
 
   @override
-  Widget build(BuildContext context) => Column(
-        children: [
-          if (leadingSpace) const SizedBox(height: 16),
-          DropdownButtonFormField<T>(
-            value: initialValue,
-            decoration: InputDecoration(
-              labelText: labelText,
-              border: const OutlineInputBorder(),
-            ),
-            items: _getDropdownItems(items),
-            onChanged: onChanged,
-          ),
-        ],
-      );
+  _HMBDroplistState<T> createState() => _HMBDroplistState<T>();
+}
 
-  List<DropdownMenuItem<T>> _getDropdownItems(List<T> values) => values
-      .map((type) => DropdownMenuItem<T>(
-            value: type,
-            child: Text(format != null ? format!(type) : type.toString()),
-          ))
-      .toList();
+class _HMBDroplistState<T> extends State<HMBDroplist<T>> {
+  T? _selectedItem;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedItem();
+  }
+
+  Future<void> _loadSelectedItem() async {
+    _selectedItem = await widget.initialItem();
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: () async {
+          final selectedItem = await showDialog<T>(
+            context: context,
+            builder: (context) => HMBDroplistDialog<T>(
+              getItems: widget.items,
+              formatItem: widget.format,
+              title: widget.title,
+              selectedItem: _selectedItem,
+            ),
+          );
+
+          if (selectedItem != null) {
+            if (mounted) {
+              setState(() {
+                _selectedItem = selectedItem;
+              });
+            }
+            widget.onChanged(selectedItem);
+          }
+        },
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (_loading)
+                    const CircularProgressIndicator()
+                  else
+                    Text(_selectedItem != null
+                        ? widget.format(_selectedItem as T)
+                        : widget.title),
+                  const Icon(Icons.arrow_drop_down),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
 }

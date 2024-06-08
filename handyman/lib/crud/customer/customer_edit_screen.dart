@@ -93,12 +93,14 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                           });
                         }),
                     HMBDroplist<CustomerType>(
-                        initialValue: _selectedCustomerType,
-                        items: CustomerType.values,
-                        labelText: 'Customer Type',
-                        onChanged: (newValue) {
-                          _selectedCustomerType = newValue!;
-                        }),
+                      initialItem: () async => _selectedCustomerType,
+                      items: (filter) async => CustomerType.values,
+                      title: 'Customer Type',
+                      onChanged: (newValue) {
+                        _selectedCustomerType = newValue;
+                      },
+                      format: (item) => item.name,
+                    ),
                   ],
                 ),
                 HMBCrudContact(

@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:june/june.dart';
+import 'package:strings/strings.dart';
 
 import '../../dao/dao_checklist.dart';
 import '../../dao/join_adaptors/dao_join_adaptor.dart';
@@ -53,6 +54,13 @@ class _CheckListEditScreenState extends State<CheckListEditScreen>
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) =>
       NestedEntityEditScreen<CheckList, Customer>(
         entity: widget.checklist,
@@ -63,6 +71,7 @@ class _CheckListEditScreenState extends State<CheckListEditScreen>
             widget.daoJoin.insertForParent(checklist!, widget.parent),
         editor: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
           children: [
             // Add other form fields for the new fields
             HMBTextField(controller: _nameController, labelText: 'Name'),
@@ -70,17 +79,28 @@ class _CheckListEditScreenState extends State<CheckListEditScreen>
                 controller: _descriptionController, labelText: 'Description'),
             if (widget.checkListType == null)
               HMBDroplist<CheckListType>(
-                  initialValue:
+                  initialItem: () async =>
                       widget.checklist?.listType ?? CheckListType.global,
-                  labelText: 'Checklist Type',
-                  items: CheckListType.values,
+                  title: 'Checklist Type',
+                  items: (filter) async => Strings.isEmpty(filter)
+                      ? CheckListType.values
+                      : CheckListType.values
+                          .where((item) => item.name.contains(filter!))
+                          .toList(),
                   onChanged: (item) => June.getState(CheckListTypeStatus.new)
-                      .checkListType = item!,
+                      .checkListType = item,
                   format: (taskStatus) => taskStatus.name),
-
-            HBMCrudCheckListItem<CheckList>(
-              parent: Parent(widget.checklist),
-              daoJoin: JoinAdaptorCheckListCheckListItem(),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    HBMCrudCheckListItem<CheckList>(
+                      parent: Parent(widget.checklist),
+                      daoJoin: JoinAdaptorCheckListCheckListItem(),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
