@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:strings/strings.dart';
 
 import 'mail_to_icon.dart';
 
@@ -28,8 +29,8 @@ class HMBEmailField extends StatelessWidget {
             return 'Please enter the email address';
           }
 
-          if (value != null) {
-            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+          if (Strings.isNotBlank(value)) {
+            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value!)) {
               return 'Please enter a valid email address';
             }
           }
