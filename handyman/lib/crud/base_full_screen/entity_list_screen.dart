@@ -1,7 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 
@@ -38,14 +34,12 @@ class EntityListScreenState<T extends Entity<T>>
     extends State<EntityListScreen<T>> {
   late Future<List<T>> entities;
   String? filterOption;
-
   late final TextEditingController filterController;
 
   @override
   void initState() {
     super.initState();
     filterController = TextEditingController();
-    // ignore: discarded_futures
     entities = widget._fetchList(null);
   }
 
@@ -63,8 +57,9 @@ class EntityListScreenState<T extends Entity<T>>
           title: Text(widget.pageTitle),
           actions: [
             SizedBox(
-              width: 300,
+              width: 250,
               child: HMBTextField(
+                leadingSpace: false,
                 labelText: 'Filter',
                 controller: filterController,
                 onChanged: (newValue) async {
@@ -95,34 +90,38 @@ class EntityListScreenState<T extends Entity<T>>
             ),
           ],
         ),
-        body: FutureBuilderEx<List<T>>(
-          future: entities,
-          waitingBuilder: (_) =>
-              const Center(child: CircularProgressIndicator()),
-          builder: (context, list) {
-            if (list == null || list.isEmpty) {
-              return const Center(
+        body: Padding(
+          padding: const EdgeInsets.all(8),
+          child: FutureBuilderEx<List<T>>(
+            future: entities,
+            waitingBuilder: (_) =>
+                const Center(child: CircularProgressIndicator()),
+            builder: (context, list) {
+              if (list == null || list.isEmpty) {
+                return const Center(
                   child: Text(
-                'No records found.',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ));
-            } else {
-              return _buildListTiles(list);
-            }
-          },
+                    'No records found.',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                  ),
+                );
+              } else {
+                return _buildListTiles(list);
+              }
+            },
+          ),
         ),
       );
 
   Widget _buildListTiles(List<T> list) => ListView.builder(
-        padding: const EdgeInsets.all(8),
+        // padding: const EdgeInsets.all(8),
         itemCount: list.length,
         itemBuilder: (context, index) {
           final entity = list[index];
           return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8),
+            // margin: const EdgeInsets.symmetric(vertical: 8),
             elevation: 2,
             child: ListTile(
-              title: widget.title(entity),
+              // widget.title(entity),
               subtitle: widget.details(entity),
               trailing: IconButton(
                 icon: const Icon(Icons.delete, color: Colors.red),
