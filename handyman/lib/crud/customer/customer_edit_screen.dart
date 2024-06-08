@@ -20,6 +20,7 @@ class CustomerEditScreen extends StatefulWidget {
   final Customer? customer;
 
   @override
+  // ignore: library_private_types_in_public_api
   _CustomerEditScreenState createState() => _CustomerEditScreenState();
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

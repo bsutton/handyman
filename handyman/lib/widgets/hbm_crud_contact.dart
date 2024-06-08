@@ -18,6 +18,7 @@ class HMBCrudContact<P extends Entity<P>> extends StatefulWidget {
   final Parent<P> parent;
 
   @override
+  // ignore: library_private_types_in_public_api
   _HMBCrudContactState<P> createState() => _HMBCrudContactState<P>();
 }
 

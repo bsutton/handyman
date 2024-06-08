@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:strings/strings.dart';
 
@@ -29,7 +28,9 @@ Future<void> upgradeDb(Database db, int oldVersion, int newVersion) async {
 
   // sort the list of upgrade script numerically after stripping
   // of the .sql extension.
-  upgradeAssets.sort((a, b) => extractVerionForSQLUpgradeScript(a) - extractVerionForSQLUpgradeScript(b));
+  upgradeAssets.sort((a, b) =>
+      extractVerionForSQLUpgradeScript(a) -
+      extractVerionForSQLUpgradeScript(b));
 
   final firstUpgrade = oldVersion + 1;
 
@@ -50,7 +51,9 @@ Future<int> getLatestVersion() async {
 
   // sort the list of upgrade script numerically after stripping
   // of the .sql extension.
-  upgradeAssets.sort((a, b) => extractVerionForSQLUpgradeScript(a) - extractVerionForSQLUpgradeScript(b));
+  upgradeAssets.sort((a, b) =>
+      extractVerionForSQLUpgradeScript(a) -
+      extractVerionForSQLUpgradeScript(b));
 
   return extractVerionForSQLUpgradeScript(upgradeAssets.last);
 }
@@ -68,8 +71,6 @@ Future<void> _executeScript(Database db, String pathToScript) async {
     await db.transaction((txn) async => txn.execute(statement));
   }
 }
-
-
 
 Future<void> x(Database db, String command) async {
   await db.execute(command);
