@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'hmb_droplist_dialog.dart';
@@ -18,6 +20,7 @@ class HMBDroplist<T> extends StatefulWidget {
   final String title;
 
   @override
+  // ignore: library_private_types_in_public_api
   _HMBDroplistState<T> createState() => _HMBDroplistState<T>();
 }
 
@@ -28,7 +31,7 @@ class _HMBDroplistState<T> extends State<HMBDroplist<T>> {
   @override
   void initState() {
     super.initState();
-    _loadSelectedItem();
+    unawaited(_loadSelectedItem());
   }
 
   Future<void> _loadSelectedItem() async {

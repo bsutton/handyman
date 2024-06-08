@@ -17,6 +17,7 @@ class HMBDroplistDialog<T> extends StatefulWidget {
   final T? selectedItem;
 
   @override
+  // ignore: library_private_types_in_public_api
   _HMBDroplistDialogState<T> createState() => _HMBDroplistDialogState<T>();
 }
 

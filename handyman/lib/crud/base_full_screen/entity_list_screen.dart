@@ -42,6 +42,7 @@ class EntityListScreenState<T extends Entity<T>>
   void initState() {
     super.initState();
     filterController = TextEditingController();
+    // ignore: discarded_futures
     entities = widget._fetchList(null);
   }
 
