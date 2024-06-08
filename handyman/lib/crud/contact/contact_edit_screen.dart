@@ -80,7 +80,7 @@ class _ContactEditScreenState extends State<ContactEditScreen>
         onInsert: (contact) async =>
             widget.daoJoin.insertForParent(contact!, widget.parent),
         entityState: this,
-        editor: Column(
+        editor: (contact) => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             HMBTextField(
@@ -135,4 +135,8 @@ class _ContactEditScreenState extends State<ContactEditScreen>
         officeNumber: _officeNumberController.text,
         emailAddress: _emailaddressController.text,
       );
+  @override
+  void refresh() {
+    setState(() {});
+  }
 }

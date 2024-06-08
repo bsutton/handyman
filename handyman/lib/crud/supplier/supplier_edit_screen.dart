@@ -42,7 +42,7 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
         entityName: 'Supplier',
         dao: DaoSupplier(),
         entityState: this,
-        editor: Column(
+        editor: (supplier) => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Column(
@@ -63,11 +63,11 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
                   ],
                 ),
                 HMBCrudContact(
-                    parent: Parent(widget.supplier),
+                    parent: Parent(supplier),
                     daoJoin: JoinAdaptorSupplierContact()),
                 HBMCrudSite(
                     daoJoin: JoinAdaptorSupplierSite(),
-                    parent: Parent(widget.supplier)),
+                    parent: Parent(supplier)),
               ],
             ),
           ],
@@ -84,4 +84,8 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
   Future<Supplier> forInsert() async => Supplier.forInsert(
         name: _nameController.text,
       );
+        @override
+  void refresh() {
+    setState(() {});
+  }
 }

@@ -1,4 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +59,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
         entityName: 'Customer',
         dao: DaoCustomer(),
         entityState: this,
-        editor: Column(
+        editor: (customer) =>  Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Column(
@@ -103,13 +102,13 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                     ),
                   ],
                 ),
-                HMBCrudContact(
-                  parent: Parent(widget.customer),
+                HMBCrudContact<Customer>(
+                  parent: Parent(customer),
                   daoJoin: JoinAdaptorCustomerContact(),
                 ),
                 HBMCrudSite(
                     daoJoin: JoinAdaptorCustomerSite(),
-                    parent: Parent(widget.customer)),
+                    parent: Parent(customer)),
               ],
             ),
           ],
@@ -130,4 +129,8 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
       disbarred: _disbarred,
       customerType: _selectedCustomerType,
       hourlyRate: MoneyEx.tryParse(_hourlyRateController.text));
+        @override
+  void refresh() {
+    setState(() {});
+  }
 }

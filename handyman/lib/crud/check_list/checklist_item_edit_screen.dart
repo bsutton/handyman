@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:june/june.dart';
-import 'package:money2/money2.dart';
 
 import '../../dao/dao_check_list_item_type.dart';
 import '../../dao/dao_checklist_item.dart';
@@ -45,8 +44,6 @@ class _CheckListItemEditScreenState extends State<CheckListItemEditScreen>
   late TextEditingController _effortInHoursController;
   late FocusNode _descriptionFocusNode;
 
-  final _formKey = GlobalKey<FormState>();
-
   @override
   void initState() {
     super.initState();
@@ -82,55 +79,41 @@ class _CheckListItemEditScreenState extends State<CheckListItemEditScreen>
         onInsert: (checkListItem) async =>
             widget.daoJoin.insertForParent(checkListItem!, widget.parent),
         entityState: this,
-        editor: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              HMBTextField(
-                controller: _descriptionController,
-                focusNode: _descriptionFocusNode,
-                labelText: 'Description',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the description';
-                  }
-                  return null;
-                },
-              ),
-              _chooseItemType(),
-              HMBTextField(
-                controller: _costController,
-                labelText: 'Cost',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the cost';
-                  }
-                  return null;
-                },
-              ),
-              HMBTextField(
-                controller: _effortInHoursController,
-                labelText: 'Effort (in hours)',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the effort in hours';
-                  }
-                  return null;
-                },
-              ),
-            ],
-          ),
+        editor: (checklistItem) => Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            HMBTextField(
+              controller: _descriptionController,
+              focusNode: _descriptionFocusNode,
+              labelText: 'Description',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter the description';
+                }
+                return null;
+              },
+            ),
+            _chooseItemType(checklistItem),
+            HMBTextField(
+              controller: _costController,
+              labelText: 'Cost',
+              keyboardType: TextInputType.number,
+            ),
+            HMBTextField(
+              controller: _effortInHoursController,
+              labelText: 'Effort (in hours)',
+              keyboardType: TextInputType.number,
+            ),
+          ],
         ),
       );
 
-  HMBDroplist<CheckListItemType> _chooseItemType() =>
+  HMBDroplist<CheckListItemType> _chooseItemType(
+          CheckListItem? checkListItem) =>
       HMBDroplist<CheckListItemType>(
         title: 'Item Type',
         initialItem: () async =>
-            DaoCheckListItemType().getById(widget.checkListItem?.itemTypeId),
+            DaoCheckListItemType().getById(checkListItem?.itemTypeId),
         items: (filter) async => DaoCheckListItemType().getByFilter(filter),
         format: (taskStatus) => taskStatus.name,
         onChanged: (item) =>
@@ -141,13 +124,13 @@ class _CheckListItemEditScreenState extends State<CheckListItemEditScreen>
   Future<CheckListItem> forUpdate(CheckListItem checkListItem) async =>
       CheckListItem.forUpdate(
         entity: checkListItem,
-        checkListId: widget.checkListItem!.checkListId,
+        checkListId: checkListItem.checkListId,
         description: _descriptionController.text,
         itemTypeId:
             June.getState(CheckListItemTypeStatus.new).checkListItemType?.id ??
                 0,
         cost: MoneyEx.tryParse(_costController.text),
-        effortInHours: Fixed.parse(_effortInHoursController.text),
+        effortInHours: FixedEx.tryParse(_effortInHoursController.text),
       );
 
   @override
@@ -160,6 +143,11 @@ class _CheckListItemEditScreenState extends State<CheckListItemEditScreen>
         cost: MoneyEx.tryParse(_costController.text),
         effortInHours: FixedEx.tryParse(_effortInHoursController.text),
       );
+
+  @override
+  void refresh() {
+    setState(() {});
+  }
 }
 
 class CheckListItemTypeStatus {

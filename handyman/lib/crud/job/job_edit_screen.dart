@@ -77,12 +77,12 @@ class JobEditScreenState extends State<JobEditScreen>
                   entityName: 'Job',
                   dao: DaoJob(),
                   entityState: this,
-                  editor: Column(
+                  editor: (job) => Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         HMBFormSection(children: [
                           _chooseCustomer(),
-                          _chooseStatus(),
+                          _chooseStatus(job),
                           _chooseDate(),
                           _showSummary(),
                           _showHourlyRate(),
@@ -98,11 +98,11 @@ class JobEditScreenState extends State<JobEditScreen>
                         ]),
 
                         /// allow the user to select a site for the job
-                        _chooseSite(customer),
+                        _chooseSite(customer, job),
 
                         /// allow the user to select a contact for the job
-                        _chooseContact(customer),
-                        _manageTasks(),
+                        _chooseContact(customer, job),
+                        _manageTasks(job),
                       ]))));
 
   Widget _showSummary() => HMBTextField(
@@ -124,18 +124,18 @@ class JobEditScreenState extends State<JobEditScreen>
         keyboardType: TextInputType.number,
       );
 
-  HMBChildCrudCard _manageTasks() => HMBChildCrudCard(
+  HMBChildCrudCard _manageTasks(Job? job) => HMBChildCrudCard(
         // headline: 'Tasks',
-        crudListScreen: TaskListScreen(parent: Parent(widget.job)),
+        crudListScreen: TaskListScreen(parent: Parent(job)),
       );
 
-  JuneBuilder<SelectedContact> _chooseContact(Customer? customer) =>
-      JuneBuilder(() => SelectedContact()..contactId = widget.job?.contactId,
+  JuneBuilder<SelectedContact> _chooseContact(Customer? customer, Job? job) =>
+      JuneBuilder(() => SelectedContact()..contactId = job?.contactId,
           builder: (state) =>
               HMBSelectContact(initialContact: state, customer: customer));
 
-  JuneBuilder<SelectedSite> _chooseSite(Customer? customer) =>
-      JuneBuilder(() => SelectedSite()..siteId = widget.job?.siteId,
+  JuneBuilder<SelectedSite> _chooseSite(Customer? customer, Job? job) =>
+      JuneBuilder(() => SelectedSite()..siteId = job?.siteId,
           builder: (state) =>
               HMBSelectSite(initialSite: state, customer: customer));
 
@@ -153,10 +153,10 @@ class JobEditScreenState extends State<JobEditScreen>
         }),
       );
 
-  Widget _chooseStatus() => HMBDroplist<JobStatus>(
+  Widget _chooseStatus(Job? job) => HMBDroplist<JobStatus>(
       title: 'Status',
       items: (filter) async => DaoJobStatus().getAll(),
-      initialItem: () async => DaoJobStatus().getById(widget.job?.jobStatusId),
+      initialItem: () async => DaoJobStatus().getById(job?.jobStatusId),
       onChanged: (status) =>
           June.getState(SelectJobStatus.new).jobStatusId = status.id,
       format: (value) => value.name);
@@ -215,6 +215,10 @@ class JobEditScreenState extends State<JobEditScreen>
     _hourlyRateFocusNode.dispose();
     _callOutFeeFocusNode.dispose();
     super.dispose();
+  }
+    @override
+  void refresh() {
+    setState(() {});
   }
 }
 

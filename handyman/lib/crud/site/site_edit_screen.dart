@@ -57,7 +57,7 @@ class _SiteEditScreenState extends State<SiteEditScreen>
         entityState: this,
         onInsert: (site) async =>
             widget.daoJoin.insertForParent(site!, widget.parent),
-        editor: Column(
+        editor: (site) => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Add other form fields for the new fields
@@ -102,4 +102,9 @@ class _SiteEditScreenState extends State<SiteEditScreen>
         state: _stateController.text,
         postcode: _sostcodeController.text,
       );
+
+  @override
+  void refresh() {
+    setState(() {});
+  }
 }

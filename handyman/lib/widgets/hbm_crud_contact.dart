@@ -1,15 +1,13 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:flutter/material.dart';
 
+import '../../entity/contact.dart';
+import '../../entity/entity.dart';
+import '../../widgets/hmb_child_crud_card.dart';
 import '../crud/base_nested/nested_list_screen.dart';
 import '../crud/contact/contact_list_screen.dart';
 import '../dao/join_adaptors/dao_join_adaptor.dart';
-import '../entity/contact.dart';
-import '../entity/entity.dart';
-import 'hmb_child_crud_card.dart';
 
-class HMBCrudContact<P extends Entity<P>> extends StatelessWidget {
+class HMBCrudContact<P extends Entity<P>> extends StatefulWidget {
   const HMBCrudContact({
     required this.parent,
     required this.daoJoin,
@@ -20,7 +18,25 @@ class HMBCrudContact<P extends Entity<P>> extends StatelessWidget {
   final Parent<P> parent;
 
   @override
-  Widget build(BuildContext context) => HMBChildCrudCard(
-      headline: 'Contacts',
-      crudListScreen: ContactListScreen(daoJoin: daoJoin, parent: parent));
+  _HMBCrudContactState<P> createState() => _HMBCrudContactState<P>();
+}
+
+class _HMBCrudContactState<P extends Entity<P>>
+    extends State<HMBCrudContact<P>> {
+  @override
+  Widget build(BuildContext context) => widget.parent.parent == null
+      ? const Center(child: Text('Save the parent first'))
+      : HMBChildCrudCard(
+          headline: 'Contacts',
+          crudListScreen:
+              ContactListScreen(daoJoin: widget.daoJoin, parent: widget.parent),
+        );
+
+  @override
+  void didUpdateWidget(covariant HMBCrudContact<P> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.parent.parent != widget.parent.parent) {
+      setState(() {});
+    }
+  }
 }

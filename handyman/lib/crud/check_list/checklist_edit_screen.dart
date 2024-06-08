@@ -69,18 +69,22 @@ class _CheckListEditScreenState extends State<CheckListEditScreen>
         entityState: this,
         onInsert: (checklist) async =>
             widget.daoJoin.insertForParent(checklist!, widget.parent),
-        editor: Column(
+        editor: (checklist) => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
             // Add other form fields for the new fields
-            HMBTextField(controller: _nameController, labelText: 'Name'),
+            HMBTextField(
+              controller: _nameController,
+              labelText: 'Name',
+              required: true,
+            ),
             HMBTextField(
                 controller: _descriptionController, labelText: 'Description'),
             if (widget.checkListType == null)
               HMBDroplist<CheckListType>(
                   initialItem: () async =>
-                      widget.checklist?.listType ?? CheckListType.global,
+                      checklist?.listType ?? CheckListType.global,
                   title: 'Checklist Type',
                   items: (filter) async => Strings.isEmpty(filter)
                       ? CheckListType.values
@@ -95,7 +99,7 @@ class _CheckListEditScreenState extends State<CheckListEditScreen>
                 child: Column(
                   children: [
                     HBMCrudCheckListItem<CheckList>(
-                      parent: Parent(widget.checklist),
+                      parent: Parent(checklist),
                       daoJoin: JoinAdaptorCheckListCheckListItem(),
                     ),
                   ],
@@ -118,6 +122,11 @@ class _CheckListEditScreenState extends State<CheckListEditScreen>
       name: _nameController.text,
       description: _descriptionController.text,
       listType: June.getState(CheckListTypeStatus.new).checkListType);
+
+  @override
+  void refresh() {
+    setState(() {});
+  }
 }
 
 class CheckListTypeStatus {

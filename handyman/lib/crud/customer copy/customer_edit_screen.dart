@@ -62,7 +62,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
         entityName: 'Customer',
         dao: DaoCustomer(),
         entityState: this,
-        editor: Column(
+        editor: (customer) =>  Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Column(
@@ -107,13 +107,13 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                     ),
                   ],
                 ),
-                HMBCrudContact(
-                  parent: Parent(widget.customer),
+                HMBCrudContact<Customer>(
+                  parent: Parent(customer),
                   daoJoin: JoinAdaptorCustomerContact(),
                 ),
                 HBMCrudSite(
                     daoJoin: JoinAdaptorCustomerSite(),
-                    parent: Parent(widget.customer)),
+                    parent: Parent(customer)),
               ],
             ),
           ],
@@ -134,4 +134,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
       disbarred: _disbarred,
       customerType: _selectedCustomerType,
       hourlyRate: _hourlyRateController.money ?? MoneyEx.zero);
+
+  @override
+  void refresh() {
+    setState(() {});
+  }
 }

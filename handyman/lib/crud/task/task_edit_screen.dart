@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:june/june.dart';
-import 'package:money2/money2.dart';
 
 import '../../dao/dao_task.dart';
 import '../../dao/dao_task_status.dart';
@@ -48,23 +47,21 @@ class _TaskEditScreenState extends State<TaskEditScreen>
   late FocusNode _effortInHoursFocusNode;
   late FocusNode _itemTypeIdFocusNode;
 
-  Task? task;
-
   @override
   void initState() {
     super.initState();
 
-    task = widget.task;
-    _nameController = TextEditingController(text: task?.name);
-    _descriptionController = TextEditingController(text: task?.description);
+    _nameController = TextEditingController(text: widget.task?.name);
+    _descriptionController =
+        TextEditingController(text: widget.task?.description);
     _estimatedCostController =
-        TextEditingController(text: task?.estimatedCost.toString());
+        TextEditingController(text: widget.task?.estimatedCost.toString());
     _effortInHoursController =
-        TextEditingController(text: task?.effortInHours.toString());
+        TextEditingController(text: widget.task?.effortInHours.toString());
     _taskStatusIdController =
-        TextEditingController(text: task?.taskStatusId.toString());
+        TextEditingController(text: widget.task?.taskStatusId.toString());
 
-    _completed = task?.completed ?? false;
+    _completed = widget.task?.completed ?? false;
 
     _summaryFocusNode = FocusNode();
     _descriptionFocusNode = FocusNode();
@@ -96,12 +93,12 @@ class _TaskEditScreenState extends State<TaskEditScreen>
 
   @override
   Widget build(BuildContext context) => NestedEntityEditScreen<Task, Job>(
-        entity: task,
+        entity: widget.task,
         entityName: 'Task',
         dao: DaoTask(),
         onInsert: (task) async => DaoTask().insert(task!),
         entityState: this,
-        editor: Column(
+        editor: (task) => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             HMBTextField(
@@ -127,7 +124,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
               labelText: 'Effort (decimal hours)',
               keyboardType: TextInputType.number,
             ),
-            _chooseTaskStatus(),
+            _chooseTaskStatus(task),
 
             /// Check List CRUD
             HBMCrudCheckList<Task>(
@@ -136,7 +133,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
         ),
       );
 
-  Widget _chooseTaskStatus() => HMBDroplist<TaskStatus>(
+  Widget _chooseTaskStatus(Task? task) => HMBDroplist<TaskStatus>(
       title: 'Set the Task Status',
       initialItem: () async => DaoTaskStatus().getById(task?.taskStatusId ?? 1),
       items: (filter) async => DaoTaskStatus().getByFilter(filter),
@@ -153,7 +150,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
         description: _descriptionController.text,
         completed: _completed,
         estimatedCost: MoneyEx.tryParse(_estimatedCostController.text),
-        effortInHours: Fixed.tryParse(_effortInHoursController.text),
+        effortInHours: FixedEx.tryParse(_effortInHoursController.text),
         taskStatusId: int.tryParse(_taskStatusIdController.text) ?? 0,
       );
 
@@ -167,6 +164,11 @@ class _TaskEditScreenState extends State<TaskEditScreen>
         effortInHours: FixedEx.tryParse(_effortInHoursController.text),
         taskStatusId: int.tryParse(_taskStatusIdController.text) ?? 0,
       );
+
+  @override
+  void refresh() {
+    setState(() {});
+  }
 }
 
 class TaskStatusState {
