@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dcli/dcli.dart';
+import 'package:handyman/database/management/db_utility.dart';
 import 'package:path/path.dart';
 
 void main() {
@@ -13,9 +14,22 @@ void main() {
 
   final relativePaths = assetFiles
       .map((path) => relative(path, from: DartProject.self.pathToProjectRoot))
-      .toList();
+      .toList()
 
-  final jsonContent = jsonEncode(relativePaths);
+    /// sort in descending order.
+    ..sort((a, b) =>
+        extractVerionForSQLUpgradeScript(b) -
+        extractVerionForSQLUpgradeScript(a));
+
+  var jsonContent = jsonEncode(relativePaths);
+
+  // make the json file more readable
+  jsonContent = jsonContent.replaceAllMapped(
+    RegExp(r'\[|\]'),
+    (match) => match.group(0) == '[' ? '[\n  ' : '\n]',
+  );
+  jsonContent = jsonContent.replaceAll(RegExp(r',\s*'), ',\n  ');
+
   final jsonFile = File('assets/sql/upgrade_list.json')
     ..writeAsStringSync(jsonContent);
 
