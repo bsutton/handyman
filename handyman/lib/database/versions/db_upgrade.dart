@@ -8,6 +8,7 @@ import 'package:strings/strings.dart';
 
 import '../management/database_helper.dart';
 import '../management/db_backup.dart';
+import '../management/db_utility.dart';
 
 /// Upgrade the database by applying each upgrade script in order
 /// from the db's current version to the latest version.
@@ -28,7 +29,7 @@ Future<void> upgradeDb(Database db, int oldVersion, int newVersion) async {
 
   // sort the list of upgrade script numerically after stripping
   // of the .sql extension.
-  upgradeAssets.sort((a, b) => _extractVersion(a) - _extractVersion(b));
+  upgradeAssets.sort((a, b) => extractVerionForSQLUpgradeScript(a) - extractVerionForSQLUpgradeScript(b));
 
   final firstUpgrade = oldVersion + 1;
 
@@ -36,7 +37,7 @@ Future<void> upgradeDb(Database db, int oldVersion, int newVersion) async {
   var index = 0;
   for (; index < upgradeAssets.length; index++) {
     final pathToScript = upgradeAssets[index];
-    final scriptVersion = _extractVersion(pathToScript);
+    final scriptVersion = extractVerionForSQLUpgradeScript(pathToScript);
     if (scriptVersion >= firstUpgrade) {
       print('Upgrading to $scriptVersion via $pathToScript');
       await _executeScript(db, pathToScript);
@@ -49,9 +50,9 @@ Future<int> getLatestVersion() async {
 
   // sort the list of upgrade script numerically after stripping
   // of the .sql extension.
-  upgradeAssets.sort((a, b) => _extractVersion(a) - _extractVersion(b));
+  upgradeAssets.sort((a, b) => extractVerionForSQLUpgradeScript(a) - extractVerionForSQLUpgradeScript(b));
 
-  return _extractVersion(upgradeAssets.last);
+  return extractVerionForSQLUpgradeScript(upgradeAssets.last);
 }
 
 Future<void> _executeScript(Database db, String pathToScript) async {
@@ -68,11 +69,7 @@ Future<void> _executeScript(Database db, String pathToScript) async {
   }
 }
 
-int _extractVersion(String pathToScript) {
-  final basename = basenameWithoutExtension(pathToScript);
 
-  return int.parse(basename.substring(1));
-}
 
 Future<void> x(Database db, String command) async {
   await db.execute(command);
