@@ -46,25 +46,7 @@ class EntityEditScreenState<E extends Entity<E>>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          HMBButton(
-                              label: 'Save & Close',
-                              onPressed: () async => _save(close: true)),
-                          const SizedBox(width: 5),
-                          HMBButton(
-                            onPressed: _save,
-                            label: 'Save',
-                          ),
-                          const SizedBox(width: 5),
-                          HMBButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            label: 'Cancel',
-                          ),
-                        ])),
+                _commandButtons(context),
 
                 /// Inject the entity specific editor.
                 Expanded(
@@ -77,6 +59,23 @@ class EntityEditScreenState<E extends Entity<E>>
               ],
             ),
           )));
+
+  Padding _commandButtons(BuildContext context) => Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
+        HMBButton(
+            label: 'Save & Close', onPressed: () async => _save(close: true)),
+        const SizedBox(width: 5),
+        HMBButton(
+          onPressed: _save,
+          label: 'Save',
+        ),
+        const SizedBox(width: 5),
+        HMBButton(
+          onPressed: () => Navigator.of(context).pop(),
+          label: 'Cancel',
+        ),
+      ]));
 
   Future<void> _save({bool close = false}) async {
     if (_formKey.currentState!.validate()) {
