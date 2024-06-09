@@ -115,7 +115,7 @@ class _HMBDroplistState<T> extends State<_HMBDroplist<T>> {
                   else
                     Text(_selectedItem != null
                         ? widget.format(_selectedItem as T)
-                        : widget.title),
+                        : 'Select a ${widget.title}'),
                   const Icon(Icons.arrow_drop_down),
                 ],
               ),
