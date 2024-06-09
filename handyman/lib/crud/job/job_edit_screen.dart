@@ -78,36 +78,37 @@ class JobEditScreenState extends State<JobEditScreen>
                   dao: DaoJob(),
                   entityState: this,
                   editor: (job) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        HMBFormSection(children: [
-                          _chooseCustomer(),
-                          _chooseStatus(job),
-                          _chooseDate(),
-                          _showSummary(),
-                          _showHourlyRate(),
-                          _showCallOutFee(),
-                          SizedBox(
-                            height: 200,
-                            child: RichEditor(
-                                controller: _descriptionController,
-                                focusNode: _descriptionFocusNode,
-                                key: UniqueKey()),
-                            // )
-                          ),
-                        ]),
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            HMBFormSection(children: [
+                              _showSummary(),
+                              _chooseCustomer(),
+                              _chooseStatus(job),
+                              _chooseDate(),
+                              _showHourlyRate(),
+                              _showCallOutFee(),
+                              SizedBox(
+                                height: 200,
+                                child: RichEditor(
+                                    controller: _descriptionController,
+                                    focusNode: _descriptionFocusNode,
+                                    key: UniqueKey()),
+                                // )
+                              ),
+                            ]),
 
-                        /// allow the user to select a site for the job
-                        _chooseSite(customer, job),
+                            /// allow the user to select a site for the job
+                            _chooseSite(customer, job),
 
-                        /// allow the user to select a contact for the job
-                        _chooseContact(customer, job),
-                        _manageTasks(job),
-                      ]))));
+                            /// allow the user to select a contact for the job
+                            _chooseContact(customer, job),
+                            _manageTasks(job),
+                          ]))));
 
   Widget _showSummary() => HMBTextField(
         controller: _summaryController,
         labelText: 'Job Summary',
+        required: true,
       );
 
   Widget _showHourlyRate() => HMBTextField(
@@ -216,7 +217,8 @@ class JobEditScreenState extends State<JobEditScreen>
     _callOutFeeFocusNode.dispose();
     super.dispose();
   }
-    @override
+
+  @override
   void refresh() {
     setState(() {});
   }
