@@ -34,4 +34,9 @@ void main() {
     ..writeAsStringSync(jsonContent);
 
   print('SQL Asset list generated: ${jsonFile.path}');
+
+// TODO(bsutton): the rich text editor includes randome icons
+// so tree shaking of icons isn't possible. Can we fix this?
+  'flutter build apk --no-tree-shake-icons'.run;
+  'flutter install'.run;
 }
