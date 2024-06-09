@@ -58,10 +58,11 @@ class JobEditScreenState extends State<JobEditScreen>
     _hourlyRateFocusNode = FocusNode();
     _callOutFeeFocusNode = FocusNode();
 
-    // Initialize SelectJobStatus state
-    if (widget.job != null) {
-      June.getState(SelectJobStatus.new).jobStatusId = widget.job!.jobStatusId;
-    }
+    /// reset the state.
+    June.getState(SelectedCustomer.new).customerId = widget.job?.customerId;
+    June.getState(SelectJobStatus.new).jobStatusId = widget.job?.jobStatusId;
+    June.getState(SelectedSite.new).siteId = widget.job?.siteId;
+    June.getState(SelectedContact.new).contactId = widget.job?.contactId;
   }
 
   @override
