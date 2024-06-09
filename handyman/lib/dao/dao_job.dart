@@ -30,6 +30,17 @@ class DaoJob extends Dao<Job> {
   @override
   Job fromMap(Map<String, dynamic> map) => Job.fromMap(map);
 
+  /// getAll - sort by modified date descending
+  @override
+  Future<List<Job>> getAll([Transaction? transaction]) async {
+    final db = getDb(transaction);
+    final List<Map<String, dynamic>> maps =
+        await db.query(tableName, orderBy: 'modifiedDate desc');
+    final list = List.generate(maps.length, (i) => fromMap(maps[i]));
+
+    return list;
+  }
+
   /// search for jobs given a user supplied filter string.
   Future<List<Job>> getByFilter(String? filter) async {
     final db = getDb();
@@ -50,6 +61,7 @@ where j.summary like ?
 or j.description like ?
 or c.name like ?
 or js.name like ?
+order by job.modifiedDate desc
 ''', [likeArg, likeArg, likeArg, likeArg]);
 
     return toList(data);
