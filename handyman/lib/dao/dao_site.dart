@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:strings/strings.dart';
 
 import '../entity/customer.dart';
 import '../entity/job.dart';
@@ -79,6 +80,30 @@ join customer cu
   on sc.customer_id = cu.id
 where cu.id =? 
 ''', [customer.id]);
+
+    return toList(data);
+  }
+
+  /// search for Sites given a user supplied filter string.
+  Future<List<Site>> getByFilter(Customer? customer, String? filter) async {
+    final db = getDb();
+
+    if (Strings.isBlank(filter)) {
+      return getByCustomer(customer);
+    }
+
+    final likeArg = '''%$filter%''';
+    final data = await db.rawQuery('''
+select s.*
+from site s
+join customer c
+  on c.id = s.customer_id
+where s.address1 like ?
+or s.address2 like ?
+or s.suburb like ?
+or s.state like ?
+or s.postcode like ?
+''', [likeArg, likeArg, likeArg, likeArg, likeArg]);
 
     return toList(data);
   }
