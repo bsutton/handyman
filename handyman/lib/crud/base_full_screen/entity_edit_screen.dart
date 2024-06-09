@@ -68,9 +68,6 @@ class EntityEditScreenState<E extends Entity<E>>
                     child: widget.editor(_currentEntity),
                   ),
                 ),
-
-                /// Save /Cancel Buttons
-                const SizedBox(height: 16),
               ],
             ),
           ),
@@ -118,7 +115,7 @@ class EntityEditScreenState<E extends Entity<E>>
         await widget.dao.insert(newEntity);
         setState(() {
           _currentEntity = newEntity;
-          widget.entityState.refresh();
+          // widget.entityState.refresh();
         });
       }
 
