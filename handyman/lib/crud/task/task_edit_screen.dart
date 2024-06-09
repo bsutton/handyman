@@ -38,7 +38,6 @@ class _TaskEditScreenState extends State<TaskEditScreen>
   late TextEditingController _descriptionController;
   late TextEditingController _estimatedCostController;
   late TextEditingController _effortInHoursController;
-  late TextEditingController _taskStatusIdController;
   late bool _completed;
   late FocusNode _summaryFocusNode;
   late FocusNode _descriptionFocusNode;
@@ -58,8 +57,6 @@ class _TaskEditScreenState extends State<TaskEditScreen>
         TextEditingController(text: widget.task?.estimatedCost.toString());
     _effortInHoursController =
         TextEditingController(text: widget.task?.effortInHours.toString());
-    _taskStatusIdController =
-        TextEditingController(text: widget.task?.taskStatusId.toString());
 
     _completed = widget.task?.completed ?? false;
 
@@ -81,7 +78,6 @@ class _TaskEditScreenState extends State<TaskEditScreen>
     _descriptionController.dispose();
     _estimatedCostController.dispose();
     _effortInHoursController.dispose();
-    _taskStatusIdController.dispose();
     _summaryFocusNode.dispose();
     _descriptionFocusNode.dispose();
     _costFocusNode.dispose();
@@ -144,26 +140,24 @@ class _TaskEditScreenState extends State<TaskEditScreen>
 
   @override
   Future<Task> forUpdate(Task task) async => Task.forUpdate(
-        entity: task,
-        jobId: widget.job.id,
-        name: _nameController.text,
-        description: _descriptionController.text,
-        completed: _completed,
-        estimatedCost: MoneyEx.tryParse(_estimatedCostController.text),
-        effortInHours: FixedEx.tryParse(_effortInHoursController.text),
-        taskStatusId: int.tryParse(_taskStatusIdController.text) ?? 0,
-      );
+      entity: task,
+      jobId: widget.job.id,
+      name: _nameController.text,
+      description: _descriptionController.text,
+      completed: _completed,
+      estimatedCost: MoneyEx.tryParse(_estimatedCostController.text),
+      effortInHours: FixedEx.tryParse(_effortInHoursController.text),
+      taskStatusId: June.getState(TaskStatusState.new).taskStatusId!);
 
   @override
   Future<Task> forInsert() async => Task.forInsert(
-        jobId: widget.job.id,
-        name: _nameController.text,
-        description: _descriptionController.text,
-        completed: _completed,
-        estimatedCost: MoneyEx.tryParse(_estimatedCostController.text),
-        effortInHours: FixedEx.tryParse(_effortInHoursController.text),
-        taskStatusId: int.tryParse(_taskStatusIdController.text) ?? 0,
-      );
+      jobId: widget.job.id,
+      name: _nameController.text,
+      description: _descriptionController.text,
+      completed: _completed,
+      estimatedCost: MoneyEx.tryParse(_estimatedCostController.text),
+      effortInHours: FixedEx.tryParse(_effortInHoursController.text),
+      taskStatusId: June.getState(TaskStatusState.new).taskStatusId!);
 
   @override
   void refresh() {
