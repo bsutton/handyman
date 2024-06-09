@@ -56,6 +56,7 @@ class _CheckListItemEditScreenState extends State<CheckListItemEditScreen>
 
     _descriptionFocusNode = FocusNode();
 
+    /// Set focus after the page finishes loading.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_descriptionFocusNode);
     });
