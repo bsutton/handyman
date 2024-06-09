@@ -3,19 +3,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'hmb_droplist_dialog.dart';
-import 'labeled_container.dart';
 
 class HMBDroplist<T> extends FormField<T> {
   HMBDroplist({
-    required this.initialItem,
-    required this.items,
-    required this.format,
-    required this.onChanged,
-    required this.title,
-    this.required = true,
+    required Future<T?> Function() initialItem,
+    required Future<List<T>> Function(String? filter) items,
+    required String Function(T) format,
+    required void Function(T) onChanged,
+    required String title,
+    super.onSaved,
+    super.initialValue,
+    bool required = true,
     super.key,
   }) : super(
-          builder: (state) => _HMBDroplistContent<T>(
+          autovalidateMode: AutovalidateMode.always,
+          builder: (state) => _HMBDroplist<T>(
             state: state,
             initialItem: initialItem,
             items: items,
@@ -25,62 +27,15 @@ class HMBDroplist<T> extends FormField<T> {
           ),
           validator: (value) {
             if (required && value == null) {
-              return 'Required';
+              return 'Please select an item';
             }
             return null;
           },
         );
-
-  final Future<T?> Function() initialItem;
-  final Future<List<T>> Function(String? filter) items;
-  final String Function(T) format;
-  final void Function(T) onChanged;
-  final String title;
-  final bool required;
-
-  @override
-  FormFieldState<T> createState() => _HMBDroplistState<T>();
 }
 
-class _HMBDroplistState<T> extends FormFieldState<T> {
-  @override
-  HMBDroplist<T> get widget => super.widget as HMBDroplist<T>;
-
-  T? _selectedItem;
-  bool _loading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    unawaited(_loadSelectedItem());
-  }
-
-  Future<void> _loadSelectedItem() async {
-    _selectedItem = await widget.initialItem();
-    setState(() {
-      _loading = false;
-    });
-  }
-
-  @override
-  void didChange(T? value) {
-    super.didChange(value);
-    _selectedItem = value;
-  }
-
-  @override
-  Widget build(BuildContext context) => _HMBDroplistContent<T>(
-        state: this,
-        initialItem: widget.initialItem,
-        items: widget.items,
-        format: widget.format,
-        onChanged: widget.onChanged,
-        title: widget.title,
-      );
-}
-
-class _HMBDroplistContent<T> extends StatelessWidget {
-  const _HMBDroplistContent({
+class _HMBDroplist<T> extends StatefulWidget {
+  const _HMBDroplist({
     required this.state,
     required this.initialItem,
     required this.items,
@@ -97,59 +52,86 @@ class _HMBDroplistContent<T> extends StatelessWidget {
   final String title;
 
   @override
-  Widget build(BuildContext context) {
-    final state = this.state as _HMBDroplistState<T>;
-    return GestureDetector(
-      onTap: () async {
-        final selectedItem = await showDialog<T>(
-          context: context,
-          builder: (context) => HMBDroplistDialog<T>(
-            getItems: items,
-            formatItem: format,
-            title: title,
-            selectedItem: state._selectedItem,
-          ),
-        );
+  _HMBDroplistState<T> createState() => _HMBDroplistState<T>();
+}
 
-        if (selectedItem != null) {
-          state.didChange(selectedItem);
-          onChanged(selectedItem);
-        }
-      },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 16,
-          ),
-          LabeledContainer(
-            labelText: title,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (state._loading)
-                  const CircularProgressIndicator()
-                else
-                  Text(state._selectedItem != null
-                      ? format(state._selectedItem as T)
-                      : 'Select a $title'),
-                const Icon(Icons.arrow_drop_down),
-              ],
+class _HMBDroplistState<T> extends State<_HMBDroplist<T>> {
+  T? _selectedItem;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_loadSelectedItem());
+  }
+
+  Future<void> _loadSelectedItem() async {
+    _selectedItem = await widget.initialItem();
+    setState(() {
+      _loading = false;
+    });
+    widget.state.didChange(_selectedItem);
+  }
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: () async {
+          final selectedItem = await showDialog<T>(
+            context: context,
+            builder: (context) => HMBDroplistDialog<T>(
+              getItems: widget.items,
+              formatItem: widget.format,
+              title: widget.title,
+              selectedItem: _selectedItem,
             ),
-          ),
-          if (state.hasError)
-            Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: Text(
-                state.errorText ?? '',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
-                  fontSize: 12,
-                ),
+          );
+
+          if (selectedItem != null) {
+            if (mounted) {
+              setState(() {
+                _selectedItem = selectedItem;
+              });
+            }
+            widget.state.didChange(selectedItem);
+            widget.onChanged(selectedItem);
+          }
+        },
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 16,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (_loading)
+                    const CircularProgressIndicator()
+                  else
+                    Text(_selectedItem != null
+                        ? widget.format(_selectedItem as T)
+                        : widget.title),
+                  const Icon(Icons.arrow_drop_down),
+                ],
               ),
             ),
-        ],
-      ),
-    );
-  }
+            if (widget.state.hasError)
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  widget.state.errorText ?? '',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
 }
