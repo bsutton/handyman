@@ -103,7 +103,7 @@ class NestedEntityEditScreenState<C extends Entity<C>, P extends Entity<P>>
         });
       } else {
         final newEntity = await widget.entityState.forInsert();
-        await widget.dao.insert(newEntity);
+        await widget.onInsert(newEntity);
         setState(() {
           _currentEntity = newEntity;
           widget.entityState.refresh();
