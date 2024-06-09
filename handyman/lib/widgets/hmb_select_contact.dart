@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:june/june.dart';
 
 import '../crud/contact/contact_edit_screen.dart';
@@ -8,6 +7,7 @@ import '../dao/join_adaptors/join_adaptor_customer_contact.dart';
 import '../entity/contact.dart';
 import '../entity/customer.dart';
 import 'hmb_add_button.dart';
+import 'hmb_droplist.dart';
 
 /// Allows the user to select a Primary Contact from the contacts
 /// owned by a customer and and the associate them with another
@@ -28,53 +28,40 @@ class HMBSelectContactState extends State<HMBSelectContact> {
   @override
   Widget build(BuildContext context) {
     if (widget.customer == null) {
-      return const Center(child: Text('Select a customer first.'));
+      return const Center(child: Text('Contacts: Select a customer first.'));
     } else {
-      return FutureBuilderEx(
-        // ignore: discarded_futures
-        future: DaoContact().getById(widget.initialContact.contactId),
-        builder: (context, selectedContact) => FutureBuilderEx<List<Contact>>(
-          // ignore: discarded_futures
-          future: DaoContact().getByCustomer(widget.customer),
-          builder: (context, data) => Row(
-            children: [
-              Expanded(
-                child: DropdownButtonFormField<Contact>(
-                  value: selectedContact,
-                  hint: const Text('Select a contact'),
-                  onChanged: (newValue) {
-                    setState(() {
-                      widget.initialContact.contactId = newValue?.id;
-                    });
-                  },
-                  items: data!
-                      .map((contact) => DropdownMenuItem<Contact>(
-                            value: contact,
-                            child: Text(contact.abbreviated()),
-                          ))
-                      .toList(),
-                  decoration: const InputDecoration(labelText: 'Contact'),
-                  // validator: (value) =>
-                  //     value == null ? 'Please select a Contact' : null,
-                ),
-              ),
-              HMBAddButton(
-                  enabled: true,
-                  onPressed: () async {
-                    final customer = await Navigator.push<Contact>(
-                      context,
-                      MaterialPageRoute<Contact>(
-                          builder: (context) => ContactEditScreen<Customer>(
-                              parent: widget.customer!,
-                              daoJoin: JoinAdaptorCustomerContact())),
-                    );
-                    setState(() {
-                      widget.initialContact.contactId = customer?.id;
-                    });
-                  }),
-            ],
+      return Row(
+        children: [
+          Expanded(
+            child: HMBDroplist<Contact>(
+                title: 'Contact',
+                initialItem: () async =>
+                    DaoContact().getById(widget.initialContact.contactId),
+                onChanged: (newValue) {
+                  setState(() {
+                    widget.initialContact.contactId = newValue.id;
+                  });
+                },
+                items: (filter) async =>
+                    DaoContact().getByCustomer(widget.customer),
+                format: (contact) => ' ${contact.firstName} ${contact.surname}',
+                required: false),
           ),
-        ),
+          HMBAddButton(
+              enabled: true,
+              onPressed: () async {
+                final customer = await Navigator.push<Contact>(
+                  context,
+                  MaterialPageRoute<Contact>(
+                      builder: (context) => ContactEditScreen<Customer>(
+                          parent: widget.customer!,
+                          daoJoin: JoinAdaptorCustomerContact())),
+                );
+                setState(() {
+                  widget.initialContact.contactId = customer?.id;
+                });
+              }),
+        ],
       );
     }
   }
