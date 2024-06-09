@@ -2,6 +2,7 @@
 
 import 'dart:ui';
 
+import '../util/hex_to_color.dart';
 import 'entity.dart';
 
 class JobStatus extends Entity<JobStatus> {
@@ -56,18 +57,7 @@ class JobStatus extends Entity<JobStatus> {
         'modifiedDate': modifiedDate.toIso8601String(),
       };
 
-  Color getColour() {
-    // Remove the leading `#` if present
-    var hex = colorCode.replaceAll('#', '');
-
-    // If the hex code is 6 characters long, add the opacity value (ff)
-    if (hex.length == 6) {
-      hex = 'ff$hex';
-    }
-
-    // Parse the hex string to an integer and create a Color object
-    return Color(int.parse(hex, radix: 16));
-  }
+  Color getColour() => hexToColor(colorCode);
 
   @override
   bool operator ==(Object other) {
