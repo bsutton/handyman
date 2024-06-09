@@ -74,7 +74,7 @@ class _CheckListItemEditScreenState extends State<CheckListItemEditScreen>
   Widget build(BuildContext context) =>
       NestedEntityEditScreen<CheckListItem, CheckList>(
         entity: widget.checkListItem,
-        entityName: 'CheckListItem',
+        entityName: 'Check List Item',
         dao: DaoCheckListItem(),
         onInsert: (checkListItem) async =>
             widget.daoJoin.insertForParent(checkListItem!, widget.parent),
