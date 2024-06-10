@@ -14,7 +14,7 @@ void main(List<String> args) {
     ..addFlag('assets',
         abbr: 'a',
         help:
-            'Update the list of assets - important to run for db upgrade scripts')
+            '''Update the list of assets - important to run for db upgrade scripts''')
     ..addFlag('build', abbr: 'b', help: 'build the apk')
     ..addFlag('install', abbr: 'i', help: 'install the apk');
 
