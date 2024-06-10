@@ -52,6 +52,20 @@ class JobListScreen extends StatelessWidget {
                             '''Description: ${RichEditor.createParchment(job.description).toPlainText().split('\n').first}''',
                           ),
                           HMBSiteText(label: 'Address:', site: site),
+                          FutureBuilderEx(
+                            // ignore: discarded_futures
+                            future: DaoJob().getJobStatistics(job),
+                            builder: (context, remainingTasks) => Row(
+                              children: [
+                                HMBText(
+                                    'Completed: ${remainingTasks!.completedTasks}/${remainingTasks.totalTasks}'),
+                                HMBText(
+                                    ' Effort(hrs): ${remainingTasks.completedEffort.format('0.00')}/${remainingTasks.totalEffort.format('0.00')}'),
+                                HMBText(
+                                    ' Earnings: ${remainingTasks.earnedCost}/${remainingTasks.totalCost}')
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     ),

@@ -1,8 +1,12 @@
+import 'package:money2/money2.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:strings/strings.dart';
 
 import '../entity/job.dart';
+import '../util/fixed_ex.dart';
+import '../util/money_ex.dart';
 import 'dao.dart';
+import 'dao_task.dart';
 
 class DaoJob extends Dao<Job> {
   @override
@@ -66,4 +70,49 @@ order by job.modifiedDate desc
 
     return toList(data);
   }
+
+  Future<JobStatistics> getJobStatistics(Job job) async {
+    final tasks = await DaoTask().getTasksByJob(job);
+
+    final totalTasks = tasks.length;
+    var completedTasks = 0;
+    var totalEffort = Fixed.zero;
+    var completedEffort = Fixed.zero;
+    var totalCost = MoneyEx.zero;
+    var earnedCost = MoneyEx.zero;
+
+    for (final task in tasks) {
+      if (task.completed) {
+        completedEffort += task.effortInHours ?? FixedEx.zero;
+        earnedCost += task.estimatedCost ?? MoneyEx.zero;
+        completedTasks++;
+      }
+      totalEffort += task.effortInHours ?? FixedEx.zero;
+      totalCost += task.estimatedCost ?? MoneyEx.zero;
+    }
+
+    return JobStatistics(
+        totalTasks: totalTasks,
+        completedTasks: completedTasks,
+        totalEffort: totalEffort,
+        completedEffort: completedEffort,
+        totalCost: totalCost,
+        earnedCost: earnedCost);
+  }
+}
+
+class JobStatistics {
+  JobStatistics(
+      {required this.totalTasks,
+      required this.completedTasks,
+      required this.totalEffort,
+      required this.completedEffort,
+      required this.totalCost,
+      required this.earnedCost});
+  final int totalTasks;
+  final int completedTasks;
+  final Fixed totalEffort;
+  final Fixed completedEffort;
+  final Money totalCost;
+  final Money earnedCost;
 }

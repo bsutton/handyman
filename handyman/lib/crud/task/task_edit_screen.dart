@@ -67,6 +67,8 @@ class _TaskEditScreenState extends State<TaskEditScreen>
     _effortInHoursFocusNode = FocusNode();
     _itemTypeIdFocusNode = FocusNode();
 
+    June.getState(TaskStatusState.new).taskStatusId = widget.task?.id;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_summaryFocusNode);
     });

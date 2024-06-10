@@ -1,5 +1,9 @@
+import 'package:money2/money2.dart';
+
 import '../entity/job.dart';
 import '../entity/task.dart';
+import '../util/fixed_ex.dart';
+import '../util/money_ex.dart';
 import 'dao.dart';
 
 class DaoTask extends Dao<Task> {
@@ -22,6 +26,39 @@ class DaoTask extends Dao<Task> {
     return tasks;
   }
 
+  Future<TaskStatistics> getTaskStatistics(Task task) async {
+    var totalEffort = Fixed.zero;
+    var completedEffort = Fixed.zero;
+    var totalCost = MoneyEx.zero;
+    var earnedCost = MoneyEx.zero;
+
+    if (task.completed) {
+      completedEffort += task.effortInHours ?? FixedEx.zero;
+      earnedCost += task.estimatedCost ?? MoneyEx.zero;
+    }
+    totalEffort += task.effortInHours ?? FixedEx.zero;
+    totalCost += task.estimatedCost ?? MoneyEx.zero;
+
+    return TaskStatistics(
+        totalEffort: totalEffort,
+        completedEffort: completedEffort,
+        totalCost: totalCost,
+        earnedCost: earnedCost);
+  }
+}
+
+class TaskStatistics {
+  TaskStatistics(
+      {required this.totalEffort,
+      required this.completedEffort,
+      required this.totalCost,
+      required this.earnedCost});
+  final Fixed totalEffort;
+  final Fixed completedEffort;
+  final Money totalCost;
+  final Money earnedCost;
+}
+
   // Future<void> deleteFromJob(Task task, Job job) async {
   //   await DaoTaskJob().deleteJoin(job, task);
   //   await delete(task.id);
@@ -31,4 +68,4 @@ class DaoTask extends Dao<Task> {
   //   await insert(task);
   //   await DaoTaskJob().insertJoin(task, job);
   // }
-}
+
