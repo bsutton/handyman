@@ -81,13 +81,13 @@ class EntityEditScreenState<E extends Entity<E>>
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             HMBButton(
-              label: 'Save & Close',
-              onPressed: () async => _save(close: true),
+              onPressed: _save,
+              label: 'Save',
             ),
             const SizedBox(width: 5),
             HMBButton(
-              onPressed: _save,
-              label: 'Save',
+              label: 'Save & Close',
+              onPressed: () async => _save(close: true),
             ),
             const SizedBox(width: 5),
             HMBButton(
