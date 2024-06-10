@@ -109,6 +109,7 @@ class JobEditScreenState extends State<JobEditScreen>
   Widget _showSummary() => HMBTextField(
         controller: _summaryController,
         labelText: 'Job Summary',
+        keyboardType: TextInputType.name,
         required: true,
       );
 

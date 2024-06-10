@@ -75,10 +75,10 @@ class _CheckListEditScreenState extends State<CheckListEditScreen>
           children: [
             // Add other form fields for the new fields
             HMBTextField(
-              controller: _nameController,
-              labelText: 'Name',
-              required: true,
-            ),
+                controller: _nameController,
+                labelText: 'Name',
+                required: true,
+                keyboardType: TextInputType.name),
             HMBTextField(
                 controller: _descriptionController, labelText: 'Description'),
             if (widget.checkListType == null)

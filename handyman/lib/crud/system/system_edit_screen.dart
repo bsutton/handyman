@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../dao/dao_system.dart';
 import '../../entity/system.dart';
 import '../../util/money_ex.dart';
+import '../../widgets/hmb_email_field.dart';
+import '../../widgets/hmb_phone_field.dart';
 import '../../widgets/hmb_text_field.dart';
 
 class SystemEditScreen extends StatefulWidget {
@@ -128,7 +130,7 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
           padding: const EdgeInsets.all(16),
           child: ListView(
             children: [
-              HMBTextField(
+              HMBEmailField(
                 controller: _fromEmailController,
                 labelText: 'From Email',
                 validator: (value) {
@@ -138,34 +140,50 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
                   return null;
                 },
               ),
-              HMBTextField(controller: _bsbController, labelText: 'BSB'),
               HMBTextField(
-                  controller: _accountNoController,
-                  labelText: 'Account Number'),
+                  controller: _bsbController,
+                  labelText: 'BSB',
+                  keyboardType: TextInputType.number),
               HMBTextField(
-                  controller: _addressLine1Controller,
-                  labelText: 'Address Line 1'),
+                controller: _accountNoController,
+                labelText: 'Account Number',
+                keyboardType: TextInputType.number,
+              ),
+              HMBTextField(
+                controller: _addressLine1Controller,
+                labelText: 'Address Line 1',
+                keyboardType: TextInputType.streetAddress,
+              ),
               HMBTextField(
                   controller: _addressLine2Controller,
-                  labelText: 'Address Line 2'),
+                  labelText: 'Address Line 2',
+                  keyboardType: TextInputType.streetAddress),
               HMBTextField(
-                  controller: _suburbController, labelText: 'Suburb'),
-              HMBTextField(controller: _stateController, labelText: 'State'),
+                controller: _suburbController,
+                labelText: 'Suburb',
+                keyboardType: TextInputType.name,
+              ),
               HMBTextField(
-                  controller: _postcodeController, labelText: 'Postcode'),
+                controller: _stateController,
+                labelText: 'State',
+                keyboardType: TextInputType.name,
+              ),
               HMBTextField(
+                  controller: _postcodeController,
+                  labelText: 'Post/Zip code',
+                  keyboardType: TextInputType.number),
+              HMBPhoneField(
                   controller: _mobileNumberController,
                   labelText: 'Mobile Number'),
-              HMBTextField(
+              HMBPhoneField(
                   controller: _landLineController, labelText: 'Land Line'),
-              HMBTextField(
+              HMBPhoneField(
                   controller: _officeNumberController,
                   labelText: 'Office Number'),
-              HMBTextField(
+              HMBEmailField(
                   controller: _emailAddressController,
                   labelText: 'To Email Address'),
-              HMBTextField(
-                  controller: _webUrlController, labelText: 'Web URL'),
+              HMBTextField(controller: _webUrlController, labelText: 'Web URL'),
               HMBTextField(
                   controller: _termsUrlController, labelText: 'Terms URL'),
               HMBTextField(

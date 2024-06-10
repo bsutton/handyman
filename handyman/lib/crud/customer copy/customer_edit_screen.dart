@@ -78,6 +78,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                       autofocus: true,
                       controller: _nameController,
                       labelText: 'Name',
+                      keyboardType: TextInputType.name,
                       required: true,
                     ),
                     HMBMoneyField(

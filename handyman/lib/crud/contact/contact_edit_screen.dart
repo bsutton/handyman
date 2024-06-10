@@ -87,6 +87,7 @@ class _ContactEditScreenState extends State<ContactEditScreen>
               controller: _firstNameController,
               focusNode: _firstNameFocusNode,
               labelText: 'First Name',
+              keyboardType: TextInputType.name,
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter the first name';
@@ -97,10 +98,12 @@ class _ContactEditScreenState extends State<ContactEditScreen>
             HMBTextField(
               controller: _surnameController,
               labelText: 'Surname',
+              keyboardType: TextInputType.name,
             ),
             HMBPhoneField(
               controller: _mobileNumberController,
               labelText: 'Mobile Number',
+              
             ),
             HMBPhoneField(
                 controller: _landlineController, labelText: 'Landline'),

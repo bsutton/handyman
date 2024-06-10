@@ -77,6 +77,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                       controller: _nameController,
                       labelText: 'Name',
                       required: true,
+                      keyboardType: TextInputType.name,
                     ),
                     HMBTextField(
                       controller: _hourlyRateController,

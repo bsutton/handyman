@@ -58,6 +58,7 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
                       autofocus: true,
                       controller: _nameController,
                       labelText: 'Name',
+                      keyboardType: TextInputType.name,
                       required: true,
                     ),
                   ],

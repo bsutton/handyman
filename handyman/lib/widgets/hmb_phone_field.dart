@@ -16,6 +16,7 @@ class HMBPhoneField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => TextFormField(
       controller: controller,
+      keyboardType:  TextInputType.phone,
       decoration: InputDecoration(
         labelText: labelText,
         suffixIcon: DialWidget(controller.text),
