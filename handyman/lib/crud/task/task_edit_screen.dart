@@ -67,7 +67,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
     _effortInHoursFocusNode = FocusNode();
     _itemTypeIdFocusNode = FocusNode();
 
-    June.getState(TaskStatusState.new).taskStatusId = widget.task?.id;
+    June.getState(TaskStatusState.new).taskStatusId = widget.task?.id ?? 1;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_summaryFocusNode);
@@ -126,7 +126,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
 
             /// Check List CRUD
             HBMCrudCheckList<Task>(
-                parentTitle: 'Job',
+                parentTitle: 'Task',
                 parent: Parent(task),
                 daoJoin: JoinAdaptorTaskCheckList())
           ],
@@ -134,7 +134,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
       );
 
   Widget _chooseTaskStatus(Task? task) => HMBDroplist<TaskStatus>(
-      title: 'Set the Task Status',
+      title: 'Task Status',
       initialItem: () async => DaoTaskStatus().getById(task?.taskStatusId ?? 1),
       items: (filter) async => DaoTaskStatus().getByFilter(filter),
       format: (item) => item.description,
