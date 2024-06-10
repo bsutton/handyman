@@ -98,9 +98,6 @@ class _HMBDroplistState<T> extends State<_HMBDroplist<T>> {
         },
         child: Column(
           children: [
-            const SizedBox(
-              height: 16,
-            ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               decoration: BoxDecoration(

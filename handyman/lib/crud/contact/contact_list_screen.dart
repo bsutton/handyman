@@ -13,15 +13,18 @@ class ContactListScreen<P extends Entity<P>> extends StatelessWidget {
   const ContactListScreen({
     required this.parent,
     required this.daoJoin,
+    required this.parentTitle,
     super.key,
   });
 
   final Parent<P> parent;
   final DaoJoinAdaptor<Contact, P> daoJoin;
+  final String parentTitle;
 
   @override
   Widget build(BuildContext context) => NestedEntityListScreen<Contact, P>(
       parent: parent,
+      parentTitle: parentTitle,
       pageTitle: 'Contacts',
       dao: DaoContact(),
       // ignore: discarded_futures

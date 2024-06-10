@@ -15,6 +15,7 @@ class TaskListScreen extends StatelessWidget {
   Widget build(BuildContext context) => NestedEntityListScreen<Task, Job>(
       parent: parent,
       pageTitle: 'Tasks',
+      parentTitle: 'Job',
       dao: DaoTask(),
       // ignore: discarded_futures
       fetchList: () => DaoTask().getTasksByJob(parent.parent!),

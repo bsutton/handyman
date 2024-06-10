@@ -12,17 +12,20 @@ class SiteListScreen<P extends Entity<P>> extends StatelessWidget {
   const SiteListScreen({
     required this.parent,
     required this.daoJoin,
+    required this.parentTitle,
     super.key,
   });
 
   final Parent<P> parent;
 
   final DaoJoinAdaptor<Site, P> daoJoin;
+  final String parentTitle;
 
   @override
   Widget build(BuildContext context) => NestedEntityListScreen<Site, P>(
       parent: parent,
       pageTitle: 'Sites',
+      parentTitle: parentTitle,
       dao: DaoSite(),
       onDelete: (site) async => daoJoin.deleteFromParent(site!, parent.parent!),
       onInsert: (site) async => daoJoin.insertForParent(site!, parent.parent!),

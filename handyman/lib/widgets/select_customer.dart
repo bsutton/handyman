@@ -37,18 +37,20 @@ class SelectCustomerState extends State<SelectCustomer> {
                 items: (filter) async => DaoCustomer().getByFilter(filter),
                 format: (customer) => customer.name),
           ),
-          HMBAddButton(
-              enabled: true,
-              onPressed: () async {
-                final customer = await Navigator.push<Customer>(
-                  context,
-                  MaterialPageRoute<Customer>(
-                      builder: (context) => const CustomerEditScreen()),
-                );
-                setState(() {
-                  widget.selectedCustomer.customerId = customer?.id;
-                });
-              }),
+          Center(
+            child: HMBButtonAdd(
+                enabled: true,
+                onPressed: () async {
+                  final customer = await Navigator.push<Customer>(
+                    context,
+                    MaterialPageRoute<Customer>(
+                        builder: (context) => const CustomerEditScreen()),
+                  );
+                  setState(() {
+                    widget.selectedCustomer.customerId = customer?.id;
+                  });
+                }),
+          ),
         ],
       );
 }

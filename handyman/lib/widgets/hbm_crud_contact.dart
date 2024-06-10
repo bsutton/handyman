@@ -11,11 +11,13 @@ class HMBCrudContact<P extends Entity<P>> extends StatefulWidget {
   const HMBCrudContact({
     required this.parent,
     required this.daoJoin,
+    required this.parentTitle,
     super.key,
   });
 
   final DaoJoinAdaptor<Contact, P> daoJoin;
   final Parent<P> parent;
+  final String parentTitle;
 
   @override
   // ignore: library_private_types_in_public_api
@@ -29,8 +31,10 @@ class _HMBCrudContactState<P extends Entity<P>>
       ? const Center(child: Text('Save the parent first'))
       : HMBChildCrudCard(
           headline: 'Contacts',
-          crudListScreen:
-              ContactListScreen(daoJoin: widget.daoJoin, parent: widget.parent),
+          crudListScreen: ContactListScreen(
+              daoJoin: widget.daoJoin,
+              parent: widget.parent,
+              parentTitle: widget.parentTitle),
         );
 
   @override

@@ -11,12 +11,14 @@ import 'checklist_edit_screen.dart';
 class CheckListListScreen<P extends Entity<P>> extends StatelessWidget {
   const CheckListListScreen({
     required this.parent,
+    required this.parentTitle,
     required this.daoJoin,
     super.key,
     this.checkListType,
   });
 
   final Parent<P> parent;
+  final String parentTitle;
 
   final DaoJoinAdaptor<CheckList, P> daoJoin;
   final CheckListType? checkListType;
@@ -25,6 +27,7 @@ class CheckListListScreen<P extends Entity<P>> extends StatelessWidget {
   Widget build(BuildContext context) => NestedEntityListScreen<CheckList, P>(
       parent: parent,
       pageTitle: 'CheckLists',
+      parentTitle: parentTitle,
       dao: DaoCheckList(),
       onDelete: (checklist) async =>
           daoJoin.deleteFromParent(checklist!, parent.parent!),

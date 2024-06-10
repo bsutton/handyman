@@ -124,7 +124,9 @@ class _TaskEditScreenState extends State<TaskEditScreen>
 
             /// Check List CRUD
             HBMCrudCheckList<Task>(
-                parent: Parent(task), daoJoin: JoinAdaptorTaskCheckList())
+                parentTitle: 'Job',
+                parent: Parent(task),
+                daoJoin: JoinAdaptorTaskCheckList())
           ],
         ),
       );

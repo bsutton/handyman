@@ -119,7 +119,7 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
           title: const Text('Edit System Entity'),
           actions: [
             IconButton(
-              icon: const Icon(Icons.save),
+              icon: const Icon(Icons.save, color: Colors.purple),
               onPressed: _saveForm,
             ),
           ],

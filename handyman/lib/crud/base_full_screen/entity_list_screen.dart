@@ -3,6 +3,7 @@ import 'package:future_builder_ex/future_builder_ex.dart';
 
 import '../../dao/dao.dart';
 import '../../entity/entities.dart';
+import '../../widgets/hmb_add_button.dart';
 import '../../widgets/hmb_text_field.dart';
 
 class EntityListScreen<T extends Entity<T>> extends StatefulWidget {
@@ -140,8 +141,8 @@ class EntityListScreenState<T extends Entity<T>>
             await _refreshEntityList();
           },
         ),
-        IconButton(
-          icon: const Icon(Icons.add),
+        HMBButtonAdd(
+          enabled: true,
           onPressed: () async {
             if (context.mounted) {
               await Navigator.push(

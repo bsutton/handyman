@@ -25,6 +25,7 @@ class NestedEntityListScreen<C extends Entity<C>, P extends Entity<P>>
     required this.pageTitle,
     required this.title,
     required this.details,
+    required this.parentTitle,
     required this.parent,
     required this.fetchList,
     super.key,
@@ -39,6 +40,7 @@ class NestedEntityListScreen<C extends Entity<C>, P extends Entity<P>>
   final Future<void> Function(C? entity) onInsert;
   final Future<List<C>> Function() fetchList;
   final Dao<C> dao;
+  final String parentTitle;
 
   @override
   NestedEntityListScreenState createState() =>
@@ -82,7 +84,7 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
             style: const TextStyle(fontSize: 18),
           ),
           actions: [
-            HMBAddButton(
+            HMBButtonAdd(
               enabled: widget.parent.parent != null,
               onPressed: () async {
                 if (context.mounted) {
@@ -102,10 +104,11 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
               const Center(child: CircularProgressIndicator()),
           builder: (context, list) {
             if (widget.parent.parent == null) {
-              return const Center(
+              return Center(
                   child: Text(
-                'Save the parent first.',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                'Save the ${widget.parentTitle} first.',
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ));
             }
             if (list!.isEmpty) {

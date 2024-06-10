@@ -39,7 +39,7 @@ class _HMBSitePrimaryState<P extends Entity<P>>
           if (widget.site != null) Text(widget.label),
           if (site != null) Text('''
 ${widget.site?.addressLine1}, ${widget.site?.addressLine2}, ${widget.site?.suburb}, ${widget.site?.state}, ${widget.site?.postcode}'''),
-          HMBAddButton(
+          HMBButtonAdd(
               enabled: true,
               onPressed: () async {
                 final site = await Navigator.push<Site>(

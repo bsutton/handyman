@@ -63,9 +63,11 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
                   ],
                 ),
                 HMBCrudContact(
+                    parentTitle: 'Supplier',
                     parent: Parent(supplier),
                     daoJoin: JoinAdaptorSupplierContact()),
                 HBMCrudSite(
+                    parentTitle: 'Supplier',
                     daoJoin: JoinAdaptorSupplierSite(),
                     parent: Parent(supplier)),
               ],
@@ -84,7 +86,7 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
   Future<Supplier> forInsert() async => Supplier.forInsert(
         name: _nameController.text,
       );
-        @override
+  @override
   void refresh() {
     setState(() {});
   }

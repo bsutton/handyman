@@ -47,7 +47,7 @@ class HMBSelectSiteState extends State<HMBSelectSite> {
                 format: (site) => site.abbreviated(),
                 required: false),
           ),
-          HMBAddButton(
+          HMBButtonAdd(
               enabled: true,
               onPressed: () async {
                 final customer = await Navigator.push<Site>(

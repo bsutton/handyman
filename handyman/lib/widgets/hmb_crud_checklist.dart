@@ -12,6 +12,7 @@ import 'hmb_child_crud_card.dart';
 class HBMCrudCheckList<P extends Entity<P>> extends StatelessWidget {
   const HBMCrudCheckList({
     required this.parent,
+    required this.parentTitle,
     required this.daoJoin,
     this.checkListType = CheckListType.owned,
     super.key,
@@ -20,10 +21,14 @@ class HBMCrudCheckList<P extends Entity<P>> extends StatelessWidget {
   final DaoJoinAdaptor<CheckList, P> daoJoin;
   final Parent<P> parent;
   final CheckListType checkListType;
+  final String parentTitle;
 
   @override
   Widget build(BuildContext context) => HMBChildCrudCard(
       headline: 'CheckLists',
       crudListScreen: CheckListListScreen(
-          daoJoin: daoJoin, parent: parent, checkListType: checkListType));
+          parentTitle: parentTitle,
+          daoJoin: daoJoin,
+          parent: parent,
+          checkListType: checkListType));
 }
