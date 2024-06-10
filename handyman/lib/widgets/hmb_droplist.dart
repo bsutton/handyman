@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'hmb_droplist_dialog.dart';
+import 'labeled_container.dart';
 
 class HMBDroplist<T> extends FormField<T> {
   HMBDroplist({
@@ -98,12 +99,8 @@ class _HMBDroplistState<T> extends State<_HMBDroplist<T>> {
         },
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(4),
-              ),
+            LabeledContainer(
+              labelText: widget.title,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

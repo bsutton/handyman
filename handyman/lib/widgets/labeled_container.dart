@@ -14,7 +14,8 @@ class LabeledContainer extends StatelessWidget {
         clipBehavior: Clip.none, // Allow overflow for the Positioned widget
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 8), // Adjust to prevent clipping
+            margin:
+                const EdgeInsets.only(top: 20), // Adjust to prevent clipping
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey, width: 1.5),
               borderRadius: BorderRadius.circular(6),
@@ -25,7 +26,7 @@ class LabeledContainer extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: -4,
+            top: 8,
             left: 10,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 4),
