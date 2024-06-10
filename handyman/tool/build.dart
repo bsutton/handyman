@@ -1,20 +1,63 @@
-#! /home/bsutton/.dswitch/active/dart
+#! dart
 
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:dcli/dcli.dart';
 import 'package:handyman/database/management/db_utility.dart';
+import 'package:path/path.dart' as path;
 import 'package:path/path.dart';
 
-void main() {
+void main(List<String> args) {
+  final parser = ArgParser()
+    ..addFlag('assets',
+        abbr: 'a',
+        help:
+            'Update the list of assets - important to run for db upgrade scripts')
+    ..addFlag('build', abbr: 'b', help: 'build the apk')
+    ..addFlag('install', abbr: 'i', help: 'install the apk');
+
+  final results = parser.parse(args);
+
+  if (results['assets'] as bool) {
+    updateAssetList();
+  }
+
+  if (results['build'] as bool) {
+    buildApk();
+  }
+
+  if (results['install'] as bool) {
+    installApk();
+  }
+}
+
+void installApk() {
+  'flutter install'.run;
+}
+
+void buildApk() {
+// TODO(bsutton): the rich text editor includes randome icons
+// so tree shaking of icons isn't possible. Can we fix this?
+  'flutter build apk --no-tree-shake-icons'.run;
+}
+
+void updateAssetList() {
   final pathToAssets = join(
       DartProject.self.pathToProjectRoot, 'assets', 'sql', 'upgrade_scripts');
   final assetFiles = find('v*.sql', workingDirectory: pathToAssets).toList();
 
+  final posix = path.posix;
   final relativePaths = assetFiles
-      .map((path) => relative(path, from: DartProject.self.pathToProjectRoot))
-      .toList()
+
+      /// We are creating asset path which must us the posix path delimiter \
+      .map((path) {
+    final rel = relative(path, from: DartProject.self.pathToProjectRoot);
+
+    /// rebuild the path with posix path delimiter
+    return posix.joinAll(split(rel));
+  }).toList()
 
     /// sort in descending order.
     ..sort((a, b) =>
@@ -34,9 +77,4 @@ void main() {
     ..writeAsStringSync(jsonContent);
 
   print('SQL Asset list generated: ${jsonFile.path}');
-
-// TODO(bsutton): the rich text editor includes randome icons
-// so tree shaking of icons isn't possible. Can we fix this?
-  'flutter build apk --no-tree-shake-icons'.run;
-  'flutter install'.run;
 }
