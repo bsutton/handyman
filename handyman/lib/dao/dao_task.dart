@@ -1,5 +1,6 @@
 import 'package:money2/money2.dart';
 
+import '../entity/check_list_item.dart';
 import '../entity/job.dart';
 import '../entity/task.dart';
 import '../util/fixed_ex.dart';
@@ -44,6 +45,24 @@ class DaoTask extends Dao<Task> {
         completedEffort: completedEffort,
         totalCost: totalCost,
         earnedCost: earnedCost);
+  }
+
+  Future<Task> getTaskForCheckListItem(CheckListItem item) async {
+    final db = getDb();
+
+    final data = await db.rawQuery('''
+select t.* 
+from check_list_item cli
+join check_list cl
+  on cli.check_list_id = cl.id
+join task_check_list tcl
+  on tcl.check_list_id = cl.id
+join task t
+  on tcl.task_id = t.id
+where cli.id =? 
+''', [item.id]);
+
+    return toList(data).first;
   }
 }
 

@@ -8,6 +8,7 @@ import 'crud/supplier/supplier_list_screen.dart';
 import 'crud/system/system_edit_screen.dart';
 import 'dao/dao_system.dart';
 import 'database/management/database_helper.dart';
+import 'screens/shopping.dart';
 import 'widgets/blocking_ui.dart';
 
 void main() async {
@@ -61,6 +62,7 @@ class MyDrawer extends StatelessWidget {
     DrawerItem(title: 'Jobs', screen: const JobListScreen()),
     DrawerItem(title: 'Customers', screen: const CustomerListScreen()),
     DrawerItem(title: 'Suppliers', screen: const SupplierListScreen()),
+    DrawerItem(title: 'Shopping', screen: const ShoppingScreen()),
     DrawerItem(
       title: 'System',
       screen: FutureBuilderEx(

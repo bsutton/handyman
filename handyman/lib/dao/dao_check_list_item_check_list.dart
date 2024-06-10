@@ -29,4 +29,5 @@ class DaoCheckListItemCheckList extends Dao<CheckListItem> {
       {'check_list_id': checklist.id, 'check_list_item_id': checklistitem.id},
     );
   }
+
 }

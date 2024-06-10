@@ -1,3 +1,4 @@
+import 'package:money2/money2.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/check_list.dart';
@@ -38,5 +39,25 @@ where cl.id =?
       CheckListItem checklistitem, CheckList checklist) async {
     await insert(checklistitem);
     await DaoCheckListItemCheckList().insertJoin(checklistitem, checklist);
+  }
+
+  Future<void> markAsCompleted(CheckListItem item, Money cost) async {
+    item
+      ..cost = cost
+      ..completed = true;
+
+    await update(item);
+  }
+
+  Future<List<CheckListItem>> getIncompleteItems() async {
+    final db = getDb();
+
+    final data = await db.rawQuery('''
+select cli.* 
+from check_list_item cli
+where cli.completed = 0
+''');
+
+    return toList(data);
   }
 }

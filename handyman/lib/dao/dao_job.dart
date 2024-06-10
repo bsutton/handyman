@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:strings/strings.dart';
 
 import '../entity/job.dart';
+import '../entity/task.dart';
 import '../util/fixed_ex.dart';
 import '../util/money_ex.dart';
 import 'dao.dart';
@@ -69,6 +70,20 @@ order by job.modifiedDate desc
 ''', [likeArg, likeArg, likeArg, likeArg]);
 
     return toList(data);
+  }
+
+  Future<Job> getJobForTask(Task task) async {
+    final db = getDb();
+
+    final data = await db.rawQuery('''
+select j.* 
+from task t
+join job j
+  on t.jobId = j.id
+where t.id =?
+''', [task.id]);
+
+    return toList(data).first;
   }
 
   Future<JobStatistics> getJobStatistics(Job job) async {

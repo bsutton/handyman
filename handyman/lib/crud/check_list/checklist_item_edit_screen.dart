@@ -124,15 +124,16 @@ class _CheckListItemEditScreenState extends State<CheckListItemEditScreen>
   @override
   Future<CheckListItem> forUpdate(CheckListItem checkListItem) async =>
       CheckListItem.forUpdate(
-        entity: checkListItem,
-        checkListId: checkListItem.checkListId,
-        description: _descriptionController.text,
-        itemTypeId:
-            June.getState(CheckListItemTypeStatus.new).checkListItemType?.id ??
-                0,
-        cost: MoneyEx.tryParse(_costController.text),
-        effortInHours: FixedEx.tryParse(_effortInHoursController.text),
-      );
+          entity: checkListItem,
+          checkListId: checkListItem.checkListId,
+          description: _descriptionController.text,
+          itemTypeId: June.getState(CheckListItemTypeStatus.new)
+                  .checkListItemType
+                  ?.id ??
+              0,
+          cost: MoneyEx.tryParse(_costController.text),
+          effortInHours: FixedEx.tryParse(_effortInHoursController.text),
+          completed: checkListItem.completed);
 
   @override
   Future<CheckListItem> forInsert() async => CheckListItem.forInsert(

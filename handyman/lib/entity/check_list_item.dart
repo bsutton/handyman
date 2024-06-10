@@ -1,3 +1,5 @@
+// ignore: unnecessary_import
+import 'package:fixed/fixed.dart';
 import 'package:money2/money2.dart';
 
 import '../util/money_ex.dart';
@@ -11,6 +13,7 @@ class CheckListItem extends Entity<CheckListItem> {
     required this.itemTypeId,
     required this.cost,
     required this.effortInHours,
+    required this.completed,
     required super.createdDate,
     required super.modifiedDate,
   }) : super();
@@ -21,6 +24,7 @@ class CheckListItem extends Entity<CheckListItem> {
     required this.itemTypeId,
     required this.cost,
     required this.effortInHours,
+    this.completed = false, // Default to false for new entries
   }) : super.forInsert();
 
   CheckListItem.forUpdate({
@@ -30,6 +34,7 @@ class CheckListItem extends Entity<CheckListItem> {
     required this.itemTypeId,
     required this.cost,
     required this.effortInHours,
+    required this.completed,
   }) : super.forUpdate();
 
   factory CheckListItem.fromMap(Map<String, dynamic> map) => CheckListItem(
@@ -39,6 +44,7 @@ class CheckListItem extends Entity<CheckListItem> {
         itemTypeId: map['item_type_id'] as int,
         cost: MoneyEx.fromInt(map['cost'] as int?),
         effortInHours: Fixed.fromInt(map['effort_in_hours'] as int? ?? 0),
+        completed: map['completed'] == 1, // Convert from int (1/0) to bool
         createdDate: DateTime.parse(map['createdDate'] as String),
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
       );
@@ -48,6 +54,7 @@ class CheckListItem extends Entity<CheckListItem> {
   int itemTypeId;
   Money cost;
   Fixed effortInHours;
+  bool completed;
 
   @override
   Map<String, dynamic> toMap() => {
@@ -57,6 +64,7 @@ class CheckListItem extends Entity<CheckListItem> {
         'item_type_id': itemTypeId,
         'cost': cost.minorUnits.toInt(),
         'effort_in_hours': effortInHours.minorUnits.toInt(),
+        'completed': completed ? 1 : 0, // Convert bool to int (1/0)
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };
