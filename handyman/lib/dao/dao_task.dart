@@ -58,14 +58,3 @@ class TaskStatistics {
   final Money totalCost;
   final Money earnedCost;
 }
-
-  // Future<void> deleteFromJob(Task task, Job job) async {
-  //   await DaoTaskJob().deleteJoin(job, task);
-  //   await delete(task.id);
-  // }
-
-  // Future<void> insertForJob(Task task, Job job) async {
-  //   await insert(task);
-  //   await DaoTaskJob().insertJoin(task, job);
-  // }
-
