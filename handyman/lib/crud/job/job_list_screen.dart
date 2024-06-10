@@ -52,24 +52,59 @@ class JobListScreen extends StatelessWidget {
                             '''Description: ${RichEditor.createParchment(job.description).toPlainText().split('\n').first}''',
                           ),
                           HMBSiteText(label: 'Address:', site: site),
-                          FutureBuilderEx(
-                            // ignore: discarded_futures
-                            future: DaoJob().getJobStatistics(job),
-                            builder: (context, remainingTasks) => Row(
-                              children: [
-                                HMBText(
-                                    'Completed: ${remainingTasks!.completedTasks}/${remainingTasks.totalTasks}'),
-                                HMBText(
-                                    ' Effort(hrs): ${remainingTasks.completedEffort.format('0.00')}/${remainingTasks.totalEffort.format('0.00')}'),
-                                HMBText(
-                                    ' Earnings: ${remainingTasks.earnedCost}/${remainingTasks.totalCost}')
-                              ],
-                            ),
-                          )
+                          buildStatistics(job)
                         ],
                       ),
                     ),
                   ));
+        },
+      );
+
+  FutureBuilderEx<JobStatistics> buildStatistics(Job job) => FutureBuilderEx(
+        // ignore: discarded_futures
+        future: DaoJob().getJobStatistics(job),
+        builder: (context, remainingTasks) {
+          if (remainingTasks == null) {
+            return const CircularProgressIndicator();
+          }
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 600) {
+                // Mobile layout
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    HMBText(
+                      'Completed: ${remainingTasks.completedTasks}/${remainingTasks.totalTasks}',
+                    ),
+                    HMBText(
+                      'Effort(hrs): ${remainingTasks.completedEffort.format('0.00')}/${remainingTasks.totalEffort.format('0.00')}',
+                    ),
+                    HMBText(
+                      'Earnings: ${remainingTasks.earnedCost}/${remainingTasks.totalCost}',
+                    ),
+                  ],
+                );
+              } else {
+                // Desktop layout
+                return Row(
+                  children: [
+                    HMBText(
+                      'Completed: ${remainingTasks.completedTasks}/${remainingTasks.totalTasks}',
+                    ),
+                    const SizedBox(width: 16), // Add spacing between items
+                    HMBText(
+                      'Effort(hrs): ${remainingTasks.completedEffort.format('0.00')}/${remainingTasks.totalEffort.format('0.00')}',
+                    ),
+                    const SizedBox(width: 16), // Add spacing between items
+                    HMBText(
+                      'Earnings: ${remainingTasks.earnedCost}/${remainingTasks.totalCost}',
+                    ),
+                  ],
+                );
+              }
+            },
+          );
         },
       );
 }
