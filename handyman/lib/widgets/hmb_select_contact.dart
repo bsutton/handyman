@@ -47,23 +47,20 @@ class HMBSelectContactState extends State<HMBSelectContact> {
                 format: (contact) => ' ${contact.firstName} ${contact.surname}',
                 required: false),
           ),
-          Padding(
-            padding: const EdgeInsets.all(50),
-            child: HMBButtonAdd(
-                enabled: true,
-                onPressed: () async {
-                  final customer = await Navigator.push<Contact>(
-                    context,
-                    MaterialPageRoute<Contact>(
-                        builder: (context) => ContactEditScreen<Customer>(
-                            parent: widget.customer!,
-                            daoJoin: JoinAdaptorCustomerContact())),
-                  );
-                  setState(() {
-                    widget.initialContact.contactId = customer?.id;
-                  });
-                }),
-          ),
+          HMBButtonAdd(
+              enabled: true,
+              onPressed: () async {
+                final customer = await Navigator.push<Contact>(
+                  context,
+                  MaterialPageRoute<Contact>(
+                      builder: (context) => ContactEditScreen<Customer>(
+                          parent: widget.customer!,
+                          daoJoin: JoinAdaptorCustomerContact())),
+                );
+                setState(() {
+                  widget.initialContact.contactId = customer?.id;
+                });
+              }),
         ],
       );
     }
