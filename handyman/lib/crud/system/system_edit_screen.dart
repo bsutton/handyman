@@ -128,87 +128,91 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(16),
-          child: ListView(
-            children: [
-              HMBEmailField(
-                controller: _fromEmailController,
-                labelText: 'From Email',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a from email';
-                  }
-                  return null;
-                },
-              ),
-              HMBTextField(
-                  controller: _bsbController,
-                  labelText: 'BSB',
-                  keyboardType: TextInputType.number),
-              HMBTextField(
-                controller: _accountNoController,
-                labelText: 'Account Number',
-                keyboardType: TextInputType.number,
-              ),
-              HMBTextField(
-                controller: _addressLine1Controller,
-                labelText: 'Address Line 1',
-                keyboardType: TextInputType.streetAddress,
-              ),
-              HMBTextField(
-                  controller: _addressLine2Controller,
-                  labelText: 'Address Line 2',
-                  keyboardType: TextInputType.streetAddress),
-              HMBTextField(
-                controller: _suburbController,
-                labelText: 'Suburb',
-                keyboardType: TextInputType.name,
-              ),
-              HMBTextField(
-                controller: _stateController,
-                labelText: 'State',
-                keyboardType: TextInputType.name,
-              ),
-              HMBTextField(
-                  controller: _postcodeController,
-                  labelText: 'Post/Zip code',
-                  keyboardType: TextInputType.number),
-              HMBPhoneField(
-                  controller: _mobileNumberController,
-                  labelText: 'Mobile Number'),
-              HMBPhoneField(
-                  controller: _landLineController, labelText: 'Land Line'),
-              HMBPhoneField(
-                  controller: _officeNumberController,
-                  labelText: 'Office Number'),
-              HMBEmailField(
-                  controller: _emailAddressController,
-                  labelText: 'To Email Address'),
-              HMBTextField(controller: _webUrlController, labelText: 'Web URL'),
-              HMBTextField(
-                  controller: _termsUrlController, labelText: 'Terms URL'),
-              HMBTextField(
-                controller: _defaultHourlyRateController,
-                labelText: 'Default Hourly Rate',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a default hourly rate';
-                  }
-                  return null;
-                },
-              ),
-              HMBTextField(
-                controller: _defaultCallOutFeeController,
-                labelText: 'Default Call Out Fee',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a default call out fee';
-                  }
-                  return null;
-                },
-              ),
-            ],
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                HMBEmailField(
+                  controller: _fromEmailController,
+                  labelText: 'From Email',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a from email';
+                    }
+                    return null;
+                  },
+                ),
+                HMBTextField(
+                    controller: _bsbController,
+                    labelText: 'BSB',
+                    keyboardType: TextInputType.number),
+                HMBTextField(
+                  controller: _accountNoController,
+                  labelText: 'Account Number',
+                  keyboardType: TextInputType.number,
+                ),
+                HMBTextField(
+                  controller: _addressLine1Controller,
+                  labelText: 'Address Line 1',
+                  keyboardType: TextInputType.streetAddress,
+                ),
+                HMBTextField(
+                    controller: _addressLine2Controller,
+                    labelText: 'Address Line 2',
+                    keyboardType: TextInputType.streetAddress),
+                HMBTextField(
+                  controller: _suburbController,
+                  labelText: 'Suburb',
+                  keyboardType: TextInputType.name,
+                ),
+                HMBTextField(
+                  controller: _stateController,
+                  labelText: 'State',
+                  keyboardType: TextInputType.name,
+                ),
+                HMBTextField(
+                    controller: _postcodeController,
+                    labelText: 'Post/Zip code',
+                    keyboardType: TextInputType.number),
+                HMBPhoneField(
+                    controller: _mobileNumberController,
+                    labelText: 'Mobile Number'),
+                HMBPhoneField(
+                    controller: _landLineController, labelText: 'Land Line'),
+                HMBPhoneField(
+                    controller: _officeNumberController,
+                    labelText: 'Office Number'),
+                HMBEmailField(
+                    controller: _emailAddressController,
+                    labelText: 'To Email Address'),
+                HMBTextField(
+                    controller: _webUrlController, labelText: 'Web URL'),
+                HMBTextField(
+                    controller: _termsUrlController, labelText: 'Terms URL'),
+                HMBTextField(
+                  controller: _defaultHourlyRateController,
+                  labelText: 'Default Hourly Rate',
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a default hourly rate';
+                    }
+                    return null;
+                  },
+                ),
+                HMBTextField(
+                  controller: _defaultCallOutFeeController,
+                  labelText: 'Default Call Out Fee',
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a default call out fee';
+                    }
+                    return null;
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       );
