@@ -7,6 +7,7 @@ import 'package:june/june.dart';
 import '../../dao/dao_customer.dart';
 import '../../dao/dao_job.dart';
 import '../../dao/dao_job_status.dart';
+import '../../dao/dao_system.dart';
 import '../../entity/customer.dart';
 import '../../entity/job.dart';
 import '../../entity/job_status.dart';
@@ -63,6 +64,26 @@ class JobEditScreenState extends State<JobEditScreen>
     June.getState(SelectJobStatus.new).jobStatusId = widget.job?.jobStatusId;
     June.getState(SelectedSite.new).siteId = widget.job?.siteId;
     June.getState(SelectedContact.new).contactId = widget.job?.contactId;
+
+    if (widget.job == null) {
+      // ignore: discarded_futures
+      DaoSystem().get().then((system) {
+        setState(() {
+          _hourlyRateController.text =
+              system!.defaultHourlyRate?.amount.toString() ?? '0.00';
+          _callOutFeeController.text =
+              system.defaultCallOutFee?.amount.toString() ?? '0.00';
+        });
+        // Hard coded id of the 'Prospecting' status, probably not a great way
+        // to do this.
+        // ignore: discarded_futures
+        DaoJobStatus().getById(1).then((jobStatus) {
+          setState(() {
+            June.getState(SelectJobStatus.new).jobStatusId = jobStatus?.id;
+          });
+        });
+      });
+    }
   }
 
   @override
@@ -159,7 +180,8 @@ class JobEditScreenState extends State<JobEditScreen>
   Widget _chooseStatus(Job? job) => HMBDroplist<JobStatus>(
       title: 'Status',
       items: (filter) async => DaoJobStatus().getAll(),
-      initialItem: () async => DaoJobStatus().getById(job?.jobStatusId),
+      initialItem: () async => DaoJobStatus().getById(
+          job?.jobStatusId ?? June.getState(SelectJobStatus.new).jobStatusId),
       onChanged: (status) =>
           June.getState(SelectJobStatus.new).jobStatusId = status.id,
       format: (value) => value.name);
