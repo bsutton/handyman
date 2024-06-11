@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../dao/dao_customer.dart';
+import '../../dao/dao_system.dart';
 import '../../dao/join_adaptors/join_adaptor_customer_contact.dart';
 import '../../dao/join_adaptors/join_adaptor_customer_site.dart';
 import '../../entity/customer.dart';
@@ -45,6 +46,16 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
     _disbarred = widget.customer?.disbarred ?? false;
     _selectedCustomerType =
         widget.customer?.customerType ?? CustomerType.residential;
+
+    if (widget.customer == null) {
+      // ignore: unawaited_futures
+      DaoSystem().get().then((system) {
+        setState(() {
+          _hourlyRateController.text =
+              system!.defaultHourlyRate?.amount.toString() ?? '0.00';
+        });
+      });
+    }
   }
 
   @override
