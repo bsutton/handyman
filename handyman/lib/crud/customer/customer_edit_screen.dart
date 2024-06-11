@@ -11,6 +11,7 @@ import '../../widgets/hbm_crud_contact.dart';
 import '../../widgets/hmb_crud_site.dart';
 import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_form_section.dart';
+import '../../widgets/hmb_name_field.dart';
 import '../../widgets/hmb_switch.dart';
 import '../../widgets/hmb_text_field.dart';
 import '../base_full_screen/entity_edit_screen.dart';
@@ -83,7 +84,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                       'Customer Details',
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
-                    HMBTextField(
+                    HMBNameField(
                       autofocus: true,
                       controller: _nameController,
                       labelText: 'Name',

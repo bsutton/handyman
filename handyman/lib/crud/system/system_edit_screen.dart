@@ -133,6 +133,7 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
             child: ListView(
               children: [
                 HMBEmailField(
+                  autofocus: true,
                   controller: _fromEmailController,
                   labelText: 'From Email',
                   validator: (value) {

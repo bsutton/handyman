@@ -9,7 +9,8 @@ class HMBEmailField extends StatelessWidget {
       required this.controller,
       this.required = false,
       super.key,
-      this.validator});
+      this.validator,
+      this.autofocus = false});
 
   final TextEditingController controller;
   final String? Function(String? value)? validator;
@@ -17,9 +18,12 @@ class HMBEmailField extends StatelessWidget {
   final String labelText;
   final bool required;
 
+  final bool autofocus;
+
   @override
   Widget build(BuildContext context) => TextFormField(
         controller: controller,
+        autofocus: autofocus,
         decoration: InputDecoration(
           labelText: labelText,
           suffixIcon: MailToIcon(controller.text),

@@ -7,8 +7,8 @@ import '../../entity/contact.dart';
 import '../../entity/customer.dart';
 import '../../entity/entity.dart';
 import '../../widgets/hmb_email_field.dart';
+import '../../widgets/hmb_name_field.dart';
 import '../../widgets/hmb_phone_field.dart';
-import '../../widgets/hmb_text_field.dart';
 import '../base_nested/nested_edit_screen.dart';
 
 class ContactEditScreen<P extends Entity<P>> extends StatefulWidget {
@@ -53,10 +53,6 @@ class _ContactEditScreenState extends State<ContactEditScreen>
         TextEditingController(text: widget.contact?.emailAddress);
 
     _firstNameFocusNode = FocusNode();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(_firstNameFocusNode);
-    });
   }
 
   @override
@@ -83,9 +79,10 @@ class _ContactEditScreenState extends State<ContactEditScreen>
         editor: (contact) => Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            HMBTextField(
+            HMBNameField(
               controller: _firstNameController,
               focusNode: _firstNameFocusNode,
+              autofocus: true,
               labelText: 'First Name',
               keyboardType: TextInputType.name,
               validator: (value) {
@@ -95,7 +92,7 @@ class _ContactEditScreenState extends State<ContactEditScreen>
                 return null;
               },
             ),
-            HMBTextField(
+            HMBNameField(
               controller: _surnameController,
               labelText: 'Surname',
               keyboardType: TextInputType.name,
@@ -103,7 +100,6 @@ class _ContactEditScreenState extends State<ContactEditScreen>
             HMBPhoneField(
               controller: _mobileNumberController,
               labelText: 'Mobile Number',
-              
             ),
             HMBPhoneField(
                 controller: _landlineController, labelText: 'Landline'),

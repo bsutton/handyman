@@ -55,11 +55,6 @@ class _CheckListItemEditScreenState extends State<CheckListItemEditScreen>
         text: widget.checkListItem?.effortInHours.toString());
 
     _descriptionFocusNode = FocusNode();
-
-    /// Set focus after the page finishes loading.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(_descriptionFocusNode);
-    });
   }
 
   @override
@@ -86,6 +81,7 @@ class _CheckListItemEditScreenState extends State<CheckListItemEditScreen>
             HMBTextField(
               controller: _descriptionController,
               focusNode: _descriptionFocusNode,
+              autofocus: true,
               labelText: 'Description',
               validator: (value) {
                 if (value == null || value.isEmpty) {

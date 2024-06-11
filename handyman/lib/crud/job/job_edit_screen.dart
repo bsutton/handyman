@@ -39,9 +39,12 @@ class JobEditScreenState extends State<JobEditScreen>
   late RichEditorController _descriptionController;
   late TextEditingController _hourlyRateController;
   late TextEditingController _callOutFeeController;
+
+  late FocusNode _summaryFocusNode;
   late FocusNode _descriptionFocusNode;
   late FocusNode _hourlyRateFocusNode;
   late FocusNode _callOutFeeFocusNode;
+
   late DateTime _selectedDate;
 
   @override
@@ -55,6 +58,8 @@ class JobEditScreenState extends State<JobEditScreen>
         TextEditingController(text: widget.job?.hourlyRate?.toString() ?? '');
     _callOutFeeController =
         TextEditingController(text: widget.job?.callOutFee?.toString() ?? '');
+
+    _summaryFocusNode = FocusNode();
     _descriptionFocusNode = FocusNode();
     _hourlyRateFocusNode = FocusNode();
     _callOutFeeFocusNode = FocusNode();
@@ -128,10 +133,13 @@ class JobEditScreenState extends State<JobEditScreen>
                           ]))));
 
   Widget _showSummary() => HMBTextField(
+        focusNode: _summaryFocusNode,
+        autofocus: true,
         controller: _summaryController,
         labelText: 'Job Summary',
-        keyboardType: TextInputType.name,
+        textCapitalization: TextCapitalization.sentences,
         required: true,
+        keyboardType: TextInputType.name,
       );
 
   Widget _showHourlyRate() => HMBTextField(
@@ -236,6 +244,7 @@ class JobEditScreenState extends State<JobEditScreen>
     _descriptionController.dispose();
     _hourlyRateController.dispose();
     _callOutFeeController.dispose();
+    _summaryFocusNode.dispose();
     _descriptionFocusNode.dispose();
     _hourlyRateFocusNode.dispose();
     _callOutFeeFocusNode.dispose();
