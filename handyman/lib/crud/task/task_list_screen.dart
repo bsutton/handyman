@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 
 import '../../dao/dao_task.dart';
+import '../../dao/dao_task_status.dart';
 import '../../entity/job.dart';
 import '../../entity/task.dart';
 import '../../widgets/hmb_text.dart';
@@ -27,6 +28,10 @@ class TaskListScreen extends StatelessWidget {
       onInsert: (task) async => DaoTask().insert(task!),
       details: (task) =>
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            FutureBuilderEx(
+                // ignore: discarded_futures
+                future: DaoTaskStatus().getById(task.taskStatusId),
+                builder: (context, status) => Text(status?.name ?? 'Not Set')),
             FutureBuilderEx(
               // ignore: discarded_futures
               future: DaoTask().getTaskStatistics(task),
