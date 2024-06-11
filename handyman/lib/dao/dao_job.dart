@@ -2,6 +2,7 @@ import 'package:money2/money2.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:strings/strings.dart';
 
+import '../entity/customer.dart';
 import '../entity/job.dart';
 import '../entity/task.dart';
 import '../util/fixed_ex.dart';
@@ -113,6 +114,21 @@ where t.id =?
         completedEffort: completedEffort,
         totalCost: totalCost,
         earnedCost: earnedCost);
+  }
+
+  /// Get all the jobs for the given customer.
+  Future<List<Job>> getByCustomer(Customer customer) async {
+    final db = getDb();
+
+    final data = await db.rawQuery('''
+select j.* 
+from job j
+join customer c
+  on j.customer_id = c.id
+where c.id =?
+''', [customer.id]);
+
+    return toList(data);
   }
 }
 

@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import '../entity/contact.dart';
 import '../entity/supplier.dart';
 import 'dao.dart';
+import 'dao_contact.dart';
 
 class DaoContactSupplier extends Dao<Contact> {
   Future<void> createTable(Database db, int version) async {}
@@ -20,6 +21,7 @@ class DaoContactSupplier extends Dao<Contact> {
       where: 'supplier_id = ? and contact_id = ?',
       whereArgs: [supplier.id, contact.id],
     );
+    await DaoContact().delete(contact.id);
   }
 
   Future<void> insertJoin(Contact contact, Supplier supplier,

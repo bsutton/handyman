@@ -4,12 +4,21 @@ import '../../entity/contact.dart';
 import '../../entity/customer.dart';
 import '../dao_contact.dart';
 import '../dao_contact_customer.dart';
+import '../dao_job.dart';
 import 'dao_join_adaptor.dart';
 
 class JoinAdaptorCustomerContact implements DaoJoinAdaptor<Contact, Customer> {
   @override
   Future<void> deleteFromParent(Contact contact, Customer customer) async {
     await DaoContactCustomer().deleteJoin(customer, contact);
+
+    for (final job in await DaoJob().getByCustomer(customer)) {
+      if (job.contactId == contact.id) {
+        job.contactId = null;
+        await DaoJob().update(job);
+      }
+      await DaoContact().delete(contact.id);
+    }
   }
 
   @override

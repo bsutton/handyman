@@ -10,8 +10,9 @@ class JoinAdaptorCheckListCheckListItem
     implements DaoJoinAdaptor<CheckListItem, CheckList> {
   @override
   Future<void> deleteFromParent(
-      CheckListItem checklistitem, CheckList checklist) async {
-    await DaoCheckListItemCheckList().deleteJoin(checklist, checklistitem);
+      CheckListItem checklistItem, CheckList checklist) async {
+    await DaoCheckListItemCheckList().deleteJoin(checklist, checklistItem);
+    await DaoCheckListItem().delete(checklistItem.id);
   }
 
   @override
