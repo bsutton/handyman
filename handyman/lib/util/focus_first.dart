@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-/// Call this method in your [initState] method of your [StatefulWidget
+/// Call this method in your initState method of your [StatefulWidget
 /// to set the focus to a focusable widget.
 /// This should normally be the first widget on the screen.
 void focusFirst(BuildContext context, FocusNode node) {
