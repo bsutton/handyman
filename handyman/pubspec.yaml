@@ -60,10 +60,10 @@ dependencies:
 dev_dependencies:
   args: ^2.5.0
   dcli: ^4.0.1-beta.4
+  flutter_launcher_icons: ^0.9.2
   flutter_test:
     sdk: flutter
   lint_hard: ^4.0.0
-  flutter_launcher_icons: ^0.9.2
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
