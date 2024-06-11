@@ -48,7 +48,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
         widget.customer?.customerType ?? CustomerType.residential;
 
     if (widget.customer == null) {
-      // ignore: unawaited_futures
+      // ignore: unawaited_futures, discarded_futures
       DaoSystem().get().then((system) {
         setState(() {
           _hourlyRateController.text =

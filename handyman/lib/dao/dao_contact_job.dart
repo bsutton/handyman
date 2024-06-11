@@ -4,7 +4,7 @@ import '../entity/contact.dart';
 import '../entity/job.dart';
 import 'dao.dart';
 
-/// TODO: is this table need as the job has a contactId.
+// TODO(bsutton): is this table need as the job has a contactId.
 /// and I think it can only have a  single contact.
 class DaoContactJob extends Dao<Contact> {
   Future<void> createTable(Database db, int version) async {}
