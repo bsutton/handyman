@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sms_advanced/sms_advanced.dart';
 import 'package:strings/strings.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'hmb_toast.dart';
 
@@ -40,8 +39,10 @@ class DialWidget extends StatelessWidget {
           TextButton(
             child: const Text('Text'),
             onPressed: () async {
-              Navigator.of(context).pop();
-              await _sendText2(context, phoneNo);
+              await _showTextInputDialog(context, phoneNo);
+              if (context.mounted) {
+                Navigator.of(context).pop();
+              }
             },
           ),
           TextButton(
@@ -76,33 +77,8 @@ class DialWidget extends StatelessWidget {
     DirectCaller().makePhoneCall(phoneNo);
   }
 
-  Future<void> _sendText(BuildContext context, String phoneNo) async {
-    final smsUri = Uri(
-      scheme: 'sms',
-      path: phoneNo,
-    );
-
-    final status = await Permission.sms.status;
-    if (status.isDenied) {
-      final result = await Permission.sms.request();
-      if (result.isDenied) {
-        if (context.mounted) {
-          HMBToast.notice(context, 'SMS permission is required to make calls');
-        }
-        return;
-      }
-    }
-
-    if (await canLaunchUrl(smsUri)) {
-      await launchUrl(smsUri);
-    } else {
-      if (context.mounted) {
-        HMBToast.notice(context, 'Could not launch SMS application');
-      }
-    }
-  }
-
-  Future<void> _sendText2(BuildContext context, String phoneNo) async {
+  Future<void> _sendText(
+      BuildContext context, String phoneNo, String messageText) async {
     final status = await Permission.sms.status;
     if (status.isDenied) {
       final result = await Permission.sms.request();
@@ -115,19 +91,60 @@ class DialWidget extends StatelessWidget {
     try {
       final sender = SmsSender();
 
-      final message = SmsMessage(phoneNo, 'Hello flutter world!');
+      final message = SmsMessage(phoneNo, messageText);
       message.onStateChanged.listen((state) {
         if (state == SmsMessageState.Sent) {
           HMBToast.notice(context, 'SMS sent successfully');
         } else if (state == SmsMessageState.Fail) {
-          HMBToast.notice(context, 'Failed to send SMS');
+          HMBToast.error(context, 'Failed to send SMS');
         }
       });
       await sender.sendSms(message);
       // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       if (context.mounted) {
-        HMBToast.notice(context, 'Could not launch SMS application');
+        HMBToast.error(context, 'Could not launch SMS application');
+      }
+    }
+  }
+
+  Future<void> _showTextInputDialog(
+      BuildContext context, String phoneNo) async {
+    final messageText = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        var text = '';
+        return AlertDialog(
+          title: const Text('Send Text Message'),
+          content: TextField(
+            onChanged: (value) {
+              text = value;
+            },
+            decoration: const InputDecoration(
+              hintText: 'Enter your message here',
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Send'),
+              onPressed: () {
+                Navigator.of(context).pop(text);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (messageText != null && messageText.isNotEmpty) {
+      if (context.mounted) {
+        await _sendText(context, phoneNo, messageText);
       }
     }
   }
