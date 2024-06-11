@@ -73,3 +73,13 @@ If we upgrade sqlflite we need to upgrade the injected files as per the above li
 Note: currenlty we are not backing up the db before doing schema upgrades
 as we don't know how to do this on the web.
 
+
+# Project Icons
+
+We use the dependency flutter_launcher_icons to generate the various icon sizes.
+To regenerate the icons run the following command:
+
+```
+flutter pub get
+flutter pub run flutter_launcher_icons:main
+```

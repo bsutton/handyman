@@ -6,7 +6,7 @@ import '../../dao/dao_contact.dart';
 import '../../dao/dao_site.dart';
 import '../../entity/customer.dart';
 import '../../widgets/contact_text.dart';
-import '../../widgets/hmb_mail_text.dart';
+import '../../widgets/hmb_email_text.dart';
 import '../../widgets/hmb_phone_text.dart';
 import '../../widgets/hmb_site_text.dart';
 import '../base_full_screen/entity_list_screen.dart';
@@ -38,7 +38,7 @@ class CustomerListScreen extends StatelessWidget {
                               label: 'Primary Contact:', contact: contact),
                           HMBPhoneText(
                               label: 'Mobile:', phoneNo: contact?.mobileNumber),
-                          HBMMailText(
+                          HMBEmailText(
                               label: 'Email', email: contact?.emailAddress),
                           HMBSiteText(label: 'Address', site: site)
                         ])));

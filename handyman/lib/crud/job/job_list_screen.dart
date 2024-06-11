@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 
+import '../../dao/dao_contact.dart';
 import '../../dao/dao_customer.dart';
 import '../../dao/dao_job.dart';
 import '../../dao/dao_job_status.dart';
@@ -8,6 +9,8 @@ import '../../dao/dao_site.dart';
 import '../../entity/customer.dart';
 import '../../entity/job.dart';
 import '../../util/format.dart';
+import '../../widgets/hmb_email_text.dart';
+import '../../widgets/hmb_phone_text.dart';
 import '../../widgets/hmb_site_text.dart';
 import '../../widgets/hmb_text.dart';
 import '../../widgets/rich_editor.dart';
@@ -45,6 +48,21 @@ class JobListScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           HMBText('Customer: ${customer?.name ?? 'Not Set'}'),
+                          FutureBuilderEx(
+                            // ignore: discarded_futures
+                            future: DaoContact().getById(job.contactId),
+                            builder: (context, contact) => Column(
+                              children: [
+                                HMBPhoneText(
+                                    label: 'Phone',
+                                    phoneNo: contact?.mobileNumber ??
+                                        contact?.landLine),
+                                HMBEmailText(
+                                    label: 'Email',
+                                    email: contact?.emailAddress)
+                              ],
+                            ),
+                          ),
                           HMBText('Status: ${jobStatus?.name}'),
                           HMBText('Scheduled: ${formatDate(job.startDate)}'),
                           HMBText('Summary: ${job.summary}'),
