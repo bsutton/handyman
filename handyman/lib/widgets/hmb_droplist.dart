@@ -98,25 +98,36 @@ class _HMBDroplistState<T> extends State<_HMBDroplist<T>> {
           }
         },
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             LabeledContainer(
               labelText: widget.title,
+              isError: widget.state.hasError,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (_loading)
                     const CircularProgressIndicator()
                   else
-                    Text(_selectedItem != null
-                        ? widget.format(_selectedItem as T)
-                        : 'Select a ${widget.title}'),
+                    Text(
+                      _selectedItem != null
+                          ? widget.format(_selectedItem as T)
+                          : 'Select a ${widget.title}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: widget.state.hasError
+                            ? Theme.of(context).colorScheme.error
+                            : Theme.of(context).textTheme.bodyLarge?.color ??
+                                Colors.black,
+                      ),
+                    ),
                   const Icon(Icons.arrow_drop_down),
                 ],
               ),
             ),
             if (widget.state.hasError)
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.only(top: 4, left: 8),
                 child: Text(
                   widget.state.errorText ?? '',
                   style: TextStyle(
