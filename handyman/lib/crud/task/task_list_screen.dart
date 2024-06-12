@@ -34,15 +34,17 @@ class _TaskListScreenState extends State<TaskListScreen> {
         // ignore: discarded_futures
         fetchList: () => DaoTask().getTasksByJob(widget.parent.parent!),
         title: (entity) => Text(entity.name),
-        onEdit: (task) => TaskEditScreen(job: widget.parent.parent!, task: task),
+        onEdit: (task) =>
+            TaskEditScreen(job: widget.parent.parent!, task: task),
         onDelete: (task) async => DaoTask().delete(task!.id),
         onInsert: (task) async => DaoTask().insert(task!),
-        details: (task) => 
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        details: (task) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             FutureBuilderEx(
-              // ignore: discarded_futures
-              future: DaoTaskStatus().getById(task.taskStatusId),
-              builder: (context, status) => Text(status?.name ?? 'Not Set')),
+                // ignore: discarded_futures
+                future: DaoTaskStatus().getById(task.taskStatusId),
+                builder: (context, status) => Text(status?.name ?? 'Not Set')),
             FutureBuilderEx(
               // ignore: discarded_futures
               future: DaoTask().getTaskStatistics(task),
