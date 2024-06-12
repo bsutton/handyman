@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:june/june.dart';
@@ -11,6 +13,7 @@ import '../../entity/task_status.dart';
 import '../../util/fixed_ex.dart';
 import '../../util/money_ex.dart';
 import '../../widgets/hmb_crud_checklist.dart';
+import '../../widgets/hmb_crud_time_entry.dart';
 import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_text_area.dart';
 import '../../widgets/hmb_text_field.dart';
@@ -76,6 +79,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
 
   @override
   void dispose() {
+    super.dispose();
     _nameController.dispose();
     _descriptionController.dispose();
     _estimatedCostController.dispose();
@@ -86,8 +90,13 @@ class _TaskEditScreenState extends State<TaskEditScreen>
     _estimatedCostFocusNode.dispose();
     _effortInHoursFocusNode.dispose();
     _itemTypeIdFocusNode.dispose();
-    super.dispose();
   }
+
+  // String _formatDuration(Duration duration) {
+  //   final hours = duration.inHours;
+  //   final minutes = duration.inMinutes.remainder(60);
+  //   return '${hours}h ${minutes}m';
+  // }
 
   @override
   Widget build(BuildContext context) => NestedEntityEditScreen<Task, Job>(
@@ -128,7 +137,12 @@ class _TaskEditScreenState extends State<TaskEditScreen>
             HBMCrudCheckList<Task>(
                 parentTitle: 'Task',
                 parent: Parent(task),
-                daoJoin: JoinAdaptorTaskCheckList())
+                daoJoin: JoinAdaptorTaskCheckList()),
+
+            HBMCrudTimeEntry(
+              parentTitle: 'Task',
+              parent: Parent(task),
+            ),
           ],
         ),
       );
@@ -174,3 +188,57 @@ class TaskStatusState {
 
   int? taskStatusId;
 }
+
+// class HBMCrudTimeEntry extends StatefulWidget {
+//   const HBMCrudTimeEntry(
+//       {required this.parentTitle, required this.parent, super.key});
+
+//   final String parentTitle;
+//   final Parent<Task> parent;
+
+//   @override
+//   _HBMCrudTimeEntryState createState() => _HBMCrudTimeEntryState();
+// }
+
+// class _HBMCrudTimeEntryState extends State<HBMCrudTimeEntry> {
+//   Future<void> refresh() async {
+//     setState(() {});
+//   }
+
+//   @override
+//   Widget build(BuildContext context) => FutureBuilder<List<TimeEntry>>(
+//         // ignore: discarded_futures
+//         future: DaoTimeEntry().getByTask(widget.parent.parent),
+//         builder: (context, snapshot) {
+//           if (snapshot.connectionState == ConnectionState.waiting) {
+//             return const Center(child: CircularProgressIndicator());
+//           } else if (snapshot.hasError) {
+//             return Center(child: Text('Error: ${snapshot.error}'));
+//           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+//             return const Center(child: Text('No time entries found.'));
+//           } else {
+//             return ListView.builder(
+//               shrinkWrap: true,
+//               itemCount: snapshot.data!.length,
+//               itemBuilder: (context, index) {
+//                 final timeEntry = snapshot.data![index];
+//                 return ListTile(
+//                   title: Text(
+//                       '''${timeEntry.startTime.toLocal()} 
+//- ${timeEntry.endTime?.toLocal() ?? 'Ongoing'}'''),
+//                   subtitle: Text(
+//                       '''Duration: ${_formatDuration(timeEntry.startTime, 
+// timeEntry.endTime)}'''),
+//                 );
+//               },
+//             );
+//           }
+//         },
+//       );
+
+// String _formatDuration(DateTime startTime, DateTime? endTime) {
+//   if (endTime == null) {
+//     return 'Ongoing';
+//   }
+//   return formatDuration(endTime.difference(startTime));
+// }
