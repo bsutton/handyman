@@ -1,4 +1,4 @@
-#! dart
+#! /home/bsutton/.dswitch/active/dart
 
 import 'dart:convert';
 import 'dart:io';
@@ -23,14 +23,27 @@ void main(List<String> args) {
   if (results['assets'] as bool) {
     updateAssetList();
   }
+  var needPubGet = true;
 
   if (results['build'] as bool) {
+    if (needPubGet) {
+      _runPubGet();
+      needPubGet = false;
+    }
     buildApk();
   }
 
   if (results['install'] as bool) {
+    if (needPubGet) {
+      _runPubGet();
+      needPubGet = false;
+    }
     installApk();
   }
+}
+
+void _runPubGet() {
+  DartSdk().runPubGet(DartProject.self.pathToProjectRoot);
 }
 
 void installApk() {
