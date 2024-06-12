@@ -21,4 +21,22 @@ class HMBToast {
       ),
     );
   }
+
+  static void error(BuildContext context, String text) {
+    FToast.toast(
+      context,
+      toast: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: Colors.orange, // Set your desired background color here
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+              color: Colors.white), // Set text color for better contrast
+        ),
+      ),
+    );
+  }
 }
