@@ -28,7 +28,8 @@ Future<void> _requestPermissions() async {
   // if (smsStatus.isDenied) {
   //   final smsResult = await Permission.phoneStatus.request();
   //   if (smsResult.isDenied) {
-  //     throw Exception('Phone Status permission is required to get device ID');
+  //     throw Exception(
+  //  'Phone Status permission is required to get device ID');
   //   }
   // }
   // final phoneStatus = await Permission.phone.status;
