@@ -21,6 +21,7 @@ class System extends Entity<System> {
     required this.defaultHourlyRate,
     required this.termsUrl,
     required this.defaultCallOutFee,
+    required this.simCardNo,
     required super.createdDate,
     required super.modifiedDate,
   }) : super();
@@ -42,6 +43,7 @@ class System extends Entity<System> {
     required this.defaultHourlyRate,
     required this.termsUrl,
     required this.defaultCallOutFee,
+    required this.simCardNo,
   }) : super.forInsert();
 
   System.forUpdate({
@@ -62,6 +64,7 @@ class System extends Entity<System> {
     required this.defaultHourlyRate,
     required this.termsUrl,
     required this.defaultCallOutFee,
+    required this.simCardNo,
   }) : super.forUpdate();
 
   factory System.fromMap(Map<String, dynamic> map) => System(
@@ -86,6 +89,7 @@ class System extends Entity<System> {
         defaultCallOutFee: Money.fromInt(
             map['default_call_out_fee'] as int? ?? 0,
             isoCode: 'AUD'),
+        simCardNo: map['sim_card_no'] as int?,
         createdDate: DateTime.tryParse((map['createdDate']) as String? ?? '') ??
             DateTime.now(),
         modifiedDate:
@@ -108,7 +112,8 @@ class System extends Entity<System> {
   String? webUrl;
   Money? defaultHourlyRate; // in cents
   String? termsUrl; // link to terms and conditions
-  Money? defaultCallOutFee; // call out fee in cents
+  Money? defaultCallOutFee; // in cents
+  int? simCardNo;
 
   @override
   Map<String, dynamic> toMap() => {
@@ -129,6 +134,7 @@ class System extends Entity<System> {
         'default_hourly_rate': defaultHourlyRate?.minorUnits.toInt(),
         'terms_url': termsUrl,
         'default_call_out_fee': defaultCallOutFee?.minorUnits.toInt(),
+        'sim_card_no': simCardNo,
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };

@@ -43,15 +43,16 @@ dependencies:
   image_picker: ^1.1.1
   june: ^1.0.0+1
   mailto: ^2.0.0
+  mobile_number: ^2.1.1
   money2: ^5.0.1
   parchment_delta: ^1.0.0
   path: ^1.9.0
   path_provider: ^2.0.0
   permission_handler: ^11.3.1
   provider: ^6.1.2
-  sms_advanced:
+  sms_advanced: # ^1.1.0
     hosted: https://onepub.dev/api/jbbxpsdavu/
-    version: ^1.1.0
+    # version: ^1.1.1
   sqflite: ^2.3.2
   sqflite_common_ffi: ^2.3.3
   sqflite_common_ffi_web: ^0.4.3+1

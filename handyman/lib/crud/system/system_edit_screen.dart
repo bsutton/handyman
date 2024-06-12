@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:future_builder_ex/future_builder_ex.dart';
+import 'package:mobile_number/mobile_number.dart';
+
+// import 'package:sms_advanced/sms_advanced.dart';
 
 import '../../dao/dao_system.dart';
 import '../../entity/system.dart';
 import '../../util/money_ex.dart';
+import '../../util/sim_cards.dart';
+import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_email_field.dart';
 import '../../widgets/hmb_phone_field.dart';
 import '../../widgets/hmb_text_field.dart';
@@ -212,6 +218,31 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
                     return null;
                   },
                 ),
+                FutureBuilderEx(
+                    // ignore: discarded_futures
+                    future: getSimCards(),
+                    builder: (context, cards) {
+                      if (cards == null || cards.isEmpty) {
+                        return const Text('No sim cards found');
+                      } else {
+                        return HMBDroplist<SimCard>(
+                          title: 'Sim Card',
+                          initialItem: () async {
+                            final cards = await getSimCards();
+
+                            if (cards.isNotEmpty) {
+                              return cards[widget.system.simCardNo ?? 0];
+                            } else {
+                              return null;
+                            }
+                          },
+                          items: (filter) async => getSimCards(),
+                          format: (card) => card.displayName ?? 'Unnamed',
+                          onChanged: (card) =>
+                              widget.system.simCardNo = card.slotIndex,
+                        );
+                      }
+                    })
               ],
             ),
           ),

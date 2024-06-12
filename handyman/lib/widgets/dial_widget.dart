@@ -94,6 +94,10 @@ class DialWidget extends StatelessWidget {
       final message = SmsMessage(phoneNo, messageText);
       message.onStateChanged.listen((state) {
         if (state == SmsMessageState.Sent) {
+          // TODO(bsutton): this won't show as the context is
+          // gone by the time the notice arrives.
+          // consider show a dialog that remains open util
+          // the sms is sent.
           HMBToast.notice(context, 'SMS sent successfully');
         } else if (state == SmsMessageState.Fail) {
           HMBToast.error(context, 'Failed to send SMS');
@@ -117,6 +121,8 @@ class DialWidget extends StatelessWidget {
         return AlertDialog(
           title: const Text('Send Text Message'),
           content: TextField(
+            autofocus: true,
+            textCapitalization: TextCapitalization.sentences,
             onChanged: (value) {
               text = value;
             },
