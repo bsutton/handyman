@@ -6,6 +6,7 @@ import '../entity/task.dart';
 import '../util/fixed_ex.dart';
 import '../util/money_ex.dart';
 import 'dao.dart';
+import 'dao_time_entry.dart';
 
 class DaoTask extends Dao<Task> {
   @override
@@ -40,11 +41,20 @@ class DaoTask extends Dao<Task> {
     totalEffort += task.effortInHours ?? FixedEx.zero;
     totalCost += task.estimatedCost ?? MoneyEx.zero;
 
+    final timeEntries = await DaoTimeEntry().getByTask(task);
+
+    var trackedEffort = Duration.zero;
+
+    for (final timeEntry in timeEntries) {
+      trackedEffort += timeEntry.duration;
+    }
+
     return TaskStatistics(
         totalEffort: totalEffort,
         completedEffort: completedEffort,
         totalCost: totalCost,
-        earnedCost: earnedCost);
+        earnedCost: earnedCost,
+        trackedEffort: trackedEffort);
   }
 
   Future<Task> getTaskForCheckListItem(CheckListItem item) async {
@@ -71,9 +81,13 @@ class TaskStatistics {
       {required this.totalEffort,
       required this.completedEffort,
       required this.totalCost,
-      required this.earnedCost});
+      required this.earnedCost,
+      required this.trackedEffort});
   final Fixed totalEffort;
   final Fixed completedEffort;
   final Money totalCost;
   final Money earnedCost;
+
+  /// sum of TimeEntry's for this task.
+  Duration trackedEffort;
 }
