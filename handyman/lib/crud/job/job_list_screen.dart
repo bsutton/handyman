@@ -13,6 +13,7 @@ import '../../widgets/hmb_email_text.dart';
 import '../../widgets/hmb_phone_text.dart';
 import '../../widgets/hmb_site_text.dart';
 import '../../widgets/hmb_text.dart';
+import '../../widgets/hmb_text_themes.dart';
 import '../../widgets/rich_editor.dart';
 import '../base_full_screen/entity_list_screen.dart';
 import 'job_edit_screen.dart';
@@ -47,7 +48,7 @@ class JobListScreen extends StatelessWidget {
                       builder: (context, site) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          HMBText('Customer: ${customer?.name ?? 'Not Set'}'),
+                          HMBTextHeadline2(customer?.name ?? 'Not Set'),
                           FutureBuilderEx(
                             // ignore: discarded_futures
                             future: DaoContact().getById(job.contactId),

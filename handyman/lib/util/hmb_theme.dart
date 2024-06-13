@@ -35,7 +35,7 @@ class HMBColors {
   static const Color headingBackground = Colors.purple;
 
   /// the color of most text such as body text.
-  static const Color textPrimary = Colors.white;
+  static const Color textPrimary = Colors.black;
 
   /// Used in headings
   static const Color textHeading = Colors.black;

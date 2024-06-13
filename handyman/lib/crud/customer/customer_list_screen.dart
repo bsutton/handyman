@@ -9,6 +9,7 @@ import '../../widgets/contact_text.dart';
 import '../../widgets/hmb_email_text.dart';
 import '../../widgets/hmb_phone_text.dart';
 import '../../widgets/hmb_site_text.dart';
+import '../../widgets/hmb_text_themes.dart';
 import '../base_full_screen/entity_list_screen.dart';
 import 'customer_edit_screen.dart';
 
@@ -33,7 +34,7 @@ class CustomerListScreen extends StatelessWidget {
                 builder: (context, contact) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Business Name: ${customer.name}'),
+                          HMBTextHeadline2(customer.name),
                           ContactText(
                               label: 'Primary Contact:', contact: contact),
                           HMBPhoneText(
