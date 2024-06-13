@@ -53,7 +53,7 @@ class EntityEditScreenState<E extends Entity<E>>
               : 'Add ${widget.entityName}'),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(8),
           child: Form(
             key: _formKey,
             child: Column(
@@ -64,7 +64,7 @@ class EntityEditScreenState<E extends Entity<E>>
                 /// Inject the entity specific editor.
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(8),
                     child: widget.editor(_currentEntity),
                   ),
                 ),

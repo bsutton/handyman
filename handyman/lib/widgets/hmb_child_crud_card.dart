@@ -14,9 +14,9 @@ class HMBChildCrudCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-        margin: const EdgeInsets.only(bottom: 16),
+        margin: const EdgeInsets.only(bottom: 8),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -27,7 +27,7 @@ class HMBChildCrudCard extends StatelessWidget {
                 ),
               const SizedBox(height: 16),
               SizedBox(
-                height: 200,
+                height: 400,
                 child: crudListScreen,
               ),
             ],
