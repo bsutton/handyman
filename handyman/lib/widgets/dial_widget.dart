@@ -6,6 +6,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sms_advanced/sms_advanced.dart';
 import 'package:strings/strings.dart';
 
+import '../util/clip_board.dart';
+import '../util/platform_ex.dart';
 import 'hmb_toast.dart';
 
 class DialWidget extends StatelessWidget {
@@ -13,12 +15,27 @@ class DialWidget extends StatelessWidget {
   final String phoneNo;
 
   @override
-  Widget build(BuildContext context) => IconButton(
-        icon: const Icon(Icons.phone),
-        onPressed: () async =>
-            Strings.isEmpty(phoneNo) ? null : _showOptions(context, phoneNo),
-        color: Strings.isEmpty(phoneNo) ? Colors.grey : Colors.blue,
-        tooltip: 'Call or Text',
+  Widget build(BuildContext context) => Row(
+        children: [
+          IconButton(
+            iconSize: 25,
+            icon: const Icon(Icons.phone),
+            onPressed: () async => Strings.isEmpty(phoneNo)
+                ? null
+                : _showOptions(context, phoneNo),
+            color: Strings.isEmpty(phoneNo) ? Colors.grey : Colors.blue,
+            tooltip: 'Call or Text',
+          ),
+          IconButton(
+            iconSize: 25,
+            icon: const Icon(Icons.copy),
+            onPressed: () async => Strings.isEmpty(phoneNo)
+                ? null
+                : clipboardCopyTo(context, phoneNo),
+            color: Strings.isEmpty(phoneNo) ? Colors.grey : Colors.blue,
+            tooltip: 'Copy Phone No. to the Clipboard',
+          ),
+        ],
       );
 
   Future<void> _showOptions(BuildContext context, String phoneNo) async {
@@ -121,7 +138,7 @@ class DialWidget extends StatelessWidget {
         return AlertDialog(
           title: const Text('Send Text Message'),
           content: TextField(
-            autofocus: true,
+            autofocus: isNotMobile,
             textCapitalization: TextCapitalization.sentences,
             onChanged: (value) {
               text = value;

@@ -12,6 +12,7 @@ import '../../entity/customer.dart';
 import '../../entity/job.dart';
 import '../../entity/job_status.dart';
 import '../../util/money_ex.dart';
+import '../../util/platform_ex.dart';
 import '../../widgets/hmb_button.dart';
 import '../../widgets/hmb_child_crud_card.dart';
 import '../../widgets/hmb_droplist.dart';
@@ -134,7 +135,7 @@ class JobEditScreenState extends State<JobEditScreen>
 
   Widget _showSummary() => HMBTextField(
         focusNode: _summaryFocusNode,
-        autofocus: true,
+        autofocus: isNotMobile,
         controller: _summaryController,
         labelText: 'Job Summary',
         textCapitalization: TextCapitalization.sentences,
@@ -158,7 +159,10 @@ class JobEditScreenState extends State<JobEditScreen>
 
   HMBChildCrudCard _manageTasks(Job? job) => HMBChildCrudCard(
         // headline: 'Tasks',
-        crudListScreen: TaskListScreen(parent: Parent(job)),
+        crudListScreen: TaskListScreen(
+          parent: Parent(job),
+          extended: true,
+        ),
       );
 
   JuneBuilder<SelectedContact> _chooseContact(Customer? customer, Job? job) =>

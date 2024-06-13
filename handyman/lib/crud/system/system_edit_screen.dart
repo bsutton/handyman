@@ -7,6 +7,7 @@ import 'package:mobile_number/mobile_number.dart';
 import '../../dao/dao_system.dart';
 import '../../entity/system.dart';
 import '../../util/money_ex.dart';
+import '../../util/platform_ex.dart';
 import '../../util/sim_cards.dart';
 import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_email_field.dart';
@@ -139,7 +140,7 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
             child: ListView(
               children: [
                 HMBEmailField(
-                  autofocus: true,
+                  autofocus: isNotMobile,
                   controller: _fromEmailController,
                   labelText: 'From Email',
                   validator: (value) {

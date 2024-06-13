@@ -6,6 +6,7 @@ import '../../dao/dao_supplier.dart';
 import '../../dao/join_adaptors/join_adaptor_supplier_contact.dart';
 import '../../dao/join_adaptors/join_adaptor_supplier_site.dart';
 import '../../entity/supplier.dart';
+import '../../util/platform_ex.dart';
 import '../../widgets/hbm_crud_contact.dart';
 import '../../widgets/hmb_crud_site.dart';
 import '../../widgets/hmb_form_section.dart';
@@ -55,7 +56,7 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     HMBTextField(
-                      autofocus: true,
+                      autofocus: isNotMobile,
                       controller: _nameController,
                       labelText: 'Name',
                       keyboardType: TextInputType.name,

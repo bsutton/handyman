@@ -6,6 +6,7 @@ import '../../dao/join_adaptors/dao_join_adaptor.dart';
 import '../../entity/contact.dart';
 import '../../entity/customer.dart';
 import '../../entity/entity.dart';
+import '../../util/platform_ex.dart';
 import '../../widgets/hmb_email_field.dart';
 import '../../widgets/hmb_name_field.dart';
 import '../../widgets/hmb_phone_field.dart';
@@ -82,7 +83,7 @@ class _ContactEditScreenState extends State<ContactEditScreen>
             HMBNameField(
               controller: _firstNameController,
               focusNode: _firstNameFocusNode,
-              autofocus: true,
+              autofocus: isNotMobile,
               labelText: 'First Name',
               keyboardType: TextInputType.name,
               validator: (value) {

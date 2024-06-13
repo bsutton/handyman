@@ -7,6 +7,7 @@ import '../../dao/join_adaptors/join_adaptor_customer_contact.dart';
 import '../../dao/join_adaptors/join_adaptor_customer_site.dart';
 import '../../entity/customer.dart';
 import '../../util/money_ex.dart';
+import '../../util/platform_ex.dart';
 import '../../widgets/hbm_crud_contact.dart';
 import '../../widgets/hmb_crud_site.dart';
 import '../../widgets/hmb_droplist.dart';
@@ -85,7 +86,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     HMBNameField(
-                      autofocus: true,
+                      autofocus: isNotMobile,
                       controller: _nameController,
                       labelText: 'Name',
                       required: true,

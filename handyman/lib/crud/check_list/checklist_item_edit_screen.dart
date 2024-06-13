@@ -11,6 +11,7 @@ import '../../entity/check_list_item_type.dart';
 import '../../entity/entity.dart';
 import '../../util/fixed_ex.dart';
 import '../../util/money_ex.dart';
+import '../../util/platform_ex.dart';
 import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_text_field.dart';
 import '../base_nested/nested_edit_screen.dart';
@@ -81,7 +82,7 @@ class _CheckListItemEditScreenState extends State<CheckListItemEditScreen>
             HMBTextField(
               controller: _descriptionController,
               focusNode: _descriptionFocusNode,
-              autofocus: true,
+              autofocus: isNotMobile,
               labelText: 'Description',
               validator: (value) {
                 if (value == null || value.isEmpty) {

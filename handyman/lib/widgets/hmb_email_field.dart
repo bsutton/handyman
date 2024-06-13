@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:strings/strings.dart';
 
+import '../util/platform_ex.dart';
 import 'mail_to_icon.dart';
 
 class HMBEmailField extends StatelessWidget {
@@ -23,7 +24,7 @@ class HMBEmailField extends StatelessWidget {
   @override
   Widget build(BuildContext context) => TextFormField(
         controller: controller,
-        autofocus: autofocus,
+        autofocus: isNotMobile,
         decoration: InputDecoration(
           labelText: labelText,
           suffixIcon: MailToIcon(controller.text),
