@@ -69,10 +69,11 @@ class EntityListScreenState<T extends Entity<T>>
                 const Center(child: CircularProgressIndicator()),
             builder: (context, list) {
               if (list == null || list.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
-                    'No records found.',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                    'Click + to add ${widget.pageTitle}.',
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w500),
                   ),
                 );
               } else {

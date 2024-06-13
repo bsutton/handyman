@@ -15,7 +15,8 @@ class TimeEntryListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) => NestedEntityListScreen<TimeEntry, Task>(
       parent: parent,
-      pageTitle: 'Time Entries',
+      entityNamePlural: 'Time Entries',
+      entityNameSingular: 'Time Entry',
       parentTitle: 'Task',
       dao: DaoTimeEntry(),
       // ignore: discarded_futures

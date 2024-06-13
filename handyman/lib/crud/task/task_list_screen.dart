@@ -28,7 +28,8 @@ class _TaskListScreenState extends State<TaskListScreen> {
   @override
   Widget build(BuildContext context) => NestedEntityListScreen<Task, Job>(
         parent: widget.parent,
-        pageTitle: 'Tasks',
+        entityNamePlural: 'Tasks',
+        entityNameSingular: 'Task',
         parentTitle: 'Job',
         dao: DaoTask(),
         // ignore: discarded_futures

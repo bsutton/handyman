@@ -24,7 +24,8 @@ class SiteListScreen<P extends Entity<P>> extends StatelessWidget {
   @override
   Widget build(BuildContext context) => NestedEntityListScreen<Site, P>(
       parent: parent,
-      pageTitle: 'Sites',
+      entityNamePlural: 'Sites',
+      entityNameSingular: 'Site',
       parentTitle: parentTitle,
       dao: DaoSite(),
       onDelete: (site) async => daoJoin.deleteFromParent(site!, parent.parent!),

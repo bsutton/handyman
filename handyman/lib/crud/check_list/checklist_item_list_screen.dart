@@ -27,7 +27,8 @@ class CheckListItemListScreen<P extends Entity<P>> extends StatelessWidget {
       NestedEntityListScreen<CheckListItem, P>(
           parent: parent,
           parentTitle: 'Check List',
-          pageTitle: 'Items',
+          entityNameSingular: 'Check List Item',
+          entityNamePlural: 'Items',
           dao: DaoCheckListItem(),
           onDelete: (checklistitem) async =>
               daoJoin.deleteFromParent(checklistitem!, parent.parent!),

@@ -25,7 +25,8 @@ class ContactListScreen<P extends Entity<P>> extends StatelessWidget {
   Widget build(BuildContext context) => NestedEntityListScreen<Contact, P>(
       parent: parent,
       parentTitle: parentTitle,
-      pageTitle: 'Contacts',
+      entityNamePlural: 'Contacts',
+      entityNameSingular: 'Contact',
       dao: DaoContact(),
       // ignore: discarded_futures
       fetchList: () => daoJoin.getByParent(parent.parent),
