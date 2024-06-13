@@ -32,7 +32,26 @@ where cu.id =?
 and cc.`primary` = 1''', [customer.id]);
 
     if (data.isEmpty) {
-      return null;
+      return (await DaoContact().getByCustomer(customer)).firstOrNull;
+    }
+    return fromMap(data.first);
+  }
+
+  /// returns the primary contact for the customer
+  Future<Contact?> getPrimaryForSupplier(Supplier supplier) async {
+    final db = getDb();
+    final data = await db.rawQuery('''
+select co.* 
+from contact co
+join supplier_contact sc
+  on co.id = sc.contact_id
+join supplier su
+  on sc.supplier_id = su.id
+where su.id =? 
+and sc.`primary` = 1''', [supplier.id]);
+
+    if (data.isEmpty) {
+      return (await DaoContact().getBySupplier(supplier)).firstOrNull;
     }
     return fromMap(data.first);
   }
@@ -57,23 +76,6 @@ where cu.id =?
   }
 
   /// returns the primary contact for the supplier
-  Future<Contact?> getPrimaryForSupplier(Supplier supplier) async {
-    final db = getDb();
-    final data = await db.rawQuery('''
-select co.* 
-from contact co
-join supplier_contact cc
-  on co.id = cc.contact_id
-join supplier cu
-  on cc.supplier_id = cu.id
-where cu.id =? 
-and cc.`primary` = 1''', [supplier.id]);
-
-    if (data.isEmpty) {
-      return null;
-    }
-    return fromMap(data.first);
-  }
 
   Future<List<Contact>> getBySupplier(Supplier? supplier) async {
     final db = getDb();

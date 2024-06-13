@@ -37,7 +37,7 @@ where cu.id =?
 and sc.`primary` = 1''', [customer.id]);
 
     if (data.isEmpty) {
-      return null;
+      return (await DaoSite().getByCustomer(customer)).firstOrNull;
     }
     return fromMap(data.first);
   }
@@ -60,7 +60,7 @@ where cu.id =?
 and sc.`primary` = 1''', [supplier.id]);
 
     if (data.isEmpty) {
-      return null;
+      return (await DaoSite().getBySupplier(supplier)).firstOrNull;
     }
     return fromMap(data.first);
   }
