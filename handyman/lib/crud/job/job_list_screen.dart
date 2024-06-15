@@ -49,6 +49,7 @@ class JobListScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           HMBTextHeadline2(customer?.name ?? 'Not Set'),
+                          HMBTextHeadline3(job.summary),
                           FutureBuilderEx(
                             // ignore: discarded_futures
                             future: DaoContact().getById(job.contactId),
@@ -66,7 +67,6 @@ class JobListScreen extends StatelessWidget {
                           ),
                           HMBText('Status: ${jobStatus?.name}'),
                           HMBText('Scheduled: ${formatDate(job.startDate)}'),
-                          HMBText('Summary: ${job.summary}'),
                           HMBText(
                             '''Description: ${RichEditor.createParchment(job.description).toPlainText().split('\n').first}''',
                           ),

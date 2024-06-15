@@ -114,6 +114,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
               labelText: 'Summary',
               required: true,
             ),
+            _chooseTaskStatus(task),
             HMBTextArea(
               controller: _descriptionController,
               focusNode: _descriptionFocusNode,
@@ -131,7 +132,6 @@ class _TaskEditScreenState extends State<TaskEditScreen>
               labelText: 'Effort (decimal hours)',
               keyboardType: TextInputType.number,
             ),
-            _chooseTaskStatus(task),
 
             /// Check List CRUD
             HBMCrudCheckList<Task>(
@@ -151,7 +151,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
       title: 'Task Status',
       initialItem: () async => DaoTaskStatus().getById(task?.taskStatusId ?? 1),
       items: (filter) async => DaoTaskStatus().getByFilter(filter),
-      format: (item) => item.description,
+      format: (item) => item.name,
       onChanged: (item) {
         June.getState(TaskStatusState.new).taskStatusId = item.id;
       });

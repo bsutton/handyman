@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../util/hmb_theme.dart';
 
-
 ///
 /// Use this style on any page that has a full width heading at the
 /// top of the page.
@@ -63,7 +62,7 @@ class HMBTextHeadline2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 8, bottom: 12),
+        padding: const EdgeInsets.only(top: 8, bottom: 8),
         child: Text(text,
             style: TextStyle(
                 color: color, fontSize: fontSize, fontWeight: FontWeight.w500)),
@@ -77,8 +76,8 @@ class HMBTextHeadline2 extends StatelessWidget {
   }
 }
 
-class HMBTextSubheading extends StatelessWidget {
-  HMBTextSubheading(this.text, {super.key, this.color = HMBColors.textPrimary})
+class HMBTextHeadline3 extends StatelessWidget {
+  HMBTextHeadline3(this.text, {super.key, this.color = HMBColors.textPrimary})
       : style = TextStyle(fontSize: fontSize, color: color);
   final String text;
   final Color color;
