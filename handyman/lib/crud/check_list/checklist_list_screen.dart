@@ -43,7 +43,7 @@ class CheckListListScreen<P extends Entity<P>> extends StatelessWidget {
           parent: parent.parent!,
           checklist: checklist,
           checkListType: checkListType),
-      details: (entity) {
+      details: (entity, details) {
         final checklist = entity;
         return Column(
             crossAxisAlignment: CrossAxisAlignment.start,

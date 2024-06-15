@@ -35,7 +35,7 @@ class SiteListScreen<P extends Entity<P>> extends StatelessWidget {
       title: (site) => Text('${site.addressLine1} ${site.suburb}') as Widget,
       onEdit: (site) =>
           SiteEditScreen(daoJoin: daoJoin, parent: parent.parent!, site: site),
-      details: (entity) {
+      details: (entity, details) {
         final site = entity;
         return Column(
             crossAxisAlignment: CrossAxisAlignment.start,

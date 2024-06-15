@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -15,6 +13,8 @@ class Parent<P extends Entity<P>> {
   P? parent;
 }
 
+enum CardDetail { full, summary }
+
 class NestedEntityListScreen<C extends Entity<C>, P extends Entity<P>>
     extends StatefulWidget {
   const NestedEntityListScreen({
@@ -22,25 +22,30 @@ class NestedEntityListScreen<C extends Entity<C>, P extends Entity<P>>
     required this.onEdit,
     required this.onDelete,
     required this.onInsert,
-    required this.pageTitle,
+    required this.entityNamePlural,
     required this.title,
     required this.details,
     required this.parentTitle,
+    required this.entityNameSingular,
     required this.parent,
     required this.fetchList,
+    this.extended = false,
     super.key,
   });
 
   final Parent<P> parent;
-  final String pageTitle;
+  final String entityNamePlural;
   final Widget Function(C entity) title;
-  final Widget Function(C entity) details;
+  final Widget Function(C entity, CardDetail cardDetail) details;
   final Widget Function(C? entity) onEdit;
   final Future<void> Function(C? entity) onDelete;
   final Future<void> Function(C? entity) onInsert;
   final Future<List<C>> Function() fetchList;
   final Dao<C> dao;
   final String parentTitle;
+  final String entityNameSingular;
+
+  final bool extended;
 
   @override
   NestedEntityListScreenState createState() =>
@@ -50,6 +55,8 @@ class NestedEntityListScreen<C extends Entity<C>, P extends Entity<P>>
 class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
     extends State<NestedEntityListScreen<C, P>> {
   late Future<List<C>> entities;
+
+  CardDetail cardDetail = CardDetail.full;
 
   @override
   void initState() {
@@ -61,7 +68,6 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
   Future<void> _refreshEntityList() async {
     if (mounted) {
       setState(() {
-        print('refreshing');
         entities = _fetchList();
       });
     }
@@ -79,10 +85,25 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false, // No back button
-          title: Text(
-            widget.pageTitle,
-            style: const TextStyle(fontSize: 18),
-          ),
+          title: Row(children: [
+            Text(
+              widget.entityNamePlural,
+              style: const TextStyle(fontSize: 18),
+            ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  cardDetail = cardDetail == CardDetail.full
+                      ? CardDetail.summary
+                      : CardDetail.full;
+                });
+              },
+              iconSize: 25,
+              icon: Icon(cardDetail == CardDetail.full
+                  ? Icons.toggle_on
+                  : Icons.toggle_off),
+            )
+          ]),
           actions: [
             HMBButtonAdd(
               enabled: widget.parent.parent != null,
@@ -112,47 +133,56 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
               ));
             }
             if (list!.isEmpty) {
-              return const Center(
+              return Center(
                   child: Text(
-                'No records found.',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                'Click + to add a ${widget.entityNameSingular}.',
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ));
             } else {
-              return _buildListTiles(list);
+              return widget.extended
+                  ? SingleChildScrollView(
+                      child: Column(
+                        children: list
+                            .map((item) => _buildCard(item, context))
+                            .toList(),
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: list.length,
+                      itemBuilder: (context, index) {
+                        final entity = list[index];
+                        return _buildCard(entity, context);
+                      },
+                    );
             }
           },
         ),
       );
 
-  Widget _buildListTiles(List<C> list) => ListView.builder(
-        padding: const EdgeInsets.all(8),
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          final entity = list[index];
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            elevation: 2,
-            child: ListTile(
-              title: widget.title(entity),
-              subtitle: widget.details(entity),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: () async {
-                  await _confirmDelete(entity);
-                },
-              ),
-              onTap: () async {
-                if (context.mounted) {
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                        builder: (context) => widget.onEdit(entity)),
-                  ).then((_) => _refreshEntityList());
-                }
-              },
-            ),
-          );
-        },
+  Card _buildCard(C entity, BuildContext context) => Card(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        elevation: 2,
+        child: ListTile(
+          title: widget.title(entity),
+          subtitle: widget.details(entity, cardDetail),
+          trailing: IconButton(
+            icon: const Icon(Icons.delete, color: Colors.red),
+            onPressed: () async {
+              await _confirmDelete(entity);
+            },
+          ),
+          onTap: () async {
+            if (context.mounted) {
+              await Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                    builder: (context) => widget.onEdit(entity)),
+              ).then((_) => _refreshEntityList());
+            }
+          },
+        ),
       );
 
   Future<void> _confirmDelete(C entity) async {

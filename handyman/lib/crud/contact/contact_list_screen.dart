@@ -40,7 +40,7 @@ class ContactListScreen<P extends Entity<P>> extends StatelessWidget {
           daoJoin.deleteFromParent(contact!, parent.parent!),
       onInsert: (contact) async =>
           daoJoin.insertForParent(contact!, parent.parent!),
-      details: (entity) {
+      details: (entity, details) {
         final customer = entity;
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           HMBPhoneText(label: 'Mobile:', phoneNo: customer.mobileNumber),

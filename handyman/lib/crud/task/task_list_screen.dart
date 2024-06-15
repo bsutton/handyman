@@ -39,34 +39,52 @@ class _TaskListScreenState extends State<TaskListScreen> {
             TaskEditScreen(job: widget.parent.parent!, task: task),
         onDelete: (task) async => DaoTask().delete(task!.id),
         onInsert: (task) async => DaoTask().insert(task!),
-        details: (task) => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FutureBuilderEx(
-                // ignore: discarded_futures
-                future: DaoTaskStatus().getById(task.taskStatusId),
-                builder: (context, status) => Text(status?.name ?? 'Not Set')),
-            FutureBuilderEx(
+        details: (task, details) => details == CardDetail.full
+            ? _buildFullTasksDetails(task)
+            : _buildTaskSummary(task),
+        extended: widget.extended,
+      );
+
+  Column _buildFullTasksDetails(Task task) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FutureBuilderEx(
               // ignore: discarded_futures
-              future: DaoTask().getTaskStatistics(task),
-              builder: (context, taskStatistics) => Row(
-                children: [
-                  HMBText(
-                      'Effort(hrs): ${taskStatistics!.completedEffort.format('0.00')}/${taskStatistics.totalEffort.format('0.00')}'),
-                  HMBText(
-                      ' Earnings: ${taskStatistics.earnedCost}/${taskStatistics.totalCost}')
-                ],
-              ),
+              future: DaoTaskStatus().getById(task.taskStatusId),
+              builder: (context, status) => Text(status?.name ?? 'Not Set')),
+          FutureBuilderEx(
+            // ignore: discarded_futures
+            future: DaoTask().getTaskStatistics(task),
+            builder: (context, taskStatistics) => Row(
+              children: [
+                HMBText(
+                    'Effort(hrs): ${taskStatistics!.completedEffort.format('0.00')}/${taskStatistics.totalEffort.format('0.00')}'),
+                HMBText(
+                    ' Earnings: ${taskStatistics.earnedCost}/${taskStatistics.totalCost}')
+              ],
             ),
-            Text('Completed: ${task.completed}'),
-            IconButton(
-              icon: Icon(_taskTimers[task.id] ?? false
-                  ? Icons.stop
-                  : Icons.play_arrow),
-              onPressed: () async => _toggleTimer(task),
-            ),
-          ],
-        ),
+          ),
+          IconButton(
+            icon: Icon(
+                _taskTimers[task.id] ?? false ? Icons.stop : Icons.play_arrow),
+            onPressed: () async => _toggleTimer(task),
+          ),
+        ],
+      );
+
+  Column _buildTaskSummary(Task task) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FutureBuilderEx(
+              // ignore: discarded_futures
+              future: DaoTaskStatus().getById(task.taskStatusId),
+              builder: (context, status) => Text(status?.name ?? 'Not Set')),
+          IconButton(
+            icon: Icon(
+                _taskTimers[task.id] ?? false ? Icons.stop : Icons.play_arrow),
+            onPressed: () async => _toggleTimer(task),
+          ),
+        ],
       );
 
   /// Start/Stop the Time entry timer.
