@@ -1,4 +1,6 @@
 [
+  "assets/sql/upgrade_scripts/v7.sql",
+  "assets/sql/upgrade_scripts/v6.sql",
   "assets/sql/upgrade_scripts/v5.sql",
   "assets/sql/upgrade_scripts/v4.sql",
   "assets/sql/upgrade_scripts/v3.sql",

@@ -7,6 +7,7 @@ import 'crud/job/job_list_screen.dart';
 import 'crud/supplier/supplier_list_screen.dart';
 import 'crud/system/system_edit_screen.dart';
 import 'dao/dao_system.dart';
+import 'database/management/backup_providers/google_drive/backup.dart';
 import 'database/management/database_helper.dart';
 import 'screens/shopping.dart';
 import 'widgets/blocking_ui.dart';
@@ -70,6 +71,11 @@ class MyDrawer extends StatelessWidget {
         builder: (context, system) => SystemEditScreen(system: system!),
       ),
     ),
+    DrawerItem(
+        title: 'Backup',
+        screen: const BackupAuthGoogleScreen(
+          pathToBackup: '',
+        )),
   ];
 
   @override
