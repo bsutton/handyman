@@ -13,6 +13,8 @@ class MailToIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween, // added line
+        mainAxisSize: MainAxisSize.min, // added
         children: [
           IconButton(
             iconSize: 25,
