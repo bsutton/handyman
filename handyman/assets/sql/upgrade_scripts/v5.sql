@@ -6,3 +6,4 @@ VALUES
 
 
 alter table check_list_item add column completed bool;
+
