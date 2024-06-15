@@ -20,12 +20,21 @@ void main(List<String> args) {
 
   final results = parser.parse(args);
 
-  if (results['assets'] as bool) {
+  var build = results['build'] as bool;
+  var install = results['install'] as bool;
+  var assets = results['assets'] as bool;
+
+  if (!build && !install && !assets) {
+    /// no switches passed so do it all.
+    build = install = assets = true;
+  }
+
+  if (assets) {
     updateAssetList();
   }
   var needPubGet = true;
 
-  if (results['build'] as bool) {
+  if (build) {
     if (needPubGet) {
       _runPubGet();
       needPubGet = false;
@@ -33,7 +42,7 @@ void main(List<String> args) {
     buildApk();
   }
 
-  if (results['install'] as bool) {
+  if (install) {
     if (needPubGet) {
       _runPubGet();
       needPubGet = false;
