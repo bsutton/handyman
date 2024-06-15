@@ -56,7 +56,7 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
     extends State<NestedEntityListScreen<C, P>> {
   late Future<List<C>> entities;
 
-  CardDetail cardDetail = CardDetail.full;
+  CardDetail cardDetail = CardDetail.summary;
 
   @override
   void initState() {
