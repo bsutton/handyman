@@ -27,8 +27,10 @@ class _TimeEntryEditScreenState extends State<TimeEntryEditScreen>
     implements NestedEntityState<TimeEntry> {
   late TextEditingController _startTimeController;
   late TextEditingController _endTimeController;
+  late TextEditingController _noteController;
   late FocusNode _startTimeFocusNode;
   late FocusNode _endTimeFocusNode;
+  late FocusNode _noteFocusNode;
   final DateFormat _dateTimeFormat = DateFormat('yyyy-MM-dd hh:mm a');
 
   @override
@@ -43,9 +45,11 @@ class _TimeEntryEditScreenState extends State<TimeEntryEditScreen>
         text: widget.timeEntry?.endTime != null
             ? _dateTimeFormat.format(widget.timeEntry!.endTime!.toLocal())
             : '');
+    _noteController = TextEditingController(text: widget.timeEntry?.note ?? '');
 
     _startTimeFocusNode = FocusNode();
     _endTimeFocusNode = FocusNode();
+    _noteFocusNode = FocusNode();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_startTimeFocusNode);
@@ -56,8 +60,10 @@ class _TimeEntryEditScreenState extends State<TimeEntryEditScreen>
   void dispose() {
     _startTimeController.dispose();
     _endTimeController.dispose();
+    _noteController.dispose();
     _startTimeFocusNode.dispose();
     _endTimeFocusNode.dispose();
+    _noteFocusNode.dispose();
     super.dispose();
   }
 
@@ -126,6 +132,11 @@ class _TimeEntryEditScreenState extends State<TimeEntryEditScreen>
                 ),
               ),
             ),
+            HMBTextField(
+              controller: _noteController,
+              focusNode: _noteFocusNode,
+              labelText: 'Note',
+            ),
           ],
         ),
       );
@@ -137,12 +148,14 @@ class _TimeEntryEditScreenState extends State<TimeEntryEditScreen>
       startTime: _dateTimeFormat.parse(_startTimeController.text),
       endTime: _endTimeController.text.isNotEmpty
           ? _dateTimeFormat.parse(_endTimeController.text)
-          : null);
+          : null,
+      note: _noteController.text);
 
   @override
   Future<TimeEntry> forInsert() async => TimeEntry.forInsert(
       taskId: widget.task.id,
-      startTime: _dateTimeFormat.parse(_startTimeController.text));
+      startTime: _dateTimeFormat.parse(_startTimeController.text),
+      note: _noteController.text);
 
   @override
   void refresh() {

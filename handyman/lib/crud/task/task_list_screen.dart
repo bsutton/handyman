@@ -8,6 +8,7 @@ import '../../entity/job.dart';
 import '../../entity/task.dart';
 import '../../entity/time_entry.dart';
 import '../../widgets/hmb_text.dart';
+import '../../widgets/hmb_timeentry_controller.dart';
 import '../base_nested/nested_list_screen.dart';
 import '../task/task_edit_screen.dart';
 
@@ -23,7 +24,17 @@ class TaskListScreen extends StatefulWidget {
 }
 
 class _TaskListScreenState extends State<TaskListScreen> {
-  final Map<int, bool> _taskTimers = {};
+  /// If a time is running for a task, this will be the
+  /// active TimeEntry record.
+  /// Only a single task can have a time running at a time.
+  late Future<TimeEntry?> activeTimeEntry;
+
+  @override
+  void initState() {
+    // ignore: discarded_futures
+    activeTimeEntry = DaoTimeEntry().getActiveEntry();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) => NestedEntityListScreen<Task, Job>(
@@ -64,11 +75,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
               ],
             ),
           ),
-          IconButton(
-            icon: Icon(
-                _taskTimers[task.id] ?? false ? Icons.stop : Icons.play_arrow),
-            onPressed: () async => _toggleTimer(task),
-          ),
+          HMBTimeEntryController(task: task)
         ],
       );
 
@@ -79,39 +86,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
               // ignore: discarded_futures
               future: DaoTaskStatus().getById(task.taskStatusId),
               builder: (context, status) => Text(status?.name ?? 'Not Set')),
-          IconButton(
-            icon: Icon(
-                _taskTimers[task.id] ?? false ? Icons.stop : Icons.play_arrow),
-            onPressed: () async => _toggleTimer(task),
-          ),
+          HMBTimeEntryController(task: task)
         ],
       );
-
-  /// Start/Stop the Time entry timer.
-  Future<void> _toggleTimer(Task task) async {
-    if (_taskTimers[task.id] ?? false) {
-      // Stop timer
-      final daoTimeEntry = DaoTimeEntry();
-      final timeEntries = await daoTimeEntry.getByTask(task);
-      final ongoingEntry =
-          timeEntries.firstWhere((entry) => entry.endTime == null);
-      final updatedEntry = TimeEntry.forUpdate(
-          entity: ongoingEntry,
-          taskId: task.id,
-          startTime: ongoingEntry.startTime,
-          endTime: DateTime.now());
-      await daoTimeEntry.update(updatedEntry);
-      setState(() {
-        _taskTimers[task.id] = false;
-      });
-    } else {
-      // Start timer
-      final newEntry =
-          TimeEntry.forInsert(taskId: task.id, startTime: DateTime.now());
-      await DaoTimeEntry().insert(newEntry);
-      setState(() {
-        _taskTimers[task.id] = true;
-      });
-    }
-  }
 }

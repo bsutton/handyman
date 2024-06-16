@@ -5,9 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "handyman",
+            "name": "handyman-chrome",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "args": ["-d", "chrome","--web-port", "8000"],
+
         },
         {
             "name": "handyman (profile mode)",

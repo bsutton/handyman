@@ -14,9 +14,18 @@ class DaoTimeEntry extends Dao<TimeEntry> {
     if (task == null) {
       return [];
     }
-    final results =
-        await db.query(tableName, where: 'task_id = ?', whereArgs: [task.id]);
+    final results = await db.query(tableName,
+        where: 'task_id = ?', whereArgs: [task.id], orderBy: 'start_time desc');
     return results.map(TimeEntry.fromMap).toList();
   }
 
+  Future<TimeEntry?> getActiveEntry() async {
+    final db = getDb();
+
+    final results = await db.query(tableName,
+        where: 'end_time is null', orderBy: 'start_time desc');
+    final list = results.map(TimeEntry.fromMap);
+    assert(list.length <= 1, 'There should only ever by one active entry');
+    return list.firstOrNull;
+  }
 }

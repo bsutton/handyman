@@ -1,4 +1,6 @@
 import 'dart:io';
 
-bool get isMobile => Platform.isAndroid || Platform.isIOS;
-bool get isNotMobile => !isMobile;
+import 'package:flutter/foundation.dart';
+
+bool get isMobile => !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+bool get isNotMobile => kIsWeb || !isMobile;

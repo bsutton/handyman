@@ -7,7 +7,8 @@ class TimeEntry extends Entity<TimeEntry> {
       required this.startTime,
       required super.createdDate,
       required super.modifiedDate,
-      this.endTime})
+      this.endTime,
+      this.note})
       : super();
 
   factory TimeEntry.fromMap(Map<String, dynamic> map) => TimeEntry(
@@ -19,21 +20,25 @@ class TimeEntry extends Entity<TimeEntry> {
             : null,
         createdDate: DateTime.parse(map['created_date'] as String),
         modifiedDate: DateTime.parse(map['modified_date'] as String),
+        note: map['notes'] as String?,
       );
 
-  TimeEntry.forInsert({required this.taskId, required this.startTime})
+  TimeEntry.forInsert(
+      {required this.taskId, required this.startTime, this.note})
       : super.forInsert();
 
   TimeEntry.forUpdate(
       {required super.entity,
       required this.taskId,
       required this.startTime,
-      this.endTime})
+      this.endTime,
+      this.note})
       : super.forUpdate();
 
   int taskId;
   DateTime startTime;
   DateTime? endTime;
+  String? note;
 
   Duration get duration {
     final end = endTime ?? DateTime.now();
@@ -49,5 +54,6 @@ class TimeEntry extends Entity<TimeEntry> {
         'end_time': endTime?.toIso8601String(),
         'created_date': createdDate.toIso8601String(),
         'modified_date': modifiedDate.toIso8601String(),
+        'notes': note,
       };
 }
