@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
+import 'package:june/june.dart';
 
 import '../../dao/dao.dart';
 import '../../entity/entities.dart';
@@ -62,7 +63,7 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
   void initState() {
     super.initState();
     // ignore: discarded_futures
-    entities = _fetchList();
+    // entities = _fetchList();
   }
 
   Future<void> _refreshEntityList() async {
@@ -91,6 +92,7 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
               style: const TextStyle(fontSize: 18),
             ),
             IconButton(
+              tooltip: 'Show/Hide full card details',
               onPressed: () {
                 setState(() {
                   cardDetail = cardDetail == CardDetail.full
@@ -119,46 +121,50 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
             )
           ],
         ),
-        body: FutureBuilderEx<List<C>>(
-          future: entities,
-          waitingBuilder: (_) =>
-              const Center(child: CircularProgressIndicator()),
-          builder: (context, list) {
-            if (widget.parent.parent == null) {
-              return Center(
-                  child: Text(
-                'Save the ${widget.parentTitle} first.',
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ));
-            }
-            if (list!.isEmpty) {
-              return Center(
-                  child: Text(
-                'Click + to add a ${widget.entityNameSingular}.',
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-              ));
-            } else {
-              return widget.extended
-                  ? SingleChildScrollView(
-                      child: Column(
-                        children: list
-                            .map((item) => _buildCard(item, context))
-                            .toList(),
-                      ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: list.length,
-                      itemBuilder: (context, index) {
-                        final entity = list[index];
-                        return _buildCard(entity, context);
-                      },
-                    );
-            }
-          },
-        ),
+        body: JuneBuilder(widget.dao.juneRefresher, builder: (context) {
+          // ignore: discarded_futures
+          entities = _fetchList();
+          return FutureBuilderEx<List<C>>(
+            future: entities,
+            waitingBuilder: (_) =>
+                const Center(child: CircularProgressIndicator()),
+            builder: (context, list) {
+              if (widget.parent.parent == null) {
+                return Center(
+                    child: Text(
+                  'Save the ${widget.parentTitle} first.',
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w500),
+                ));
+              }
+              if (list!.isEmpty) {
+                return Center(
+                    child: Text(
+                  'Click + to add a ${widget.entityNameSingular}.',
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.w500),
+                ));
+              } else {
+                return widget.extended
+                    ? SingleChildScrollView(
+                        child: Column(
+                          children: list
+                              .map((item) => _buildCard(item, context))
+                              .toList(),
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: list.length,
+                        itemBuilder: (context, index) {
+                          final entity = list[index];
+                          return _buildCard(entity, context);
+                        },
+                      );
+              }
+            },
+          );
+        }),
       );
 
   Card _buildCard(C entity, BuildContext context) => Card(

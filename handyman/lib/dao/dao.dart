@@ -1,11 +1,26 @@
 import 'package:flutter/foundation.dart';
+import 'package:june/june.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../database/management/database_helper.dart';
 import '../entity/entity.dart';
+import 'dao_time_entry.dart';
 
 export '../database/management/database_helper.dart';
 export 'dao_customer.dart';
+
+/// If a [Dao] implements [DaoNotify] then
+/// we can notify UI elements that the db has changed.
+/// The Dao class must implement a JuneState and the UI
+/// must use a JuneBuilder linked to that JuneState.
+/// See [DaoTimeEntry] for an example.
+// ignore: one_member_abstracts
+// abstract class DaoNotify {
+//   void notify();
+//   JuneState get state;
+// }
+
+typedef JuneStateCreator = JuneState Function();
 
 abstract class Dao<T extends Entity<T>> {
   /// Insert [entity] into the database.
@@ -14,8 +29,17 @@ abstract class Dao<T extends Entity<T>> {
     final db = getDb(transaction);
     final id = await db.insert(tableName, entity.toMap()..remove('id'));
     entity.id = id;
+
+    _notify();
+
     return id;
   }
+
+  void _notify() {
+    June.getState(juneRefresher).setState();
+  }
+
+  JuneStateCreator get juneRefresher;
 
   Future<List<T>> getAll([Transaction? transaction]) async {
     final db = getDb(transaction);
@@ -39,21 +63,26 @@ abstract class Dao<T extends Entity<T>> {
 
   Future<int> update(covariant T entity, [Transaction? transaction]) async {
     final db = getDb(transaction);
-    return db.update(
+    final id = await db.update(
       tableName,
       entity.toMap(),
       where: 'id = ?',
       whereArgs: [entity.id],
     );
+    _notify();
+    return id;
   }
 
+  //// Returns the number of rows deleted.
   Future<int> delete(int id, [Transaction? transaction]) async {
     final db = getDb(transaction);
-    return db.delete(
+    final rowsDeleted = db.delete(
       tableName,
       where: 'id = ?',
       whereArgs: [id],
     );
+    _notify();
+    return rowsDeleted;
   }
 
   @protected

@@ -16,17 +16,16 @@ final _dateTimeFormat = DateFormat('yyyy-MM-dd hh:mm a');
 
 /// Display a control that lets you start/stop and time
 /// entry as well as displaying the elapsed time.
-class HMBTimeEntryController extends StatefulWidget {
-  const HMBTimeEntryController({required this.task, super.key});
+class HMBStartTimeEntry extends StatefulWidget {
+  const HMBStartTimeEntry({required this.task, super.key});
   @override
-  State<StatefulWidget> createState() => HMBTimeEntryControllerState();
+  State<StatefulWidget> createState() => HMBStartTimeEntryState();
 
   final Task? task;
 }
 
-class HMBTimeEntryControllerState extends State<HMBTimeEntryController> {
+class HMBStartTimeEntryState extends State<HMBStartTimeEntry> {
   Timer? _timer;
-  Duration _elapsedTime = Duration.zero;
   late Future<TimeEntry?> _initialEntry;
   TimeEntry? timeEntry;
 
@@ -84,6 +83,9 @@ class HMBTimeEntryControllerState extends State<HMBTimeEntryController> {
         endTime: DateTime.now(),
       ));
 
+      /// forrce a reload of the time entry crud.
+      // June.getState(TimeEntryReload.new).setState();
+
       setState(_stopTimer);
     }
   }
@@ -97,7 +99,6 @@ class HMBTimeEntryControllerState extends State<HMBTimeEntryController> {
   void _startTimer(TimeEntry timeEntry) {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        _elapsedTime += DateTime.now().difference(timeEntry.startTime);
         this.timeEntry = timeEntry;
       });
     });
@@ -105,7 +106,6 @@ class HMBTimeEntryControllerState extends State<HMBTimeEntryController> {
 
   void _stopTimer() {
     _timer?.cancel();
-    _elapsedTime = Duration.zero;
     timeEntry = null;
   }
 

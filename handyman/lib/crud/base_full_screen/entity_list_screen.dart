@@ -99,7 +99,9 @@ class EntityListScreenState<T extends Entity<T>>
                     // margin: const EdgeInsets.symmetric(vertical: 8),
                     elevation: 2,
                     child: ListTile(
+                      contentPadding: const EdgeInsets.all(4),
                       // widget.title(entity),
+                      visualDensity: const VisualDensity(horizontal: -4),
                       subtitle: widget.details(entity),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),

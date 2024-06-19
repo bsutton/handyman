@@ -1,3 +1,5 @@
+import 'package:june/june.dart';
+
 import '../entity/task.dart';
 import '../entity/time_entry.dart';
 import 'dao.dart';
@@ -28,4 +30,18 @@ class DaoTimeEntry extends Dao<TimeEntry> {
     assert(list.length <= 1, 'There should only ever by one active entry');
     return list.firstOrNull;
   }
+
+  @override
+  JuneStateCreator get juneRefresher => DbTimeEntryChanged.new;
+}
+
+/// Can be used to notify the UI that the time entry has changed.
+/// This method is called each time the database is updated through the [Dao]
+/// methods - delete, insert and update.
+/// You can also for a notification by calling:
+/// ```
+/// DbTimeEntryChanged.notify();
+/// ```
+class DbTimeEntryChanged extends JuneState {
+  DbTimeEntryChanged();
 }

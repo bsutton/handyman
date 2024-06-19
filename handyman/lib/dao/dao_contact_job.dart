@@ -1,3 +1,4 @@
+import 'package:june/state_manager/src/simple/controllers.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/contact.dart';
@@ -41,4 +42,12 @@ class DaoContactJob extends Dao<Contact> {
       whereArgs: [job.id, contact.id],
     );
   }
+
+  @override
+  JuneStateCreator get juneRefresher => ContactJobState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class ContactJobState extends JuneState {
+  ContactJobState();
 }

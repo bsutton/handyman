@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/system.dart';
@@ -13,4 +14,11 @@ class DaoSystem extends Dao<System> {
 
   @override
   String get tableName => 'system';
+  @override
+  JuneStateCreator get juneRefresher => SystemState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class SystemState extends JuneState {
+  SystemState();
 }

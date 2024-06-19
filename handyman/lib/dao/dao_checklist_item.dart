@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:money2/money2.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -72,4 +73,12 @@ join check_list cl
 where cl.id =? 
 ''', [checklist.id]);
   }
+
+  @override
+  JuneStateCreator get juneRefresher => CheckListItemState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class CheckListItemState extends JuneState {
+  CheckListItemState();
 }

@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:strings/strings.dart';
 
@@ -180,4 +181,12 @@ where jo.id =?
     await insert(site);
     await DaoSiteJob().insertJoin(site, job);
   }
+
+  @override
+  JuneStateCreator get juneRefresher => SiteState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class SiteState extends JuneState {
+  SiteState();
 }

@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/contact.dart';
@@ -39,4 +40,12 @@ class DaoContactCustomer extends Dao<Contact> {
       whereArgs: [customer.id, contact.id],
     );
   }
+
+  @override
+  JuneStateCreator get juneRefresher => ContactCustomerState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class ContactCustomerState extends JuneState {
+  ContactCustomerState();
 }

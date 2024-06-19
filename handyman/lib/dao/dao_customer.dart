@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:money2/money2.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:strings/strings.dart';
@@ -61,4 +62,12 @@ where c.name like ?
     }
     return hourlyRate;
   }
+
+  @override
+  JuneStateCreator get juneRefresher => CustomerState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class CustomerState extends JuneState {
+  CustomerState();
 }

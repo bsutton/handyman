@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/check_list.dart';
@@ -47,4 +48,12 @@ where jo.id =?
     await insert(checklist);
     await DaoCheckListTask().insertJoin(checklist, task);
   }
+
+  @override
+  JuneStateCreator get juneRefresher => CheckListState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class CheckListState extends JuneState {
+  CheckListState();
 }

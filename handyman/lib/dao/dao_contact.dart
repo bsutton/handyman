@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/contact.dart';
@@ -144,4 +145,12 @@ where cu.id =?
     await insert(contact);
     await DaoContactJob().insertJoin(contact, job);
   }
+
+  @override
+  JuneStateCreator get juneRefresher => ContactState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class ContactState extends JuneState {
+  ContactState();
 }

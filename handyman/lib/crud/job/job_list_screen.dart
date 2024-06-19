@@ -56,12 +56,9 @@ class JobListScreen extends StatelessWidget {
                             builder: (context, contact) => Column(
                               children: [
                                 HMBPhoneText(
-                                    label: 'Phone',
                                     phoneNo: contact?.mobileNumber ??
                                         contact?.landLine),
-                                HMBEmailText(
-                                    label: 'Email',
-                                    email: contact?.emailAddress)
+                                HMBEmailText(email: contact?.emailAddress)
                               ],
                             ),
                           ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:strings/strings.dart';
 
 import '../../dao/dao_contact.dart';
 import '../../dao/join_adaptors/dao_join_adaptor.dart';
 import '../../entity/contact.dart';
 import '../../entity/entity.dart';
+import '../../widgets/hmb_email_text.dart';
 import '../../widgets/hmb_phone_text.dart';
 import '../base_nested/nested_list_screen.dart';
 import 'contact_edit_screen.dart';
@@ -43,9 +43,8 @@ class ContactListScreen<P extends Entity<P>> extends StatelessWidget {
       details: (entity, details) {
         final customer = entity;
         return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          HMBPhoneText(label: 'Mobile:', phoneNo: customer.mobileNumber),
-          if (Strings.isNotBlank(customer.emailAddress))
-            Text('Email: ${customer.emailAddress}'),
+          HMBPhoneText(label: '', phoneNo: customer.mobileNumber),
+          HMBEmailText(label: '', email: customer.emailAddress)
         ]);
       });
 }

@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:money2/money2.dart';
 
 import '../entity/check_list_item.dart';
@@ -74,6 +75,14 @@ where cli.id =?
 
     return toList(data).first;
   }
+
+  @override
+  JuneStateCreator get juneRefresher => TaskState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class TaskState extends JuneState {
+  TaskState();
 }
 
 class TaskStatistics {

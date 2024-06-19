@@ -3,12 +3,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:june/june.dart';
 
 import '../crud/base_nested/nested_list_screen.dart';
 import '../crud/time_entry/time_entry_list_screen.dart';
 import '../entity/task.dart';
 import 'hmb_child_crud_card.dart';
-import 'hmb_timeentry_controller.dart';
+import 'hmb_start_time_entry.dart';
 
 // class HBMCrudTimeEntry extends StatelessWidget {
 //   const HBMCrudTimeEntry({
@@ -47,52 +48,63 @@ class HBMCrudTimeEntryState extends State<HBMCrudTimeEntry> {
   @override
   Widget build(BuildContext context) => Column(
         children: [
-          HMBTimeEntryController(
+          HMBStartTimeEntry(
             task: widget.parent.parent,
           ),
-          HMBChildCrudCard(
-              headline: 'Time Entries',
-              crudListScreen: TimeEntryListScreen(
-                parent: widget.parent,
-              )),
+
+          /// Just used to force a relaod when the HMBStartTimeEntry creates
+          /// a new [TimeEntry]
+          // JuneBuilder(
+          //   TimeEntryReload.new,
+          //   builder: (timeEntryReload) => 
+            
+            HMBChildCrudCard(
+                headline: 'Time Entries',
+                crudListScreen: TimeEntryListScreen(
+                  parent: widget.parent,
+                )),
+          // )
         ],
       );
 }
 
-  // FutureBuilder<List<TimeEntry>>(
-  //       // ignore: discarded_futures
-  //       future: DaoTimeEntry().getByTask(widget.parent.parent),
-  //       builder: (context, snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.waiting) {
-  //           return const Center(child: CircularProgressIndicator());
-  //         } else if (snapshot.hasError) {
-  //           return Center(child: Text('Error: ${snapshot.error}'));
-  //         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-  //           return const Center(child: Text('No time entries found.'));
-  //         } else {
-  //           return ListView.builder(
-  //             shrinkWrap: true,
-  //             itemCount: snapshot.data!.length,
-  //             itemBuilder: (context, index) {
-  //               final timeEntry = snapshot.data![index];
-  //               return ListTile(
-  //                 title: Text(
-  //'''${timeEntry.startTime.toLocal()} - '''
-  //'''${timeEntry.endTime?.toLocal() ?? 'Ongoing'}'''),
-  //                 subtitle: Text(
-  //                     '''Duration:
-  //${_formatDuration(timeEntry.startTime, timeEntry.endTime)}'''),
-  //               );
-  //             },
-  //           );
-  //         }
-  //       },
-  //     );
-
+// FutureBuilder<List<TimeEntry>>(
+//       // ignore: discarded_futures
+//       future: DaoTimeEntry().getByTask(widget.parent.parent),
+//       builder: (context, snapshot) {
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return const Center(child: CircularProgressIndicator());
+//         } else if (snapshot.hasError) {
+//           return Center(child: Text('Error: ${snapshot.error}'));
+//         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+//           return const Center(child: Text('No time entries found.'));
+//         } else {
+//           return ListView.builder(
+//             shrinkWrap: true,
+//             itemCount: snapshot.data!.length,
+//             itemBuilder: (context, index) {
+//               final timeEntry = snapshot.data![index];
+//               return ListTile(
+//                 title: Text(
+//'''${timeEntry.startTime.toLocal()} - '''
+//'''${timeEntry.endTime?.toLocal() ?? 'Ongoing'}'''),
+//                 subtitle: Text(
+//                     '''Duration:
+//${_formatDuration(timeEntry.startTime, timeEntry.endTime)}'''),
+//               );
+//             },
+//           );
+//         }
+//       },
+//     );
 
 // String _formatDuration(DateTime startTime, DateTime? endTime) {
 //   if (endTime == null) {
 //     return 'Ongoing';
 //   }
 //   return formatDuration(endTime.difference(startTime));
+// }
+
+// class TimeEntryReload extends JuneState {
+//   TimeEntryReload();
 // }

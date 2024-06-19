@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:strings/strings.dart';
 
 import '../entity/task_status.dart';
@@ -28,4 +29,11 @@ or ts.description like ?
 
   @override
   TaskStatus fromMap(Map<String, dynamic> map) => TaskStatus.fromMap(map);
+  @override
+  JuneStateCreator get juneRefresher => TaskStatusState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class TaskStatusState extends JuneState {
+  TaskStatusState();
 }

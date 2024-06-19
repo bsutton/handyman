@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:strings/strings.dart';
 
 import '../entity/check_list_item_type.dart';
@@ -29,4 +30,12 @@ or it.description like ?
   @override
   CheckListItemType fromMap(Map<String, dynamic> map) =>
       CheckListItemType.fromMap(map);
+
+  @override
+  JuneStateCreator get juneRefresher => CheckListItemTypeState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class CheckListItemTypeState extends JuneState {
+  CheckListItemTypeState();
 }

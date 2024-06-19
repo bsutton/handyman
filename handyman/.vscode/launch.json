@@ -8,8 +8,21 @@
             "name": "handyman-chrome",
             "request": "launch",
             "type": "dart",
-            "args": ["-d", "chrome","--web-port", "8000"],
-
+            "args": [
+                "-d",
+                "chrome",
+                "--web-port",
+                "8000"
+            ],
+        },
+        {
+            "name": "handyman-linux",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "-d",
+                "linux"
+            ],
         },
         {
             "name": "handyman (profile mode)",

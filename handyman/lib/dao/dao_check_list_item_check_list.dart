@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/check_list.dart';
@@ -30,4 +31,11 @@ class DaoCheckListItemCheckList extends Dao<CheckListItem> {
     );
   }
 
+  @override
+  JuneStateCreator get juneRefresher => CheckListItemCheckListState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class CheckListItemCheckListState extends JuneState {
+  CheckListItemCheckListState();
 }

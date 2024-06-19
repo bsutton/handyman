@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:money2/money2.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:strings/strings.dart';
@@ -130,6 +131,14 @@ where c.id =?
 
     return toList(data);
   }
+
+  @override
+  JuneStateCreator get juneRefresher => JobState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class JobState extends JuneState {
+  JobState();
 }
 
 class JobStatistics {

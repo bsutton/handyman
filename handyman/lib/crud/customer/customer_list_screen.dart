@@ -38,9 +38,8 @@ class CustomerListScreen extends StatelessWidget {
                           ContactText(
                               label: 'Primary Contact:', contact: contact),
                           HMBPhoneText(
-                              label: 'Mobile:', phoneNo: contact?.mobileNumber),
-                          HMBEmailText(
-                              label: 'Email', email: contact?.emailAddress),
+                              label: '', phoneNo: contact?.mobileNumber),
+                          HMBEmailText(label: '', email: contact?.emailAddress),
                           HMBSiteText(label: 'Address', site: site)
                         ])));
       });

@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/customer.dart';
@@ -39,4 +40,12 @@ class DaoSiteCustomer extends Dao<Site> {
       whereArgs: [customer.id, site.id],
     );
   }
+
+  @override
+  JuneStateCreator get juneRefresher => SiteCustomerState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class SiteCustomerState extends JuneState {
+  SiteCustomerState();
 }

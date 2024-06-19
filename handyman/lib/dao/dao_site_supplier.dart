@@ -1,3 +1,4 @@
+import 'package:june/june.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../entity/site.dart';
@@ -30,7 +31,6 @@ class DaoSiteSupplier extends Dao<Site> {
     );
   }
 
-
   Future<void> setAsPrimary(Site site, Supplier supplier,
       [Transaction? transaction]) async {
     await getDb(transaction).update(
@@ -40,4 +40,12 @@ class DaoSiteSupplier extends Dao<Site> {
       whereArgs: [supplier.id, site.id],
     );
   }
+
+  @override
+  JuneStateCreator get juneRefresher => SiteSupplierState.new;
+}
+
+/// Used to notify the UI that the time entry has changed.
+class SiteSupplierState extends JuneState {
+  SiteSupplierState();
 }

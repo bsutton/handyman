@@ -7,8 +7,8 @@ import '../../dao/dao_time_entry.dart';
 import '../../entity/job.dart';
 import '../../entity/task.dart';
 import '../../entity/time_entry.dart';
+import '../../widgets/hmb_start_time_entry.dart';
 import '../../widgets/hmb_text.dart';
-import '../../widgets/hmb_timeentry_controller.dart';
 import '../base_nested/nested_list_screen.dart';
 import '../task/task_edit_screen.dart';
 
@@ -75,7 +75,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
               ],
             ),
           ),
-          HMBTimeEntryController(task: task)
+          HMBStartTimeEntry(task: task)
         ],
       );
 
@@ -86,7 +86,7 @@ class _TaskListScreenState extends State<TaskListScreen> {
               // ignore: discarded_futures
               future: DaoTaskStatus().getById(task.taskStatusId),
               builder: (context, status) => Text(status?.name ?? 'Not Set')),
-          HMBTimeEntryController(task: task)
+          HMBStartTimeEntry(task: task)
         ],
       );
 }
