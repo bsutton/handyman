@@ -42,7 +42,7 @@ class DaoTask extends Dao<Task> {
     totalEffort += task.effortInHours ?? FixedEx.zero;
     totalCost += task.estimatedCost ?? MoneyEx.zero;
 
-    final timeEntries = await DaoTimeEntry().getByTask(task);
+    final timeEntries = await DaoTimeEntry().getByTask(task.id);
 
     var trackedEffort = Duration.zero;
 

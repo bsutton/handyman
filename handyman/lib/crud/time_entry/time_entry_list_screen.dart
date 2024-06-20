@@ -20,7 +20,7 @@ class TimeEntryListScreen extends StatelessWidget {
       parentTitle: 'Task',
       dao: DaoTimeEntry(),
       // ignore: discarded_futures
-      fetchList: () => DaoTimeEntry().getByTask(parent.parent),
+      fetchList: () => DaoTimeEntry().getByTask(parent.parent?.id),
       title: (entity) => Text(
           '''Interval: ${formatDateTime(entity.startTime)} - ${entity.endTime != null ? formatDateTime(entity.endTime!) : 'running'}'''),
       onEdit: (timeEntry) =>

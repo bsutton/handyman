@@ -93,11 +93,17 @@ class JobListScreen extends StatelessWidget {
                     HMBText(
                       'Completed: ${remainingTasks.completedTasks}/${remainingTasks.totalTasks}',
                     ),
+
+                    // ignore: discarded_futures
+
                     HMBText(
                       'Effort(hrs): ${remainingTasks.completedEffort.format('0.00')}/${remainingTasks.totalEffort.format('0.00')}',
                     ),
                     HMBText(
                       'Earnings: ${remainingTasks.earnedCost}/${remainingTasks.totalCost}',
+                    ),
+                    HMBText(
+                      'Worked: ${remainingTasks.worked}',
                     ),
                   ],
                 );
@@ -115,6 +121,9 @@ class JobListScreen extends StatelessWidget {
                     const SizedBox(width: 16), // Add spacing between items
                     HMBText(
                       'Earnings: ${remainingTasks.earnedCost}/${remainingTasks.totalCost}',
+                    ),
+                    HMBText(
+                      ' Worked: ${remainingTasks.worked}',
                     ),
                   ],
                 );

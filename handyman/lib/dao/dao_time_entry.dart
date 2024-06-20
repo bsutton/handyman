@@ -1,6 +1,5 @@
 import 'package:june/june.dart';
 
-import '../entity/task.dart';
 import '../entity/time_entry.dart';
 import 'dao.dart';
 
@@ -11,16 +10,18 @@ class DaoTimeEntry extends Dao<TimeEntry> {
   @override
   String get tableName => 'time_entry';
 
-  Future<List<TimeEntry>> getByTask(Task? task) async {
+  Future<List<TimeEntry>> getByTask(int? taskId) async {
     final db = getDb();
-    if (task == null) {
+    if (taskId == null) {
       return [];
     }
     final results = await db.query(tableName,
-        where: 'task_id = ?', whereArgs: [task.id], orderBy: 'start_time desc');
+        where: 'task_id = ?', whereArgs: [taskId], orderBy: 'start_time desc');
     return results.map(TimeEntry.fromMap).toList();
   }
 
+  /// Find the active [TimeEntry] there should only ever
+  /// be one or none.
   Future<TimeEntry?> getActiveEntry() async {
     final db = getDb();
 

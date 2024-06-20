@@ -68,9 +68,12 @@ class _HMBDroplistState<T> extends State<_HMBDroplist<T>> {
 
   Future<void> _loadSelectedItem() async {
     _selectedItem = await widget.initialItem();
-    setState(() {
-      _loading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _loading = false;
+      });
+    }
+
     widget.state.didChange(_selectedItem);
   }
 

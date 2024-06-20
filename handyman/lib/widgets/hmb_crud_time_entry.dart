@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:june/june.dart';
 
 import '../crud/base_nested/nested_list_screen.dart';
 import '../crud/time_entry/time_entry_list_screen.dart';
@@ -52,17 +51,11 @@ class HBMCrudTimeEntryState extends State<HBMCrudTimeEntry> {
             task: widget.parent.parent,
           ),
 
-          /// Just used to force a relaod when the HMBStartTimeEntry creates
-          /// a new [TimeEntry]
-          // JuneBuilder(
-          //   TimeEntryReload.new,
-          //   builder: (timeEntryReload) => 
-            
-            HMBChildCrudCard(
-                headline: 'Time Entries',
-                crudListScreen: TimeEntryListScreen(
-                  parent: widget.parent,
-                )),
+          HMBChildCrudCard(
+              headline: 'Time Entries',
+              crudListScreen: TimeEntryListScreen(
+                parent: widget.parent,
+              )),
           // )
         ],
       );

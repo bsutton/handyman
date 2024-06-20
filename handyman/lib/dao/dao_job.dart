@@ -10,6 +10,7 @@ import '../util/fixed_ex.dart';
 import '../util/money_ex.dart';
 import 'dao.dart';
 import 'dao_task.dart';
+import 'dao_time_entry.dart';
 
 class DaoJob extends Dao<Job> {
   @override
@@ -97,6 +98,7 @@ where t.id =?
     var completedEffort = Fixed.zero;
     var totalCost = MoneyEx.zero;
     var earnedCost = MoneyEx.zero;
+    var workedHours = Fixed.zero;
 
     for (final task in tasks) {
       if (task.completed) {
@@ -106,6 +108,12 @@ where t.id =?
       }
       totalEffort += task.effortInHours ?? FixedEx.zero;
       totalCost += task.estimatedCost ?? MoneyEx.zero;
+
+      final timeEntries = await DaoTimeEntry().getByTask(task.id);
+      for (final timeEntry in timeEntries) {
+        workedHours +=
+            Fixed.fromInt((timeEntry.duration.inMinutes / 60.0 * 100).toInt());
+      }
     }
 
     return JobStatistics(
@@ -114,7 +122,8 @@ where t.id =?
         totalEffort: totalEffort,
         completedEffort: completedEffort,
         totalCost: totalCost,
-        earnedCost: earnedCost);
+        earnedCost: earnedCost,
+        worked: job.hourlyRate!.multiplyByFixed(workedHours));
   }
 
   /// Get all the jobs for the given customer.
@@ -148,11 +157,13 @@ class JobStatistics {
       required this.totalEffort,
       required this.completedEffort,
       required this.totalCost,
-      required this.earnedCost});
+      required this.earnedCost,
+      required this.worked});
   final int totalTasks;
   final int completedTasks;
   final Fixed totalEffort;
   final Fixed completedEffort;
   final Money totalCost;
   final Money earnedCost;
+  final Money worked;
 }

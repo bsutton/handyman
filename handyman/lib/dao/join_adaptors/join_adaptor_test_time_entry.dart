@@ -12,7 +12,7 @@ class JoinAdaptorTaskTimeEntry extends DaoJoinAdaptor<TimeEntry, Task> {
 
   @override
   Future<List<TimeEntry>> getByParent(Task? parent) async =>
-      DaoTimeEntry().getByTask(parent);
+      DaoTimeEntry().getByTask(parent?.id);
 
   @override
   Future<void> insertForParent(TimeEntry child, Task parent) async {

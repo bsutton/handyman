@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:intl/intl.dart';
 
+import '../dao/dao_task.dart';
 import '../dao/dao_time_entry.dart';
 import '../entity/task.dart';
 import '../entity/time_entry.dart';
 import '../util/format.dart';
-import 'hmb_text.dart';
-import 'hmb_text_area.dart';
-import 'hmb_text_field.dart';
+import 'time_entry_dialog.dart';
 
 final _dateTimeFormat = DateFormat('yyyy-MM-dd hh:mm a');
 
@@ -27,17 +26,22 @@ class HMBStartTimeEntry extends StatefulWidget {
 class HMBStartTimeEntryState extends State<HMBStartTimeEntry> {
   Timer? _timer;
   late Future<TimeEntry?> _initialEntry;
-  TimeEntry? timeEntry;
+  // TimeEntry? timeEntry;
 
   @override
   void initState() {
     super.initState();
+    final completer = Completer<TimeEntry?>();
+    _initialEntry = completer.future;
     // ignore: discarded_futures
-    _initialEntry = DaoTimeEntry().getActiveEntry();
-    // ignore: discarded_futures
-    _initialEntry.then((entry) {
+    DaoTimeEntry().getActiveEntry().then((entry) {
+      if (entry != null && entry.taskId == widget.task!.id) {
+        completer.complete(entry);
+      } else {
+        completer.complete(null);
+      }
       setState(() {
-        timeEntry = entry;
+        // timeEntry = entry;
         _initTimer(entry);
       });
     });
@@ -46,7 +50,7 @@ class HMBStartTimeEntryState extends State<HMBStartTimeEntry> {
   @override
   Widget build(BuildContext context) => FutureBuilderEx(
       future: _initialEntry,
-      builder: (context, _) => Row(
+      builder: (context, timeEntry) => Row(
             children: [
               IconButton(
                 icon: Icon(timeEntry != null ? Icons.stop : Icons.play_arrow),
@@ -57,36 +61,49 @@ class HMBStartTimeEntryState extends State<HMBStartTimeEntry> {
           ));
 
   Future<void> _toggleTimer(TimeEntry? timeEntry) async {
-    if (timeEntry == null) {
-      // Insert new TimeEntry to start tracking time
-      timeEntry = TimeEntry.forInsert(
-        taskId: widget.task!.id,
-        startTime: DateTime.now(),
-      );
+    final activeEntry = await DaoTimeEntry().getActiveEntry();
 
-      await DaoTimeEntry().insert(timeEntry);
-      setState(() {
-        _startTimer(timeEntry!);
-      });
-    } else {
-      // Update the last TimeEntry to stop tracking time
-      // final entries = await DaoTimeEntry().getByTask(widget.task);
-      // final ongoingEntry =
-      //     entries.lastWhereOrNull((entry) => entry.endTime == null);
-      // if (ongoingEntry == null) {
-      //   return;
-      // }
-      await DaoTimeEntry().update(TimeEntry.forUpdate(
-        entity: timeEntry,
-        taskId: widget.task!.id,
-        startTime: timeEntry.startTime,
-        endTime: DateTime.now(),
-      ));
+    /// If there is another activity running then it needs to be stopped.
+    if (activeEntry != null && activeEntry.id != timeEntry?.id) {
+      final otherTask = await DaoTask().getById(activeEntry.taskId);
 
-      /// forrce a reload of the time entry crud.
-      // June.getState(TimeEntryReload.new).setState();
+      if (mounted) {
+        /// There is an existing timer for another task,
+        /// we must get the user to
+        /// shut it down first.
+        final result = await _showTimeEntryDialog(
+            context, otherTask!, activeEntry,
+            showTask: true);
+        if (result != null) {
+          await DaoTimeEntry().update(result);
+        }
+      }
+    }
 
-      setState(_stopTimer);
+    if (mounted) {
+      /// Ask the user to adjust the start or stop time.
+      final newTimeEntry =
+          await _showTimeEntryDialog(context, widget.task!, timeEntry);
+      if (newTimeEntry != null) {
+        /// The user selected a start or stop time.
+        if (timeEntry == null) {
+          // No existing entry so this is a new entry time.
+          await DaoTimeEntry().insert(newTimeEntry);
+          if (mounted) {
+            setState(() {
+              _startTimer(newTimeEntry);
+            });
+          }
+        } else {
+          /// There was an exising entry so this is a stop time.
+          await DaoTimeEntry().update(newTimeEntry);
+          if (mounted) {
+            if (mounted) {
+              setState(_stopTimer);
+            }
+          }
+        }
+      }
     }
   }
 
@@ -99,14 +116,14 @@ class HMBStartTimeEntryState extends State<HMBStartTimeEntry> {
   void _startTimer(TimeEntry timeEntry) {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        this.timeEntry = timeEntry;
+        // this.timeEntry = timeEntry;
       });
     });
   }
 
   void _stopTimer() {
     _timer?.cancel();
-    timeEntry = null;
+    // timeEntry = null;
   }
 
   @override
@@ -124,117 +141,13 @@ class HMBStartTimeEntryState extends State<HMBStartTimeEntry> {
       return const Text('Tap to start tracking time');
     }
   }
-}
 
-Future<TimeEntry?> _showTimeEntryDialog(
-    BuildContext context, Task task, TimeEntry? openEntry) {
-  final now = DateTime.now();
-  DateTime nearestQuarterHour;
-
-  if (openEntry == null) {
-    nearestQuarterHour = DateTime(
-        now.year, now.month, now.day, now.hour, (now.minute ~/ 15) * 15);
-  } else {
-    nearestQuarterHour = DateTime(
-        now.year, now.month, now.day, now.hour, (now.minute ~/ 15) + 1 * 15);
-  }
-
-  final dateTimeController = TextEditingController(
-    text: formatDateTime(nearestQuarterHour),
-  );
-  final noteController = TextEditingController();
-  final dateTimeFocusNode = FocusNode();
-  final noteFocusNode = FocusNode();
-
-  noteController.text = openEntry?.note ?? '';
-
-  return showDialog<TimeEntry>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(openEntry != null ? 'Stop Timer' : 'Start Timer'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (openEntry != null)
-            HMBText('Start: ${formatDateTime(openEntry.startTime)}'),
-          GestureDetector(
-            onTap: () async => _selectDateTime(context, dateTimeController),
-            child: AbsorbPointer(
-              child: HMBTextField(
-                controller: dateTimeController,
-                focusNode: dateTimeFocusNode,
-                labelText: openEntry != null ? 'Stop Timer' : 'Start Timer',
-                keyboardType: TextInputType.datetime,
-                required: true,
-              ),
-            ),
-          ),
-          HMBTextArea(
-            controller: noteController,
-            focusNode: noteFocusNode,
-            labelText: 'Note',
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () {
-            final selectedDateTime =
-                _dateTimeFormat.parse(dateTimeController.text);
-            final note = noteController.text;
-            TimeEntry timeEntry;
-            if (openEntry == null) {
-              timeEntry = TimeEntry.forInsert(
-                  taskId: task.id, startTime: selectedDateTime, note: note);
-            } else {
-              timeEntry = TimeEntry.forUpdate(
-                  entity: openEntry,
-                  taskId: task.id,
-                  startTime: openEntry.startTime,
-                  endTime: selectedDateTime,
-                  note: note);
-            }
-            Navigator.pop(context, timeEntry);
-          },
-          child: const Text('OK'),
-        ),
-      ],
-    ),
-  );
-}
-
-Future<void> _selectDateTime(
-    BuildContext context, TextEditingController controller) async {
-  final selectedDate = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime(2000),
-    lastDate: DateTime(2101),
-  );
-
-  if (selectedDate != null && context.mounted) {
-    final selectedTime = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-      builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-        child: child!,
-      ),
-    );
-
-    if (selectedTime != null) {
-      final finalDateTime = DateTime(
-        selectedDate.year,
-        selectedDate.month,
-        selectedDate.day,
-        selectedTime.hour,
-        selectedTime.minute,
+  Future<TimeEntry?> _showTimeEntryDialog(
+          BuildContext context, Task task, TimeEntry? openEntry,
+          {bool showTask = false}) =>
+      showDialog<TimeEntry>(
+        context: context,
+        builder: (context) => TimeEntryDialog(
+            task: task, openEntry: openEntry, showTask: showTask),
       );
-      controller.text = formatDateTime(finalDateTime);
-    }
-  }
 }

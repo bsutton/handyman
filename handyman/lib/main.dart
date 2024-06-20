@@ -15,6 +15,12 @@ import 'widgets/blocking_ui.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // await TimeMachine.initialize({'rootBundle': rootBundle});
+  // final tzdb = await DateTimeZoneProviders.tzdb;
+  // final currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
+  // // log.info('Loading current timezone of [$currentTimeZone]');
+  // await tzdb[currentTimeZone];
+
   runApp(const MyApp());
 }
 
