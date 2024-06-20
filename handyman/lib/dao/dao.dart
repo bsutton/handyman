@@ -4,21 +4,9 @@ import 'package:sqflite/sqflite.dart';
 
 import '../database/management/database_helper.dart';
 import '../entity/entity.dart';
-import 'dao_time_entry.dart';
 
 export '../database/management/database_helper.dart';
 export 'dao_customer.dart';
-
-/// If a [Dao] implements [DaoNotify] then
-/// we can notify UI elements that the db has changed.
-/// The Dao class must implement a JuneState and the UI
-/// must use a JuneBuilder linked to that JuneState.
-/// See [DaoTimeEntry] for an example.
-// ignore: one_member_abstracts
-// abstract class DaoNotify {
-//   void notify();
-//   JuneState get state;
-// }
 
 typedef JuneStateCreator = JuneState Function();
 
@@ -39,6 +27,11 @@ abstract class Dao<T extends Entity<T>> {
     June.getState(juneRefresher).setState();
   }
 
+  /// A callback which provides the [Dao] with the ability to notify
+  /// the [JuneState] returned by [juneRefresher].
+  /// The [Dao] notifies the [juneRefresher] when ever the table
+  /// is changed via one of the standard CRUD operations exposed
+  /// by the Dao.
   JuneStateCreator get juneRefresher;
 
   Future<List<T>> getAll([Transaction? transaction]) async {

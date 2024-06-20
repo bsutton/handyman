@@ -98,7 +98,7 @@ where t.id =?
     var completedEffort = Fixed.zero;
     var totalCost = MoneyEx.zero;
     var earnedCost = MoneyEx.zero;
-    var workedHours = Fixed.zero;
+    var workedHours = Fixed.fromNum(0, scale: 2);
 
     for (final task in tasks) {
       if (task.completed) {
@@ -123,6 +123,7 @@ where t.id =?
         completedEffort: completedEffort,
         totalCost: totalCost,
         earnedCost: earnedCost,
+        workedHours: workedHours,
         worked: job.hourlyRate!.multiplyByFixed(workedHours));
   }
 
@@ -151,14 +152,16 @@ class JobState extends JuneState {
 }
 
 class JobStatistics {
-  JobStatistics(
-      {required this.totalTasks,
-      required this.completedTasks,
-      required this.totalEffort,
-      required this.completedEffort,
-      required this.totalCost,
-      required this.earnedCost,
-      required this.worked});
+  JobStatistics({
+    required this.totalTasks,
+    required this.completedTasks,
+    required this.totalEffort,
+    required this.completedEffort,
+    required this.totalCost,
+    required this.earnedCost,
+    required this.worked,
+    required this.workedHours,
+  });
   final int totalTasks;
   final int completedTasks;
   final Fixed totalEffort;
@@ -166,4 +169,5 @@ class JobStatistics {
   final Money totalCost;
   final Money earnedCost;
   final Money worked;
+  final Fixed workedHours;
 }
