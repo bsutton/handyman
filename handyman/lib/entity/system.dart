@@ -1,5 +1,4 @@
 import 'package:money2/money2.dart';
-
 import 'entity.dart';
 
 class System extends Entity<System> {
@@ -22,6 +21,8 @@ class System extends Entity<System> {
     required this.termsUrl,
     required this.defaultCallOutFee,
     required this.simCardNo,
+    required this.xeroClientId,
+    required this.xeroClientSecret,
     required super.createdDate,
     required super.modifiedDate,
   }) : super();
@@ -44,6 +45,8 @@ class System extends Entity<System> {
     required this.termsUrl,
     required this.defaultCallOutFee,
     required this.simCardNo,
+    required this.xeroClientId,
+    required this.xeroClientSecret,
   }) : super.forInsert();
 
   System.forUpdate({
@@ -65,6 +68,8 @@ class System extends Entity<System> {
     required this.termsUrl,
     required this.defaultCallOutFee,
     required this.simCardNo,
+    required this.xeroClientId,
+    required this.xeroClientSecret,
   }) : super.forUpdate();
 
   factory System.fromMap(Map<String, dynamic> map) => System(
@@ -90,6 +95,8 @@ class System extends Entity<System> {
             map['default_call_out_fee'] as int? ?? 0,
             isoCode: 'AUD'),
         simCardNo: map['sim_card_no'] as int?,
+        xeroClientId: map['xero_client_id'] as String?,
+        xeroClientSecret: map['xero_client_secret'] as String?,
         createdDate: DateTime.tryParse((map['createdDate']) as String? ?? '') ??
             DateTime.now(),
         modifiedDate:
@@ -114,6 +121,8 @@ class System extends Entity<System> {
   String? termsUrl; // link to terms and conditions
   Money? defaultCallOutFee; // in cents
   int? simCardNo;
+  String? xeroClientId;
+  String? xeroClientSecret;
 
   @override
   Map<String, dynamic> toMap() => {
@@ -135,6 +144,8 @@ class System extends Entity<System> {
         'terms_url': termsUrl,
         'default_call_out_fee': defaultCallOutFee?.minorUnits.toInt(),
         'sim_card_no': simCardNo,
+        'xero_client_id': xeroClientId,
+        'xero_client_secret': xeroClientSecret,
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };
