@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
-import 'package:intl/intl.dart';
 
 import '../dao/dao_customer.dart';
 import '../dao/dao_job.dart';
@@ -11,14 +10,19 @@ import 'hmb_date_time_picker.dart';
 import 'hmb_text.dart';
 import 'hmb_text_area.dart';
 
-final _dateTimeFormat = DateFormat('yyyy-MM-dd hh:mm a');
+// final _dateTimeFormat = DateFormat('yyyy-MM-dd hh:mm a');
 
 class TimeEntryDialog extends StatefulWidget {
   const TimeEntryDialog(
-      {required this.task, required this.showTask, super.key, this.openEntry});
+      {required this.task,
+      required this.showTask,
+      super.key,
+      this.openEntry,
+      this.followOnStartTime});
   final Task task;
   final TimeEntry? openEntry;
   final bool showTask;
+  final DateTime? followOnStartTime;
 
   @override
   State<TimeEntryDialog> createState() => _TimeEntryDialogState();
@@ -33,9 +37,12 @@ class _TimeEntryDialogState extends State<TimeEntryDialog> {
     DateTime nearestQuarterHour;
 
     if (widget.openEntry == null) {
-      nearestQuarterHour = DateTime(
-          now.year, now.month, now.day, now.hour, (now.minute ~/ 15) * 15);
+      /// start time
+      nearestQuarterHour = widget.followOnStartTime ??
+          DateTime(
+              now.year, now.month, now.day, now.hour, (now.minute ~/ 15) * 15);
     } else {
+      // end time
       nearestQuarterHour = DateTime(
           now.year, now.month, now.day, now.hour, (now.minute ~/ 15) + 1 * 15);
     }
@@ -113,37 +120,38 @@ class _TimeEntryDialogState extends State<TimeEntryDialog> {
     );
   }
 
-  Future<void> _selectDateTime(
-      BuildContext context, TextEditingController controller) async {
-    final selectedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
+  // Future<void> _selectDateTime(
+  //     BuildContext context, TextEditingController controller) async {
+  //   final selectedDate = await showDatePicker(
+  //     context: context,
+  //     initialDate: DateTime.now(),
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2101),
+  //   );
 
-    if (selectedDate != null && context.mounted) {
-      final selectedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-        builder: (context, child) => MediaQuery(
-          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-          child: child!,
-        ),
-      );
+  //   if (selectedDate != null && context.mounted) {
+  //     final selectedTime = await showTimePicker(
+  //       context: context,
+  //       initialTime: TimeOfDay.now(),
+  //       builder: (context, child) => MediaQuery(
+  //         data: MediaQuery.of(context)
+  //            .copyWith(alwaysUse24HourFormat: false),
+  //         child: child!,
+  //       ),
+  //     );
 
-      if (selectedTime != null) {
-        final finalDateTime = DateTime(
-          selectedDate.year,
-          selectedDate.month,
-          selectedDate.day,
-          selectedTime.hour,
-          selectedTime.minute,
-        );
-        controller.text = formatDateTime(finalDateTime);
-      }
-    }
-  }
+  //     if (selectedTime != null) {
+  //       final finalDateTime = DateTime(
+  //         selectedDate.year,
+  //         selectedDate.month,
+  //         selectedDate.day,
+  //         selectedTime.hour,
+  //         selectedTime.minute,
+  //       );
+  //       controller.text = formatDateTime(finalDateTime);
+  //     }
+  //   }
+  // }
 
   Widget buildTaskDetails() => Column(children: [
         FutureBuilderEx(

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
-import 'package:intl/intl.dart';
 
 import '../dao/dao_task.dart';
 import '../dao/dao_time_entry.dart';
@@ -11,7 +10,6 @@ import '../entity/time_entry.dart';
 import '../util/format.dart';
 import 'time_entry_dialog.dart';
 
-final _dateTimeFormat = DateFormat('yyyy-MM-dd hh:mm a');
 
 /// Display a control that lets you start/stop and time
 /// entry as well as displaying the elapsed time.
@@ -63,6 +61,10 @@ class HMBStartTimeEntryState extends State<HMBStartTimeEntry> {
   Future<void> _toggleTimer(TimeEntry? timeEntry) async {
     final activeEntry = await DaoTimeEntry().getActiveEntry();
 
+    /// If we stop an existing timer then the new one
+    /// should start where the old one left off + 1 min.
+    DateTime? followOnStartTime;
+
     /// If there is another activity running then it needs to be stopped.
     if (activeEntry != null && activeEntry.id != timeEntry?.id) {
       final otherTask = await DaoTask().getById(activeEntry.taskId);
@@ -71,19 +73,22 @@ class HMBStartTimeEntryState extends State<HMBStartTimeEntry> {
         /// There is an existing timer for another task,
         /// we must get the user to
         /// shut it down first.
-        final result = await _showTimeEntryDialog(
+        final stoppedTimeEntry = await _showTimeEntryDialog(
             context, otherTask!, activeEntry,
             showTask: true);
-        if (result != null) {
-          await DaoTimeEntry().update(result);
+        if (stoppedTimeEntry != null) {
+          followOnStartTime =
+              stoppedTimeEntry.startTime.add(const Duration(minutes: 1));
+          await DaoTimeEntry().update(stoppedTimeEntry);
         }
       }
     }
 
     if (mounted) {
       /// Ask the user to adjust the start or stop time.
-      final newTimeEntry =
-          await _showTimeEntryDialog(context, widget.task!, timeEntry);
+      final newTimeEntry = await _showTimeEntryDialog(
+          context, widget.task!, timeEntry,
+          followOnStartTime: followOnStartTime);
       if (newTimeEntry != null) {
         /// The user selected a start or stop time.
         if (timeEntry == null) {
@@ -144,10 +149,13 @@ class HMBStartTimeEntryState extends State<HMBStartTimeEntry> {
 
   Future<TimeEntry?> _showTimeEntryDialog(
           BuildContext context, Task task, TimeEntry? openEntry,
-          {bool showTask = false}) =>
+          {bool showTask = false, DateTime? followOnStartTime}) =>
       showDialog<TimeEntry>(
         context: context,
         builder: (context) => TimeEntryDialog(
-            task: task, openEntry: openEntry, showTask: showTask),
+            task: task,
+            openEntry: openEntry,
+            showTask: showTask,
+            followOnStartTime: followOnStartTime),
       );
 }
