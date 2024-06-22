@@ -1,4 +1,5 @@
 import 'package:money2/money2.dart';
+
 import 'entity.dart';
 
 class System extends Entity<System> {
@@ -23,54 +24,57 @@ class System extends Entity<System> {
     required this.simCardNo,
     required this.xeroClientId,
     required this.xeroClientSecret,
+    required this.xeroRedirectUrl,
     required super.createdDate,
     required super.modifiedDate,
   }) : super();
 
-  System.forInsert({
-    required this.fromEmail,
-    required this.bsb,
-    required this.accountNo,
-    required this.addressLine1,
-    required this.addressLine2,
-    required this.suburb,
-    required this.state,
-    required this.postcode,
-    required this.mobileNumber,
-    required this.landLine,
-    required this.officeNumber,
-    required this.emailAddress,
-    required this.webUrl,
-    required this.defaultHourlyRate,
-    required this.termsUrl,
-    required this.defaultCallOutFee,
-    required this.simCardNo,
-    required this.xeroClientId,
-    required this.xeroClientSecret,
-  }) : super.forInsert();
+  System.forInsert(
+      {required this.fromEmail,
+      required this.bsb,
+      required this.accountNo,
+      required this.addressLine1,
+      required this.addressLine2,
+      required this.suburb,
+      required this.state,
+      required this.postcode,
+      required this.mobileNumber,
+      required this.landLine,
+      required this.officeNumber,
+      required this.emailAddress,
+      required this.webUrl,
+      required this.defaultHourlyRate,
+      required this.termsUrl,
+      required this.defaultCallOutFee,
+      required this.simCardNo,
+      required this.xeroClientId,
+      required this.xeroClientSecret,
+      required this.xeroRedirectUrl})
+      : super.forInsert();
 
-  System.forUpdate({
-    required super.entity,
-    required this.fromEmail,
-    required this.bsb,
-    required this.accountNo,
-    required this.addressLine1,
-    required this.addressLine2,
-    required this.suburb,
-    required this.state,
-    required this.postcode,
-    required this.mobileNumber,
-    required this.landLine,
-    required this.officeNumber,
-    required this.emailAddress,
-    required this.webUrl,
-    required this.defaultHourlyRate,
-    required this.termsUrl,
-    required this.defaultCallOutFee,
-    required this.simCardNo,
-    required this.xeroClientId,
-    required this.xeroClientSecret,
-  }) : super.forUpdate();
+  System.forUpdate(
+      {required super.entity,
+      required this.fromEmail,
+      required this.bsb,
+      required this.accountNo,
+      required this.addressLine1,
+      required this.addressLine2,
+      required this.suburb,
+      required this.state,
+      required this.postcode,
+      required this.mobileNumber,
+      required this.landLine,
+      required this.officeNumber,
+      required this.emailAddress,
+      required this.webUrl,
+      required this.defaultHourlyRate,
+      required this.termsUrl,
+      required this.defaultCallOutFee,
+      required this.simCardNo,
+      required this.xeroClientId,
+      required this.xeroClientSecret,
+      required this.xeroRedirectUrl})
+      : super.forUpdate();
 
   factory System.fromMap(Map<String, dynamic> map) => System(
         id: map['id'] as int,
@@ -97,6 +101,7 @@ class System extends Entity<System> {
         simCardNo: map['sim_card_no'] as int?,
         xeroClientId: map['xero_client_id'] as String?,
         xeroClientSecret: map['xero_client_secret'] as String?,
+        xeroRedirectUrl: map['xero_redirect_url'] as String?,
         createdDate: DateTime.tryParse((map['createdDate']) as String? ?? '') ??
             DateTime.now(),
         modifiedDate:
@@ -123,6 +128,7 @@ class System extends Entity<System> {
   int? simCardNo;
   String? xeroClientId;
   String? xeroClientSecret;
+  String? xeroRedirectUrl;
 
   @override
   Map<String, dynamic> toMap() => {
@@ -146,6 +152,7 @@ class System extends Entity<System> {
         'sim_card_no': simCardNo,
         'xero_client_id': xeroClientId,
         'xero_client_secret': xeroClientSecret,
+        'xero_redirect_url': xeroRedirectUrl,
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };

@@ -9,6 +9,7 @@ import 'crud/system/system_edit_screen.dart';
 import 'dao/dao_system.dart';
 import 'database/management/backup_providers/google_drive/backup.dart';
 import 'database/management/database_helper.dart';
+import 'invoicing/xero_auth.dart';
 import 'screens/shopping.dart';
 import 'widgets/blocking_ui.dart';
 
@@ -42,6 +43,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      initialRoute: '/',
+      routes: {
+        '${XeroAuthScreen.routeName}': (context) => const XeroAuthScreen(),
+      },
       home: ChangeNotifierProvider(
         create: (_) => BlockingUI(),
         child: Scaffold(
