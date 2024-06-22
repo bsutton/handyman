@@ -39,6 +39,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_appauth: ^6.0.6
+  flutter_secure_storage: ^9.2.2
   ftoast: ^2.0.0
   future_builder_ex: ^4.0.0
   google_sign_in: ^6.2.1
