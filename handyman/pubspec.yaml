@@ -31,6 +31,7 @@ dependencies:
   completer_ex: ^4.0.3
   date_time_format: ^2.0.1
   datetime_picker_formfield: ^2.0.1
+  dcli_core: ^4.0.1-beta.4
   direct_caller_sim_choice: ^1.0.5
   email_validator: ^2.1.17
   equatable: ^2.0.0
@@ -46,6 +47,7 @@ dependencies:
   google_sign_in: ^6.2.1
   googleapis: ^13.1.0
   googleapis_auth: ^1.6.0
+  halfpipe: ^0.0.1
   http: ^1.2.1
   image_picker: ^1.1.1
   intl: ^0.19.0
@@ -67,6 +69,7 @@ dependencies:
   stacktrace_impl: ^2.3.0
   strings: ^3.1.1
   url_launcher: ^6.2.5
+  win32: ^5.3.0
 
 
 dev_dependencies:
@@ -98,6 +101,7 @@ flutter:
   assets:
     - assets/sql/upgrade_scripts/
     - assets/sql/upgrade_list.json
+    - assets/installer/linux/hmb.desktop
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

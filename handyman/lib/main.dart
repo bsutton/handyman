@@ -1,5 +1,11 @@
+import 'dart:io';
+
+import 'package:dcli_core/dcli_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'crud/customer/customer_list_screen.dart';
@@ -9,13 +15,12 @@ import 'crud/system/system_edit_screen.dart';
 import 'dao/dao_system.dart';
 import 'database/management/backup_providers/google_drive/backup.dart';
 import 'database/management/database_helper.dart';
+import 'installer/linux/install.dart';
 import 'invoicing/xero_auth.dart';
 import 'screens/shopping.dart';
 import 'widgets/blocking_ui.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   // await TimeMachine.initialize({'rootBundle': rootBundle});
   // final tzdb = await DateTimeZoneProviders.tzdb;
   // final currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
@@ -23,14 +28,6 @@ void main() async {
   // await tzdb[currentTimeZone];
 
   runApp(const MyApp());
-}
-
-Future<void> _initDb() async {
-  await DatabaseHelper.initDatabase();
-
-  // await Future.delayed(const Duration(seconds: 60), () {});
-
-  print('Database located at: ${await DatabaseHelper.pathToDatabase()}');
 }
 
 class MyApp extends StatelessWidget {
@@ -45,13 +42,13 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '${XeroAuthScreen.routeName}': (context) => const XeroAuthScreen(),
+        XeroAuthScreen.routeName: (context) => const XeroAuthScreen(),
       },
       home: ChangeNotifierProvider(
         create: (_) => BlockingUI(),
         child: Scaffold(
           body: BlockingUIBuilder<void>(
-            future: _initDb,
+            future: _initialise,
             stacktrace: StackTrace.current,
             label: 'Upgrade your database.',
             builder: (context, _) =>
@@ -127,3 +124,41 @@ class HomeWithDrawer extends StatelessWidget {
         body: initialScreen,
       );
 }
+
+Future<void> _initialise() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  _checkInstall();
+  _initDb();
+}
+
+Future<void> _initDb() async {
+  await DatabaseHelper.initDatabase();
+
+  // await Future.delayed(const Duration(seconds: 60), () {});
+
+  print('Database located at: ${await DatabaseHelper.pathToDatabase()}');
+}
+
+Future<void> _checkInstall() async {
+  if (kIsWeb) {
+    return;
+  }
+
+  final pathToHmbFirstRun = join(await pathToHmbFiles, 'firstrun.txt');
+
+  createDir(await pathToHmbFiles, recursive: true);
+
+  if (!exists(pathToHmbFirstRun)) {
+    await _install();
+    touch(pathToHmbFirstRun, create: true);
+  }
+}
+
+Future<void> _install() async {
+  if (Platform.isLinux) {
+    await linuxInstaller();
+  }
+}
+
+Future<String> get pathToHmbFiles async =>
+    join((await getApplicationSupportDirectory()).path, 'hmb');

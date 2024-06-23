@@ -178,7 +178,7 @@ packages:
     source: hosted
     version: "4.0.1-beta.4"
   dcli_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: dcli_core
       sha256: "915b6d7aa9cc039de4be263ecbdac0d372286059f5dba02a8b171748afb4883c"
@@ -520,6 +520,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.0"
+  halfpipe:
+    dependency: "direct main"
+    description:
+      name: halfpipe
+      sha256: "766877607098602b70d2bca56594483439e4ca39c0753532803aa165ae027611"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
   html:
     dependency: transitive
     description:
@@ -1294,7 +1302,7 @@ packages:
     source: hosted
     version: "0.5.1"
   win32:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: win32
       sha256: "8cb58b45c47dcb42ab3651533626161d6b67a2921917d8d429791f76972b3480"
