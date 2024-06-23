@@ -60,74 +60,6 @@ You can add items to the hardware inventory by clicking the '+' icon on the Job 
 You can then add items to the hardware inventory by clicking the '+' icon on the
 Hardware Inventory card.
 
-# Hardware Inventory
-HMB has a hardware inventory. This is a list of items that you have purchased.
-You can add items to the hardware inventory by clicking the '+' icon on the Job card.
-You can then add items to the hardware inventory by clicking the '+' icon on the
-Hardware Inventory card.
-
-# Hardware Inventory
-HMB has a hardware inventory. This is a list of items that you have purchased.
-You can add items to the hardware inventory by clicking the '+' icon on the Job card.
-You can then add items to the hardware inventory by clicking the '+' icon on the
-Hardware Inventory card.
-
-# Hardware Inventory
-HMB has a hardware inventory. This is a list of items that you have purchased.
-You can add items to the hardware inventory by clicking the '+' icon on the Job card.
-You can then add items to the hardware inventory by clicking the '+' icon on the
-Hardware Inventory card.
-
-# Hardware Inventory
-HMB has a hardware inventory. This is a list of items that you have purchased.
-You can add items to the hardware inventory by clicking the '+' icon on the Job card.
-You can then add items to the hardware inventory by clicking the '+' icon on the
-Hardware Inventory card.
-
-# Hardware Inventory
-HMB has a hardware inventory. This is a list of items that you have purchased.
-You can add items to the hardware inventory by clicking the '+' icon on the Job card.
-You can then add items to the hardware inventory by clicking the '+' icon on the
-Hardware Inventory card.
-
-# Hardware Inventory
-HMB has a hardware inventory. This is a list of items that you have purchased.
-You can add items to the hardware inventory by clicking the '+' icon on the Job card.
-You can then add items to the hardware inventory by clicking the '+' icon on the
-Hardware Inventory card.
-
-# Hardware Inventory
-HMB has a hardware inventory. This is a list of items that you have purchased.
-You can add items to the hardware inventory by clicking the '+' icon on the Job card.
-You can then add items to the hardware inventory by clicking the '+' icon on the
-Hardware Inventory card.
-
-# Hardware Inventory
-HMB has a hardware inventory. This is a list of items that you have purchased.
-You can add items to the hardware inventory by clicking the '+' icon on the Job card.
-You can then add items to the hardware inventory by clicking the '+' icon on the
-Hardware Inventory card.
-
-# Hardware Inventory
-HMB has a hardware inventory. This is a list of items that you have purchased.
-You can add items to the hardware inventory by clicking the '+' icon on the Job card.
-You can then add items to the hardware inventory by clicking the '+' icon on the
-Hardware Inventory card.
-
-# Hardware Inventory
-HMB has a hardware inventory. This is a list of items that you have purchased.
-You can add items to the hardware inventory by clicking the '+' icon on the Job card.
-You can then add items to the hardware inventory by clicking the '+' icon on the
-Hardware Inventory card.
-
-# Hardware Inventory
-HMB has a hardware inventory. This is a list of items that you have purchased.
-You can add items to the hardware inventory by clicking the '+' icon on the Job card.
-You can then add items to the hardware inventory by clicking the '+' icon on the
-Hardware Inventory card.
-
-# Hardware Inventory
-HMB has
 
 ## Getting Started
 
@@ -180,50 +112,6 @@ running the script:
 
 tool/build.dart --assets
 
-# HMB
-
-HMB (hold my beer) is an app designed for a single handyman to run their business.
-
-HMB supports the following:
-* customer database
-* supplier databse
-* job management
-
-A Job is to track work we are doing for a customer.
-How you use a job is up to you.
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-
-# Gradle:
-
-The project has an explicit path set for java in the android/gradle.properties file.
-You will like need to update this path to point to your local java installation.
-
-Note; android needs java 11.
-
-
-# Upgrading the database.
-
-Each time the app is launched it will check if the database needs to
-be upgraded and automatically upgrade the databse.
-
-The upgrade scripts are shipped as assets in the
- assets/sql/upgrade_scripts
-
 In development to upgrade the database create a .sql file with the name
 'vNN.sql'
 
@@ -265,6 +153,14 @@ If we upgrade sqlflite we need to upgrade the injected files as per the above li
 Note: currenlty we are not backing up the db before doing schema upgrades
 as we don't know how to do this on the web.
 
+
+# Linux development
+I do most of my development on a Ubuntu box with some work on a Windows laptop.
+To get the linux environment working you need to run:
+
+```
+tool/linux_setup.dart
+```
 
 # Build/install
 
