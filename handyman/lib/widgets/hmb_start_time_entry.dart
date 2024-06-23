@@ -10,6 +10,7 @@ import '../entity/time_entry.dart';
 import '../util/format.dart';
 import 'time_entry_dialog.dart';
 
+// final _dateTimeFormat = DateFormat('yyyy-MM-dd hh:mm a');
 
 /// Display a control that lets you start/stop and time
 /// entry as well as displaying the elapsed time.

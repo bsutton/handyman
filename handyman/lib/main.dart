@@ -1,3 +1,4 @@
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,14 @@ import 'widgets/blocking_ui.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  /// Implement deep linking
+  final _appLinks = AppLinks(); // AppLinks is singleton
+
+// Subscribe to all events (initial link and further)
+  _appLinks.uriLinkStream.listen((uri) {
+    if (uri.path == ('/xero/auth_callback')) {}
+  });
 
   // await TimeMachine.initialize({'rootBundle': rootBundle});
   // final tzdb = await DateTimeZoneProviders.tzdb;
@@ -45,7 +54,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '${XeroAuthScreen.routeName}': (context) => const XeroAuthScreen(),
+        XeroAuthScreen.routeName: (context) => const XeroAuthScreen(),
       },
       home: ChangeNotifierProvider(
         create: (_) => BlockingUI(),

@@ -1,4 +1,4 @@
-package dev.onepub.handyman
+package au.com.ivanhoehandyman
 
 import io.flutter.embedding.android.FlutterFragmentActivity;
 
