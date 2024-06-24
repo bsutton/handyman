@@ -1,18 +1,30 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:mobile_number/mobile_number.dart' as mobile;
+import 'package:permission_handler/permission_handler.dart';
 // import 'package:sms_advanced/sms_advanced.dart' hide SimCard;
 
 Future<List<mobile.SimCard>> getSimCards() async {
-  await _requestPermissions();
+  List<mobile.SimCard>? cards;
 
-  final cards = await mobile.MobileNumber.getSimCards;
+  if (!kIsWeb && Platform.isAndroid) {
+    await _requestPermissions();
 
+    cards = await mobile.MobileNumber.getSimCards;
+    // cards =  SimCardsProvider().getSimCards();
+  }
   return cards ?? [];
-
-  // return SimCardsProvider().getSimCards();
 }
 
 Future<void> _requestPermissions() async {
-  if (!(await mobile.MobileNumber.hasPhonePermission)) {
+  var status = await Permission.phone.status;
+  if (!status.isGranted) {
+    status = await Permission.phone.request();
+  }
+
+  // if (!(await mobile.MobileNumber.hasPhonePermission)) {
+  if (status.isGranted) {
     await mobile.MobileNumber.requestPhonePermission;
   }
 
