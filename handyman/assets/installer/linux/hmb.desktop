@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Hold My Beer deep links such as xero auth.
+Comment=Launch Hold My Beer with deep linking URL
+Exec=xdg-open https://hmb.ivanhoehandyman.com.au/deep_links
+Icon=web-browser
+Terminal=false
+Type=Application
+Categories=Network;WebBrowser;

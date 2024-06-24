@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:app_links/app_links.dart';
+import 'package:dcli_core/dcli_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'crud/customer/customer_list_screen.dart';
@@ -10,43 +16,49 @@ import 'crud/system/system_edit_screen.dart';
 import 'dao/dao_system.dart';
 import 'database/management/backup_providers/google_drive/backup.dart';
 import 'database/management/database_helper.dart';
+import 'installer/linux/install.dart';
 import 'invoicing/xero_auth.dart';
 import 'screens/shopping.dart';
 import 'widgets/blocking_ui.dart';
+import 'widgets/hmb_toast.dart';
 
-void main() async {
+void main(List<String> args) async {
+  if (args.isNotEmpty) {
+    print('Got a link $args');
+  } else {
+    print('no args');
+  }
+
   WidgetsFlutterBinding.ensureInitialized();
-
-  /// Implement deep linking
-  final _appLinks = AppLinks(); // AppLinks is singleton
-
-// Subscribe to all events (initial link and further)
-  _appLinks.uriLinkStream.listen((uri) {
-    if (uri.path == ('/xero/auth_callback')) {}
-  });
-
   // await TimeMachine.initialize({'rootBundle': rootBundle});
   // final tzdb = await DateTimeZoneProviders.tzdb;
   // final currentTimeZone = await FlutterNativeTimezone.getLocalTimezone();
   // // log.info('Loading current timezone of [$currentTimeZone]');
   // await tzdb[currentTimeZone];
 
+  /// Implement deep linking
+  final _appLinks = AppLinks(); // AppLinks is singleton
+
+// Subscribe to all events (initial link and further)
+  _appLinks.uriLinkStream.listen((uri) {
+    print('Hi from app link');
+    HMBToast.notice(navigatorKey.currentContext!, 'Got a link $uri');
+    if (uri.path == ('/xero/auth_callback')) {
+      HMBToast.notice(navigatorKey.currentContext!, 'Some asked for xero');
+    }
+  });
+
   runApp(const MyApp());
 }
 
-Future<void> _initDb() async {
-  await DatabaseHelper.initDatabase();
-
-  // await Future.delayed(const Duration(seconds: 60), () {});
-
-  print('Database located at: ${await DatabaseHelper.pathToDatabase()}');
-}
+final navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) => MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Handyman',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -60,7 +72,7 @@ class MyApp extends StatelessWidget {
         create: (_) => BlockingUI(),
         child: Scaffold(
           body: BlockingUIBuilder<void>(
-            future: _initDb,
+            future: _initialise,
             stacktrace: StackTrace.current,
             label: 'Upgrade your database.',
             builder: (context, _) =>
@@ -80,7 +92,7 @@ class MyDrawer extends StatelessWidget {
   MyDrawer({super.key});
 
   final List<DrawerItem> drawerItems = [
-    DrawerItem(title: 'Jobs', screen: const JobListScreen()),
+    DrawerItem(title: 'Jobs adob', screen: const JobListScreen()),
     DrawerItem(title: 'Customers', screen: const CustomerListScreen()),
     DrawerItem(title: 'Suppliers', screen: const SupplierListScreen()),
     DrawerItem(title: 'Shopping', screen: const ShoppingScreen()),
@@ -136,3 +148,43 @@ class HomeWithDrawer extends StatelessWidget {
         body: initialScreen,
       );
 }
+
+Future<void> _initialise() async {
+  await _checkInstall();
+  await _initDb();
+}
+
+Future<void> _initDb() async {
+  await DatabaseHelper.initDatabase();
+
+  // await Future.delayed(const Duration(seconds: 60), () {});
+
+  print('Database located at: ${await DatabaseHelper.pathToDatabase()}');
+}
+
+Future<void> _checkInstall() async {
+  if (kIsWeb) {
+    return;
+  }
+
+  final pathToHmbFirstRun = join(await pathToHmbFiles, 'firstrun.txt');
+  print('checking firstRun: $pathToHmbFirstRun');
+
+  if (!exists(await pathToHmbFiles)) {
+    createDir(await pathToHmbFiles, recursive: true);
+  }
+
+  if (!exists(pathToHmbFirstRun)) {
+    await _install();
+    touch(pathToHmbFirstRun, create: true);
+  }
+}
+
+Future<void> _install() async {
+  if (Platform.isLinux) {
+    await linuxInstaller();
+  }
+}
+
+Future<String> get pathToHmbFiles async =>
+    join((await getApplicationSupportDirectory()).path, 'hmb');
