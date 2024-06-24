@@ -24,7 +24,7 @@ class System extends Entity<System> {
     required this.simCardNo,
     required this.xeroClientId,
     required this.xeroClientSecret,
-    required this.xeroRedirectUrl,
+    // required this.xeroRedirectUrl,
     required super.createdDate,
     required super.modifiedDate,
   }) : super();
@@ -49,7 +49,8 @@ class System extends Entity<System> {
       required this.simCardNo,
       required this.xeroClientId,
       required this.xeroClientSecret,
-      required this.xeroRedirectUrl})
+      // required this.xeroRedirectUrl
+      })
       : super.forInsert();
 
   System.forUpdate(
@@ -73,7 +74,8 @@ class System extends Entity<System> {
       required this.simCardNo,
       required this.xeroClientId,
       required this.xeroClientSecret,
-      required this.xeroRedirectUrl})
+      // required this.xeroRedirectUrl
+      })
       : super.forUpdate();
 
   factory System.fromMap(Map<String, dynamic> map) => System(
@@ -101,7 +103,7 @@ class System extends Entity<System> {
         simCardNo: map['sim_card_no'] as int?,
         xeroClientId: map['xero_client_id'] as String?,
         xeroClientSecret: map['xero_client_secret'] as String?,
-        xeroRedirectUrl: map['xero_redirect_url'] as String?,
+        // xeroRedirectUrl: map['xero_redirect_url'] as String?,
         createdDate: DateTime.tryParse((map['createdDate']) as String? ?? '') ??
             DateTime.now(),
         modifiedDate:
@@ -128,7 +130,7 @@ class System extends Entity<System> {
   int? simCardNo;
   String? xeroClientId;
   String? xeroClientSecret;
-  String? xeroRedirectUrl;
+  // String? xeroRedirectUrl;
 
   @override
   Map<String, dynamic> toMap() => {
@@ -152,7 +154,7 @@ class System extends Entity<System> {
         'sim_card_no': simCardNo,
         'xero_client_id': xeroClientId,
         'xero_client_secret': xeroClientSecret,
-        'xero_redirect_url': xeroRedirectUrl,
+        // 'xero_redirect_url': xeroRedirectUrl,
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
       };
