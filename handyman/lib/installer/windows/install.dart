@@ -1,12 +1,14 @@
 import 'dart:ffi';
 
+import 'package:dcli/dcli.dart';
 import 'package:ffi/ffi.dart';
 import 'package:win32/win32.dart';
 
-void windowsInstalelr() {
+
+void windowsInstalller() {
   const protocol = 'hmb';
-  const appPath = r'C:\Path\To\YourApplication.exe'; // Update this path
-  const url = 'https://hmb.ivanhoehandyman.com.au/deep_links';
+
+  final appPath = DartScript.self.pathToScript;
 
   final protocolKey = text('Software\\Classes\\$protocol');
   final commandKey = text('Software\\Classes\\$protocol\\shell\\open\\command');
@@ -30,6 +32,7 @@ void windowsInstalelr() {
     nullptr,
   );
 
+  
   if (result == ERROR_SUCCESS) {
     // Set the default value for the protocol key
     RegSetValueEx(hKey.value, nullptr, 0, REG_SZ, protocolValue.cast<BYTE>(),
