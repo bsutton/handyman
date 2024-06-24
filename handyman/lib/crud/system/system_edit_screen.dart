@@ -41,7 +41,11 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
   late TextEditingController _webUrlController;
   late TextEditingController _termsUrlController;
   late TextEditingController _defaultHourlyRateController;
+
   late TextEditingController _defaultCallOutFeeController;
+
+  late TextEditingController _xeroClientIdController;
+  late TextEditingController _xeroClientSecretController;
 
   @override
   void initState() {
@@ -69,6 +73,11 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
         TextEditingController(text: widget.system.defaultHourlyRate.toString());
     _defaultCallOutFeeController =
         TextEditingController(text: widget.system.defaultCallOutFee.toString());
+
+    _xeroClientIdController =
+        TextEditingController(text: widget.system.xeroClientId);
+    _xeroClientSecretController =
+        TextEditingController(text: widget.system.xeroClientSecret);
   }
 
   @override
@@ -89,6 +98,9 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
     _termsUrlController.dispose();
     _defaultHourlyRateController.dispose();
     _defaultCallOutFeeController.dispose();
+
+    _xeroClientIdController.dispose();
+    _xeroClientSecretController.dispose();
     super.dispose();
   }
 
@@ -113,6 +125,9 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
           MoneyEx.tryParse(_defaultHourlyRateController.text);
       widget.system.defaultCallOutFee =
           MoneyEx.tryParse(_defaultCallOutFeeController.text);
+
+      widget.system.xeroClientId = _xeroClientIdController.text;
+      widget.system.xeroClientSecret = _xeroClientSecretController.text;
 
       await DaoSystem().update(widget.system);
 
@@ -215,6 +230,28 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a default call out fee';
+                    }
+                    return null;
+                  },
+                ),
+                HMBTextField(
+                  controller: _xeroClientIdController,
+                  labelText: 'Xero Client ID',
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the client id';
+                    }
+                    return null;
+                  },
+                ),
+                HMBTextField(
+                  controller: _xeroClientSecretController,
+                  labelText: 'Xero Client Secret',
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the client secret';
                     }
                     return null;
                   },
