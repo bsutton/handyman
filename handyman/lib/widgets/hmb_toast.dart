@@ -25,6 +25,7 @@ class HMBToast {
   static void error(BuildContext context, String text) {
     FToast.toast(
       context,
+      duration: 6000,
       toast: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         decoration: BoxDecoration(
