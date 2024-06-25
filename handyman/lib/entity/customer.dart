@@ -9,6 +9,7 @@ class Customer extends Entity<Customer> {
   Customer({
     required super.id,
     required this.name,
+    required this.description,
     required this.disbarred,
     required this.customerType,
     required this.hourlyRate,
@@ -18,6 +19,7 @@ class Customer extends Entity<Customer> {
 
   Customer.forInsert({
     required this.name,
+    required this.description,
     required this.disbarred,
     required this.customerType,
     required this.hourlyRate,
@@ -26,6 +28,7 @@ class Customer extends Entity<Customer> {
   Customer.forUpdate({
     required super.entity,
     required this.name,
+    required this.description,
     required this.disbarred,
     required this.customerType,
     required this.hourlyRate,
@@ -34,6 +37,7 @@ class Customer extends Entity<Customer> {
   factory Customer.fromMap(Map<String, dynamic> map) => Customer(
         id: map['id'] as int,
         name: map['name'] as String,
+        description: map['description'] as String,
         createdDate: DateTime.parse(map['createdDate'] as String),
         modifiedDate: DateTime.parse(map['modifiedDate'] as String),
         disbarred: map['disbarred'] as int == 1,
@@ -42,6 +46,7 @@ class Customer extends Entity<Customer> {
       );
 
   String name;
+  String description;
   bool disbarred;
   CustomerType customerType;
   Money hourlyRate;
@@ -50,6 +55,7 @@ class Customer extends Entity<Customer> {
   Map<String, dynamic> toMap() => {
         'id': id,
         'name': name,
+        'description': description,
         'createdDate': createdDate.toIso8601String(),
         'modifiedDate': modifiedDate.toIso8601String(),
         'disbarred': disbarred ? 1 : 0,

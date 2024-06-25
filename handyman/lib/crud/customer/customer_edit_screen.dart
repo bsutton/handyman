@@ -35,6 +35,7 @@ class CustomerEditScreen extends StatefulWidget {
 class _CustomerEditScreenState extends State<CustomerEditScreen>
     implements EntityState<Customer> {
   late TextEditingController _nameController;
+  late TextEditingController _descriptionController;
   late TextEditingController _hourlyRateController;
   late bool _disbarred;
   late CustomerType _selectedCustomerType;
@@ -43,6 +44,8 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.customer?.name);
+    _descriptionController =
+        TextEditingController(text: widget.customer?.description);
     _hourlyRateController = TextEditingController(
         text: widget.customer?.hourlyRate.amount.toString() ?? '0');
     _disbarred = widget.customer?.disbarred ?? false;
@@ -63,6 +66,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
   @override
   void dispose() {
     _nameController.dispose();
+    _descriptionController.dispose();
     _hourlyRateController.dispose();
     super.dispose();
   }
@@ -91,6 +95,11 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                       labelText: 'Name',
                       required: true,
                       keyboardType: TextInputType.name,
+                    ),
+                    HMBTextField(
+                      controller: _descriptionController,
+                      labelText: 'Description',
+                      required: true,
                     ),
                     HMBTextField(
                       controller: _hourlyRateController,
@@ -136,6 +145,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
   Future<Customer> forUpdate(Customer customer) async => Customer.forUpdate(
       entity: customer,
       name: _nameController.text,
+      description: _descriptionController.text,
       disbarred: _disbarred,
       customerType: _selectedCustomerType,
       hourlyRate: MoneyEx.tryParse(_hourlyRateController.text));
@@ -143,6 +153,7 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
   @override
   Future<Customer> forInsert() async => Customer.forInsert(
       name: _nameController.text,
+      description: _descriptionController.text,
       disbarred: _disbarred,
       customerType: _selectedCustomerType,
       hourlyRate: MoneyEx.tryParse(_hourlyRateController.text));
