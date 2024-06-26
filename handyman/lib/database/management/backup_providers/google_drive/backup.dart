@@ -50,7 +50,7 @@ class _BackupAuthGoogleScreenState extends State<BackupAuthGoogleScreen> {
         ),
         body: FutureBuilderEx(
             // ignore: discarded_futures
-            future: _googleSignIn.signInSilently(),
+            future: _signin(context),
             waitingBuilder: (context) =>
                 const Center(child: CircularProgressIndicator()),
             builder: (context, auth) => Center(
@@ -86,6 +86,18 @@ class _BackupAuthGoogleScreenState extends State<BackupAuthGoogleScreen> {
 
     final response = await driveApi.files.create(driveFile, uploadMedia: media);
     print('Uploaded file: ${response.id}');
+  }
+
+  Future<GoogleSignInAccount?> _signin(BuildContext context) async {
+    try {
+      return (await _googleSignIn.isSignedIn())
+          ? _googleSignIn.signInSilently()
+          : _googleSignIn.signIn();
+      // ignore: avoid_catches_without_on_clauses
+    } catch (e) {
+      HMBToast.error(context, 'Error signing in: $e');
+      return null;
+    }
   }
 }
 

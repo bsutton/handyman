@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../dao/dao_system.dart';
+import '../widgets/hmb_toast.dart';
 import 'models/models.dart';
 
 class InvoiceException implements Exception {
@@ -65,16 +68,17 @@ class _XeroAuthScreenState extends State<XeroAuthScreen> {
   Future<XeroCredentials> _fetchCredentials() async {
     final system = await DaoSystem().get();
 
-    if (system!.xeroClientId == null ||
-        system.xeroClientSecret == null ||
-        system.xeroRedirectUrl == null) {
-      throw InvoiceException('Xero credentials not set');
+    if (system!.xeroClientId == null || system.xeroClientSecret == null
+        // system.xeroRedirectUrl == null
+        ) {
+      throw InvoiceException(
+          '''The Xero credentials not set. Go to the System screen and set them.''');
     }
 
     return XeroCredentials(
         clientId: system.xeroClientId!,
         clientSecret: system.xeroClientSecret!,
-        redirectUrl: system.xeroRedirectUrl!);
+        redirectUrl: 'hmb://xero/callback');
   }
 
   Future<void> _authenticate() async {
@@ -99,8 +103,10 @@ class _XeroAuthScreenState extends State<XeroAuthScreen> {
             key: 'refresh_token', value: result?.refreshToken);
       }
       // ignore: avoid_catches_without_on_clauses
-    } catch (e) {
-      print('Error: $e');
+    } on InvoiceException catch (e) {
+      if (mounted) {
+        HMBToast.error(context, e.message);
+      }
     }
   }
 

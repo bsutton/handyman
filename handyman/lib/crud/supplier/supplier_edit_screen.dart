@@ -1,4 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +9,7 @@ import '../../util/platform_ex.dart';
 import '../../widgets/hbm_crud_contact.dart';
 import '../../widgets/hmb_crud_site.dart';
 import '../../widgets/hmb_form_section.dart';
+import '../../widgets/hmb_text_area.dart';
 import '../../widgets/hmb_text_field.dart';
 import '../base_full_screen/entity_edit_screen.dart';
 import '../base_nested/nested_list_screen.dart';
@@ -30,11 +30,22 @@ class SupplierEditScreen extends StatefulWidget {
 class _SupplierEditScreenState extends State<SupplierEditScreen>
     implements EntityState<Supplier> {
   late TextEditingController _nameController;
+  late TextEditingController _businessNumberController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _bsbController;
+  late TextEditingController _accountNumberController;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.supplier?.name);
+    _businessNumberController =
+        TextEditingController(text: widget.supplier?.businessNumber);
+    _descriptionController =
+        TextEditingController(text: widget.supplier?.description);
+    _bsbController = TextEditingController(text: widget.supplier?.bsb);
+    _accountNumberController =
+        TextEditingController(text: widget.supplier?.accountNumber);
   }
 
   @override
@@ -62,6 +73,27 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
                       keyboardType: TextInputType.name,
                       required: true,
                     ),
+                    HMBTextArea(
+                      controller: _descriptionController,
+                      labelText: 'Description',
+                    ),
+                    HMBTextField(
+                      controller: _businessNumberController,
+                      labelText: 'Business Number',
+                      required: true,
+                    ),
+                    HMBTextField(
+                      controller: _bsbController,
+                      labelText: 'BSB',
+                      keyboardType: TextInputType.number,
+                      required: true,
+                    ),
+                    HMBTextField(
+                      controller: _accountNumberController,
+                      labelText: 'Account Number',
+                      keyboardType: TextInputType.number,
+                      required: true,
+                    ),
                   ],
                 ),
                 HMBCrudContact(
@@ -82,12 +114,21 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
   Future<Supplier> forUpdate(Supplier supplier) async => Supplier.forUpdate(
         entity: supplier,
         name: _nameController.text,
+        businessNumber: _businessNumberController.text,
+        description: _descriptionController.text,
+        bsb: _bsbController.text,
+        accountNumber: _accountNumberController.text,
       );
 
   @override
   Future<Supplier> forInsert() async => Supplier.forInsert(
         name: _nameController.text,
+        businessNumber: _businessNumberController.text,
+        description: _descriptionController.text,
+        bsb: _bsbController.text,
+        accountNumber: _accountNumberController.text,
       );
+
   @override
   void refresh() {
     setState(() {});

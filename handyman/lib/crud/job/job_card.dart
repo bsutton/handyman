@@ -8,7 +8,7 @@ import '../../dao/dao_job_status.dart';
 import '../../dao/dao_site.dart';
 import '../../entity/customer.dart';
 import '../../entity/job.dart';
-import '../../invoicing/xero_auth.dart';
+import '../../invoicing/xero_auth_v2.dart';
 import '../../util/format.dart';
 import '../../widgets/hmb_email_text.dart';
 import '../../widgets/hmb_phone_text.dart';
@@ -95,7 +95,7 @@ class JobCard extends StatelessWidget {
 
   Widget _buildInvoiceButton(BuildContext context) => ElevatedButton(
         onPressed: () async => Navigator.of(context).pushNamed(
-          XeroAuthScreen.routeName,
+          XeroAuthScreenV2.routeName,
           arguments: InvoiceScreenArguments(job: job),
         ),
         child: const Text('Invoice'),

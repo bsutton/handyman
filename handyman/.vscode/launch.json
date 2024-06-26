@@ -25,6 +25,12 @@
             ],
         },
         {
+            "name": "handyman-selected-device",
+            "request": "launch",
+            "type": "dart",
+          
+        },
+        {
             "name": "handyman (profile mode)",
             "request": "launch",
             "type": "dart",

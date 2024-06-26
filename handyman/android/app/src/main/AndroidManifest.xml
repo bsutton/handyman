@@ -4,7 +4,10 @@
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.RECEIVE_SMS" />
 	<uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
-	<application android:label="HMB" android:name="${applicationName}" android:icon="@mipmap/ic_launcher" android:enableOnBackInvokedCallback="true">
+	<!-- backup_ruiles and data_extraction_rules required by oidc package -->
+	<application android:label="HMB" 
+	
+	android:icon="@mipmap/ic_launcher" android:enableOnBackInvokedCallback="true" android:fullBackupContent="@xml/backup_rules" android:dataExtractionRules="@xml/data_extraction_rules">
 		<activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:taskAffinity="" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
 			<!--
 			Specifies an Android theme to apply to this Activity as soon as
@@ -23,13 +26,15 @@
 				<data android:scheme="smsto" />
 			</intent-filter>
 			<!-- App Link:  deep linking -->
-			<!--intent-filter android:autoVerify="true">
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="https" android:host="ivanhoehandyman.com.au" android:pathPrefix="/xero/auth_callback" />
-				<data android:scheme="http" />
-			</intent-filter-->
+			<!--
+			intent-filter android:autoVerify="true">
+			<action android:name="android.intent.action.VIEW" />
+			<category android:name="android.intent.category.DEFAULT" />
+			<category android:name="android.intent.category.BROWSABLE" />
+			<data android:scheme="https" android:host="ivanhoehandyman.com.au" android:pathPrefix="/xero/auth_callback" />
+			<data android:scheme="http" />
+			</intent-filter
+			-->
 			<!-- Deep Link sample -->
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -39,7 +44,7 @@
 				Add optional android:host to distinguish your app
 				from others in case of conflicting scheme name
 				-->
-				<data android:scheme="hmb" android:host="open.my.app" />
+				<data android:scheme="hmb" android:host="hmb.ivanhoehandyman.com.au" />
 				<!-- <data android:scheme="sample" /> -->
 			</intent-filter>
 		</activity>

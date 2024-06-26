@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app_links/app_links.dart';
 import 'package:dcli_core/dcli_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
@@ -16,8 +17,10 @@ import 'crud/system/system_edit_screen.dart';
 import 'dao/dao_system.dart';
 import 'database/management/backup_providers/google_drive/backup.dart';
 import 'database/management/database_helper.dart';
+import 'firebase_options.dart';
 import 'installer/linux/install.dart';
 import 'invoicing/xero_auth.dart';
+import 'invoicing/xero_auth_v2.dart';
 import 'screens/shopping.dart';
 import 'widgets/blocking_ui.dart';
 import 'widgets/hmb_toast.dart';
@@ -66,7 +69,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        XeroAuthScreen.routeName: (context) => const XeroAuthScreen(),
+        XeroAuthScreen.routeName: (context) => const XeroAuthScreenV2(),
       },
       home: ChangeNotifierProvider(
         create: (_) => BlockingUI(),
@@ -92,7 +95,7 @@ class MyDrawer extends StatelessWidget {
   MyDrawer({super.key});
 
   final List<DrawerItem> drawerItems = [
-    DrawerItem(title: 'Jobs adob', screen: const JobListScreen()),
+    DrawerItem(title: 'Jobs', screen: const JobListScreen()),
     DrawerItem(title: 'Customers', screen: const CustomerListScreen()),
     DrawerItem(title: 'Suppliers', screen: const SupplierListScreen()),
     DrawerItem(title: 'Shopping', screen: const ShoppingScreen()),
@@ -151,7 +154,18 @@ class HomeWithDrawer extends StatelessWidget {
 
 Future<void> _initialise() async {
   await _checkInstall();
+  await _initFirebase();
   await _initDb();
+}
+
+Future<void> _initFirebase() async {
+  if (!Platform.isLinux) {
+    /// We use this for google sigin so we can backup to
+    /// the google drive.
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 }
 
 Future<void> _initDb() async {

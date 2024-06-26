@@ -1,5 +1,8 @@
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
@@ -24,7 +27,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "au.com.ivanhoehandyman"
+    namespace = "au.com.ivanhoehandyman.hmb"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -34,13 +37,17 @@ android {
     }
 
     defaultConfig {
-        applicationId = "au.com.ivanhoehandyman"
+        applicationId = "au.com.ivanhoehandyman.hmb"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = 23 // flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
+        // required bu the oidc package
+        manifestPlaceholders = [appAuthRedirectScheme: 'au.com.ivanhoehandyman.hmb'
+        /// proves substitution key/values for AndroidManifest.xml
+        , applicationName: 'au.com.ivanhoehandyman.hmb']
     }
 
     buildTypes {

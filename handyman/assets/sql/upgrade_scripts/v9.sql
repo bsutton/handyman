@@ -11,3 +11,4 @@ update job_status set name = 'In Progress' where name = 'In progress';
 update job_status set name = 'To be Scheduled' where name = 'To be scheduled';
 
 alter table customer add column description text;
+

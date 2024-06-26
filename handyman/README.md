@@ -83,6 +83,17 @@ quick and easy to do a daily backup.
 
 
 
+# Devevelopment
+To contribute to HMB start by forking this git hub repo.
+
+As we use the oidc package for oauth (used for the xero integration) you 
+need to enable MultiDex by running:
+
+```
+flutter run
+```
+from the package root directory (from a terminal) and press y when asked.
+
 
 # Gradle:
 
@@ -152,6 +163,12 @@ If we upgrade sqlflite we need to upgrade the injected files as per the above li
 
 Note: currenlty we are not backing up the db before doing schema upgrades
 as we don't know how to do this on the web.
+
+If you want to use the Xero integration, when in debugg you need to launch 
+the app with the args:
+`--web-port 22433`
+
+see xero_auth.dart for details.
 
 
 # Linux development

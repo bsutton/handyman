@@ -32,10 +32,13 @@ dependencies:
   completer_ex: ^4.0.3
   date_time_format: ^2.0.1
   datetime_picker_formfield: ^2.0.1
-  dcli_core: ^4.0.1-beta.4
+  dcli: ^4.0.2
+  dcli_core: ^4.0.2
   direct_caller_sim_choice: ^1.0.5
-  email_validator: ^2.1.17
+  email_validator: ^3.0.0
   equatable: ^2.0.0
+  ffi: ^2.1.2
+  firebase_core: ^3.1.1
   fixed: ^4.3.0
   fleather: ^1.14.5+1
   flutter:
@@ -57,6 +60,9 @@ dependencies:
   mailto: ^2.0.0
   mobile_number: ^2.1.1
   money2: ^5.0.1
+  oidc: ^0.7.0
+  oidc_core: ^0.7.0
+  oidc_default_store: ^0.2.0+9
   parchment_delta: ^1.0.0
   path: ^1.9.0
   path_provider: ^2.0.0
@@ -64,7 +70,6 @@ dependencies:
   provider: ^6.1.2
   sms_advanced: # ^1.1.0
     hosted: https://onepub.dev/api/jbbxpsdavu/
-    # version: ^1.1.1
   sqflite: ^2.3.2
   sqflite_common_ffi: ^2.3.3
   sqflite_common_ffi_web: ^0.4.3+1
@@ -73,11 +78,10 @@ dependencies:
   url_launcher: ^6.2.5
   win32: ^5.3.0
 
-
 dev_dependencies:
   args: ^2.5.0
-  dcli: ^4.0.1-beta.4
-  flutter_launcher_icons: ^0.9.2
+  
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
   lint_hard: ^4.0.0
