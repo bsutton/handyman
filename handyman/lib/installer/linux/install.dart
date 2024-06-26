@@ -36,5 +36,7 @@ Future<void> _installDeepLinkHander() async {
       .command('update-desktop-database ${dirname(pathTo)}')
       // creates an entry in ~/.config/mimeapps.list
       .command('xdg-mime default hmb.desktop x-scheme-handler/hmb')
+      // required by oidc for the secure storage pacakge.
+  
       .exitCode();
 }
