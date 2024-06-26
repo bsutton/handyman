@@ -125,11 +125,12 @@ class JobEditScreenState extends State<JobEditScreen>
                               ),
                             ]),
 
+                            /// allow the user to select a contact for the job
+                            _chooseContact(customer, job),
+
                             /// allow the user to select a site for the job
                             _chooseSite(customer, job),
 
-                            /// allow the user to select a contact for the job
-                            _chooseContact(customer, job),
                             _manageTasks(job),
                           ]))));
 
