@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:strings/strings.dart';
 
 import '../entity/site.dart';
+import 'hmb_map_icon.dart';
+import 'hmb_text_themes.dart';
 
 class HMBSiteText extends StatelessWidget {
   const HMBSiteText({required this.label, required this.site, super.key});
@@ -19,7 +21,8 @@ class HMBSiteText extends StatelessWidget {
               site?.suburb,
               site?.state,
               site?.postcode
-            ], separator: ', ', excludeEmpty: true))
+            ], separator: ', ', excludeEmpty: true)),
+            HMBMapIcon(site)
         ],
       );
 }

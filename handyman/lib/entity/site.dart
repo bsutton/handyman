@@ -58,4 +58,17 @@ class Site extends Entity<Site> {
       };
 
   String abbreviated() => '$addressLine1, $suburb';
+
+  String toGoogleMapsQuery() {
+    final address = '$addressLine1, $addressLine2, $suburb, $state $postcode';
+    final encodedAddress = Uri.encodeComponent(address);
+    return 'https://www.google.com/maps/search/?api=1&query=$encodedAddress';
+  }
+
+  bool isEmpty() =>
+      addressLine1.isEmpty &&
+      addressLine2.isEmpty &&
+      suburb.isEmpty &&
+      state.isEmpty &&
+      postcode.isEmpty;
 }
