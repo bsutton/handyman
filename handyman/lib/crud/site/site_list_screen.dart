@@ -32,13 +32,10 @@ class SiteListScreen<P extends Entity<P>> extends StatelessWidget {
       onInsert: (site) async => daoJoin.insertForParent(site!, parent.parent!),
       // ignore: discarded_futures
       fetchList: () => daoJoin.getByParent(parent.parent),
-      title: (site) => Text('${site.addressLine1} ${site.suburb}') as Widget,
+      // title: (site) => Text('${site.addressLine1} ${site.suburb}') as Widget,
+      title: (site) => HMBSiteText(label: '', site: site),
       onEdit: (site) =>
           SiteEditScreen(daoJoin: daoJoin, parent: parent.parent!, site: site),
-      details: (entity, details) {
-        final site = entity;
-        return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [HMBSiteText(label: 'Address', site: site)]);
-      });
+      details: (entity, details) =>
+          const Column(crossAxisAlignment: CrossAxisAlignment.start));
 }
