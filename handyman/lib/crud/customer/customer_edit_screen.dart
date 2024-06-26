@@ -14,6 +14,7 @@ import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_form_section.dart';
 import '../../widgets/hmb_name_field.dart';
 import '../../widgets/hmb_switch.dart';
+import '../../widgets/hmb_text_area.dart';
 import '../../widgets/hmb_text_field.dart';
 import '../base_full_screen/entity_edit_screen.dart';
 import '../base_nested/nested_list_screen.dart';
@@ -96,10 +97,9 @@ class _CustomerEditScreenState extends State<CustomerEditScreen>
                       required: true,
                       keyboardType: TextInputType.name,
                     ),
-                    HMBTextField(
+                    HMBTextArea(
                       controller: _descriptionController,
                       labelText: 'Description',
-                      required: true,
                     ),
                     HMBTextField(
                       controller: _hourlyRateController,
