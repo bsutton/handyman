@@ -72,10 +72,12 @@ class _SiteEditScreenState extends State<SiteEditScreen>
             TextFormField(
               controller: _suburbController,
               decoration: const InputDecoration(labelText: ' Suburb'),
+              keyboardType: TextInputType.name,
             ),
             TextFormField(
               controller: _stateController,
               decoration: const InputDecoration(labelText: ' State'),
+              keyboardType: TextInputType.name,
             ),
             TextFormField(
               controller: _sostcodeController,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:strings/strings.dart';
 
 import '../entity/site.dart';
 
@@ -11,8 +12,14 @@ class HMBSiteText extends StatelessWidget {
   Widget build(BuildContext context) => Row(
         children: [
           if (site != null) Text(label),
-          if (site != null) Text('''
-${site?.addressLine1}, ${site?.addressLine2}, ${site?.suburb}, ${site?.state}, ${site?.postcode}''')
+          if (site != null)
+            Text(Strings.join([
+              site?.addressLine1,
+              site?.addressLine2,
+              site?.suburb,
+              site?.state,
+              site?.postcode
+            ], separator: ', ', excludeEmpty: true))
         ],
       );
 }
