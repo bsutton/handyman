@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '867590954038',
     projectId: 'hold-my-beer-ed8ee',
     storageBucket: 'hold-my-beer-ed8ee.appspot.com',
-    iosBundleId: 'au.com.ivanhoehandyman.hmb',
+    iosBundleId: 'dev.onepub.handyman',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -72,7 +72,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '867590954038',
     projectId: 'hold-my-beer-ed8ee',
     storageBucket: 'hold-my-beer-ed8ee.appspot.com',
-    iosBundleId: 'au.com.ivanhoehandyman.hmb',
+    iosBundleId: 'dev.onepub.handyman',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
