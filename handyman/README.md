@@ -179,6 +179,29 @@ To get the linux environment working you need to run:
 tool/linux_setup.dart
 ```
 
+# Xero
+HMB supports xero for invoicing.
+This means that you can track your time in HMB (via creating time entries 
+against a task) and then have HMB automatically generate an invoice in xero.
+
+For this to work you need to:
+
+Have an Xero account (the base one will do).
+
+Log into the xero developer portal at:
+https://developer.xero.com/app/manage/
+
+Within the developer portal:
+Add an App 
+Configure a connection for the app;  storing the client id and client secret into the 
+system table - not currently not encrypted!
+
+Add the following redirect URL to the xero configuration:
+
+http://localhost:12335
+
+
+
 # Build/install
 
 You can run a build and intall HMB to your phone by running:
