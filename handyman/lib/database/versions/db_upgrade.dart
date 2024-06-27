@@ -5,8 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:strings/strings.dart';
 
-import '../management/database_helper.dart';
-import '../management/db_backup.dart';
+import '../management/backup_providers/local/backup.dart';
 import '../management/db_utility.dart';
 
 /// Upgrade the database by applying each upgrade script in order
@@ -19,8 +18,8 @@ Future<void> upgradeDb(Database db, int oldVersion, int newVersion) async {
       print("Skipping web backup as we don't have a solution");
     } else {
       print('Backing up database prior to upgrade');
-      await backupDatabase(await DatabaseHelper.pathToDatabase(),
-          version: oldVersion);
+
+      await LocalBackupProvider().performBackup(version: oldVersion);
       print('Upgrade database from Version $oldVersion');
     }
   }

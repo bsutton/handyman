@@ -15,7 +15,7 @@ import 'crud/job/job_list_screen.dart';
 import 'crud/supplier/supplier_list_screen.dart';
 import 'crud/system/system_edit_screen.dart';
 import 'dao/dao_system.dart';
-import 'database/management/backup_providers/google_drive/backup.dart';
+import 'database/management/backup_providers/email/screen.dart';
 import 'database/management/database_helper.dart';
 import 'firebase_options.dart';
 import 'installer/linux/install.dart';
@@ -108,7 +108,7 @@ class MyDrawer extends StatelessWidget {
     ),
     DrawerItem(
         title: 'Backup',
-        screen: const BackupAuthGoogleScreen(
+        screen: const BackupScreen(
           pathToBackup: '',
         )),
   ];
@@ -169,11 +169,11 @@ Future<void> _initFirebase() async {
 }
 
 Future<void> _initDb() async {
-  await DatabaseHelper.initDatabase();
+  await DatabaseHelper().initDatabase();
 
   // await Future.delayed(const Duration(seconds: 60), () {});
 
-  print('Database located at: ${await DatabaseHelper.pathToDatabase()}');
+  print('Database located at: ${DatabaseHelper().pathToDatabase}');
 }
 
 Future<void> _checkInstall() async {

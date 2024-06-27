@@ -9,13 +9,38 @@ import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import '../versions/db_upgrade.dart';
 
 class DatabaseHelper {
-  DatabaseHelper._privateConstructor();
-  static late Database? _database;
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
+  factory DatabaseHelper() => instance;
+  DatabaseHelper._();
+  static Database? _database;
+  static final DatabaseHelper instance = DatabaseHelper._();
 
   Database get database => _database!;
 
-  static Future<void> initDatabase() async {
+  Future<void> initDatabase() async {
+    _initDatabaseFactory();
+
+    await openDb();
+  }
+
+  Future<void> openDb() async {
+    final path = await pathToDatabase();
+    _database = await databaseFactory.openDatabase(path,
+        options: OpenDatabaseOptions(
+            version: await getLatestVersion(), onUpgrade: upgradeDb));
+  }
+
+  Future<String> pathToDatabase() async {
+    final path = join(await getDatabasesPath(), 'handyman.db');
+    return path;
+  }
+
+  Future<void> closeDb() async {
+    final db = database;
+    _database = null;
+    await db.close();
+  }
+
+  void _initDatabaseFactory() {
     if (kIsWeb) {
       databaseFactory = databaseFactoryFfiWeb;
     } else {
@@ -27,15 +52,7 @@ class DatabaseHelper {
         /// uses the default factory.
       }
     }
-
-    final path = await pathToDatabase();
-    _database = await databaseFactory.openDatabase(path,
-        options: OpenDatabaseOptions(
-            version: await getLatestVersion(), onUpgrade: upgradeDb));
   }
 
-  static Future<String> pathToDatabase() async {
-    final path = join(await getDatabasesPath(), 'handyman.db');
-    return path;
-  }
+  bool isOpen() => _database != null;
 }
