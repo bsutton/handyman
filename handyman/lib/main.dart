@@ -172,7 +172,7 @@ Future<void> _initDb() async {
 
   // await Future.delayed(const Duration(seconds: 60), () {});
 
-  print('Database located at: ${DatabaseHelper().pathToDatabase}');
+  print('Database located at: ${await DatabaseHelper().pathToDatabase()}');
 }
 
 Future<void> _checkInstall() async {
