@@ -207,7 +207,7 @@ class _SystemEditScreenState extends State<SystemEditScreen> {
                     labelText: 'Office Number'),
                 HMBEmailField(
                     controller: _emailAddressController,
-                    labelText: 'To Email Address'),
+                    labelText: 'Notice/Backup Email Address'),
                 HMBTextField(
                     controller: _webUrlController, labelText: 'Web URL'),
                 HMBTextField(

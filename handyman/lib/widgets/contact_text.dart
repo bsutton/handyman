@@ -8,10 +8,14 @@ class ContactText extends StatelessWidget {
   final Contact? contact;
 
   @override
-  Widget build(BuildContext context) => Row(
-        children: [
-          if (contact != null) Text(label),
-          if (contact != null) Text('${contact?.firstName} ${contact?.surname}')
-        ],
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(4),
+        child: Row(
+          children: [
+            if (contact != null) Text(label),
+            if (contact != null)
+              Text('${contact?.firstName} ${contact?.surname}')
+          ],
+        ),
       );
 }

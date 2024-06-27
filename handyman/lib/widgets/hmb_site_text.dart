@@ -3,7 +3,6 @@ import 'package:strings/strings.dart';
 
 import '../entity/site.dart';
 import 'hmb_map_icon.dart';
-import 'hmb_text_themes.dart';
 
 class HMBSiteText extends StatelessWidget {
   const HMBSiteText({required this.label, required this.site, super.key});
@@ -12,17 +11,18 @@ class HMBSiteText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (site != null) Text(label),
+          if (site != null && Strings.isNotEmpty(label)) Text(label),
+          Text(Strings.join([
+            site?.addressLine1,
+            site?.addressLine2,
+            site?.suburb,
+            site?.state,
+            site?.postcode
+          ], separator: ', ', excludeEmpty: true)),
           if (site != null)
-            Text(Strings.join([
-              site?.addressLine1,
-              site?.addressLine2,
-              site?.suburb,
-              site?.state,
-              site?.postcode
-            ], separator: ', ', excludeEmpty: true)),
-            HMBMapIcon(site)
+            if (site != null) HMBMapIcon(site),
         ],
       );
 }

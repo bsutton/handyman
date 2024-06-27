@@ -7,6 +7,7 @@ import 'package:june/june.dart';
 import '../../dao/dao.dart';
 import '../../entity/entities.dart';
 import '../../widgets/hmb_add_button.dart';
+import '../../widgets/hmb_list_card.dart';
 
 class Parent<P extends Entity<P>> {
   Parent(this.parent);
@@ -46,6 +47,7 @@ class NestedEntityListScreen<C extends Entity<C>, P extends Entity<P>>
   final String parentTitle;
   final String entityNameSingular;
 
+  /// All cards are displayed on screen rather than in a listview.
   final bool extended;
 
   @override
@@ -154,7 +156,7 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
                         ),
                       )
                     : ListView.builder(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(2),
                         itemCount: list.length,
                         itemBuilder: (context, index) {
                           final entity = list[index];
@@ -167,29 +169,12 @@ class NestedEntityListScreenState<C extends Entity<C>, P extends Entity<P>>
         }),
       );
 
-  Card _buildCard(C entity, BuildContext context) => Card(
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        elevation: 2,
-        child: ListTile(
-          title: widget.title(entity),
-          subtitle: widget.details(entity, cardDetail),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete, color: Colors.red),
-            onPressed: () async {
-              await _confirmDelete(entity);
-            },
-          ),
-          onTap: () async {
-            if (context.mounted) {
-              await Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                    builder: (context) => widget.onEdit(entity)),
-              ).then((_) => _refreshEntityList());
-            }
-          },
-        ),
-      );
+  Widget _buildCard(C entity, BuildContext context) => HMBCrudListCard(
+      title: widget.title(entity),
+      onDelete: () async => _confirmDelete(entity),
+      onEdit: () => widget.onEdit(entity),
+      onRefresh: _refreshEntityList,
+      child: widget.details(entity, cardDetail));
 
   Future<void> _confirmDelete(C entity) async {
     final deleteConfirmed = await showDialog<bool>(

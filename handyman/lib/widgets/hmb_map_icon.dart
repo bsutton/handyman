@@ -13,6 +13,9 @@ class HMBMapIcon extends StatelessWidget {
         mainAxisSize: MainAxisSize.min, // added
         children: [
           IconButton(
+            padding: EdgeInsets.zero,
+            alignment: Alignment.centerLeft,
+            visualDensity: VisualDensity.compact,
             iconSize: 25,
             icon: const Icon(Icons.map),
             onPressed: () async =>

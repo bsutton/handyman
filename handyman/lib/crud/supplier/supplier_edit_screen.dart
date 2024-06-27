@@ -19,7 +19,7 @@ class SupplierEditScreen extends StatefulWidget {
   final Supplier? supplier;
 
   @override
-  _SupplierEditScreenState createState() => _SupplierEditScreenState();
+  SupplierEditScreenState createState() => SupplierEditScreenState();
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -27,7 +27,7 @@ class SupplierEditScreen extends StatefulWidget {
   }
 }
 
-class _SupplierEditScreenState extends State<SupplierEditScreen>
+class SupplierEditScreenState extends State<SupplierEditScreen>
     implements EntityState<Supplier> {
   late TextEditingController _nameController;
   late TextEditingController _businessNumberController;
@@ -80,19 +80,16 @@ class _SupplierEditScreenState extends State<SupplierEditScreen>
                     HMBTextField(
                       controller: _businessNumberController,
                       labelText: 'Business Number',
-                      required: true,
                     ),
                     HMBTextField(
                       controller: _bsbController,
                       labelText: 'BSB',
                       keyboardType: TextInputType.number,
-                      required: true,
                     ),
                     HMBTextField(
                       controller: _accountNumberController,
                       labelText: 'Account Number',
                       keyboardType: TextInputType.number,
-                      required: true,
                     ),
                   ],
                 ),

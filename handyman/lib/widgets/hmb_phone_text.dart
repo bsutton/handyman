@@ -13,6 +13,7 @@ class HMBPhoneText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (Strings.isNotBlank(phoneNo)) Text('${plusSpace(label)} $phoneNo'),
           if (Strings.isNotBlank(phoneNo)) DialWidget(phoneNo!)

@@ -11,6 +11,7 @@ class HMBEmailText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (Strings.isNotBlank(email))
             Text('${plusSpace(label)} ${email ?? ''}'),
