@@ -20,7 +20,6 @@ import 'database/management/database_helper.dart';
 import 'firebase_options.dart';
 import 'installer/linux/install.dart';
 import 'invoicing/xero_auth.dart';
-import 'invoicing/xero_auth_v2.dart';
 import 'screens/shopping.dart';
 import 'widgets/blocking_ui.dart';
 import 'widgets/hmb_toast.dart';
@@ -69,7 +68,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        XeroAuthScreen.routeName: (context) => const XeroAuthScreenV2(),
+        XeroAuthScreen.routeName: (context) => const XeroAuthScreen(),
       },
       home: ChangeNotifierProvider(
         create: (_) => BlockingUI(),
