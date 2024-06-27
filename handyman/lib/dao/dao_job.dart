@@ -69,7 +69,7 @@ where j.summary like ?
 or j.description like ?
 or c.name like ?
 or js.name like ?
-order by job.modifiedDate desc
+order by j.modifiedDate desc
 ''', [likeArg, likeArg, likeArg, likeArg]);
 
     return toList(data);
