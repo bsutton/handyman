@@ -5,7 +5,7 @@
         <string>Editor</string>
         <key>CFBundleURLSchemes</key>
         <array>
-            <string>au.com.ivanhoehandyman.hmb</string>
+            <string>dev.onepub.handyman</string>
         </array>
     </dict>
 </array>

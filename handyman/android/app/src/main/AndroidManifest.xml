@@ -4,10 +4,11 @@
 	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	<uses-permission android:name="android.permission.RECEIVE_SMS" />
 	<uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+	<!-- so we can backup the db -->
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<!-- backup_ruiles and data_extraction_rules required by oidc package -->
-	<application android:label="HMB" 
-	
-	android:icon="@mipmap/ic_launcher" android:enableOnBackInvokedCallback="true" android:fullBackupContent="@xml/backup_rules" android:dataExtractionRules="@xml/data_extraction_rules">
+	<application android:label="HMB" android:icon="@mipmap/ic_launcher" android:enableOnBackInvokedCallback="true" android:fullBackupContent="@xml/backup_rules" android:dataExtractionRules="@xml/data_extraction_rules">
 		<activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:taskAffinity="" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
 			<!--
 			Specifies an Android theme to apply to this Activity as soon as
@@ -65,6 +66,11 @@
 		<intent>
 			<action android:name="android.intent.action.PROCESS_TEXT" />
 			<data android:mimeType="text/plain" />
+		</intent>
+		<!-- used by flutter_email_sender to send emails. -->
+		<intent>
+			<action android:name="android.intent.action.SENDTO" />
+			<data android:scheme="mailto" />
 		</intent>
 	</queries>
 </manifest>

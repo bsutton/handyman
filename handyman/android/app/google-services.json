@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:867590954038:android:95bc2dc5d9ce4a8d5d4c97",
         "android_client_info": {
-          "package_name": "au.com.ivanhoehandyman.hmb"
+          "package_name": "dev.onepub.handyman"
         }
       },
       "oauth_client": [],
