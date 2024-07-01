@@ -16,3 +16,4 @@ ihserver/test/letsencrypt/live/squarephone.biz/fullchain.pem
 ihserver/test/letsencrypt/live/squarephone.biz/privkey.pem
 ihserver/test/letsencrypt/live/squarephone.biz/pubkey.pem
 grpc/.dart_tool
+hmb/backups/*
