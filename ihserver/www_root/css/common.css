@@ -278,6 +278,10 @@ body {
     padding: 20px;
 }
 
+.sample-description {
+    padding: 20px;
+    font-size: 18px;
+}
 
 @media screen and (max-width: 1524px) {
     .samples {
