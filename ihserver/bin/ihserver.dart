@@ -24,7 +24,7 @@ enum CertificateMode { staging, production }
 late HttpServer server;
 late HttpServer secureServer;
 
-/// Simple web server that can server stastic content and email
+/// Simple web server that can serve stastic content and email
 /// a booking.
 void main() async {
   final config = Config();
@@ -51,7 +51,6 @@ void main() async {
 }
 
 Future<void> _checkFQDNResolved(String fqdn) async {
-  // 'nslookup squarephone.biz'.run;
   final dnsolve = DNSolve();
   final response = await dnsolve.lookup(fqdn);
   if (response.answer?.records != null) {
@@ -155,6 +154,9 @@ Router _buildRouter() {
     ..get('/js/<.*>', handleStatic)
     ..get('/images/<.*>', handleStatic)
     ..get('/images/samples/<.*>', handleStatic)
+
+    /// validates deep links used by the hmb app.
+    ..get('/.well-known/assetlinks.json', handleStatic)
     ..post('/booking', (Request request) async => handleBooking(request));
   return router;
 }
