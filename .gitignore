@@ -18,3 +18,5 @@ ihserver/test/letsencrypt/live/squarephone.biz/pubkey.pem
 grpc/.dart_tool
 hmb/backups/*
 hmb/hmb-key.keystore
+hmb/hmb.0.0.1.aab
+hmb/hmb.0.0.1.apk
