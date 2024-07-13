@@ -2,6 +2,11 @@ externals:
   - external:
     path: www_root
     mount: www_root
+  
+  # hidden files are ignored so add it explicitly.
+  - external:
+    path: www_root/.well-known/assetlinks.json
+    mount: www_root/.well-known/assetlinks.json
 
   - external:
     path: bin/ihserver
