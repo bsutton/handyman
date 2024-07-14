@@ -64,7 +64,7 @@ void _restart() {
 
   print(red('Reboot the system to complete the deployment'));
 
-  print(green('sudo reboot --reboot -f'));
+  print(green('sudo reboot now'));
 }
 
 void killProcess(String processName) {
