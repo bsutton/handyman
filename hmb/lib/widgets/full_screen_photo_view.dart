@@ -15,6 +15,9 @@ class FullScreenPhotoViewer extends StatelessWidget {
             PhotoView(
               imageProvider: FileImage(File(imagePath)),
               backgroundDecoration: const BoxDecoration(color: Colors.black),
+              minScale: PhotoViewComputedScale.contained,
+              maxScale: PhotoViewComputedScale.covered * 2.0,
+              initialScale: PhotoViewComputedScale.contained,
             ),
             Positioned(
               top: 40,
