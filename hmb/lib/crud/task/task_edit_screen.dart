@@ -27,9 +27,9 @@ import '../../widgets/hmb_crud_time_entry.dart';
 import '../../widgets/hmb_droplist.dart';
 import '../../widgets/hmb_text_area.dart';
 import '../../widgets/hmb_text_field.dart';
+import '../../widgets/photo_gallery.dart';
 import '../base_nested/nested_edit_screen.dart';
 import '../base_nested/nested_list_screen.dart';
-import '../job/job_edit_screen.dart';
 
 class TaskEditScreen extends StatefulWidget {
   const TaskEditScreen({required this.job, super.key, this.task});
@@ -171,9 +171,13 @@ class _TaskEditScreenState extends State<TaskEditScreen>
         ),
       );
 
-  Future<void> _showFullScreenPhoto(
-      BuildContext context, String imagePath) async {
-    await context.push('/photo_viewer', extra: imagePath);
+  Future<void> _showFullScreenPhoto(BuildContext context, String imagePath,
+      String taskName, String comment) async {
+    await context.push('/photo_viewer', extra: {
+      'imagePath': imagePath,
+      'taskName': taskName,
+      'comment': comment,
+    });
   }
 
   @override
@@ -264,7 +268,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
             setState(() {
               _photosFuture = _loadPhotos(); // Refresh the photos
             });
-            _notifyGallery();
+            PhotoGallery.notify();
           }
         },
       );
@@ -282,8 +286,19 @@ class _TaskEditScreenState extends State<TaskEditScreen>
                             Positioned(
                               right: 0,
                               child: GestureDetector(
-                                onTap: () async => _showFullScreenPhoto(
-                                    context, photo.filePath),
+                                onTap: () async {
+                                  // Fetch the task for this photo to get
+                                  // the task name.
+                                  final task =
+                                      await DaoTask().getById(photo.taskId);
+                                  if (context.mounted) {
+                                    await _showFullScreenPhoto(
+                                        context,
+                                        photo.filePath,
+                                        task!.name,
+                                        photo.comment);
+                                  }
+                                },
                                 child: Container(
                                   color: Colors.black.withOpacity(0.5),
                                   padding: const EdgeInsets.all(8),
@@ -301,7 +316,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
                           icon: const Icon(Icons.delete),
                           onPressed: () async {
                             await _showConfirmDeleteDialog(context, photo);
-                            _notifyGallery();
+                            PhotoGallery.notify();
                           },
                         ),
                       ],
@@ -321,6 +336,7 @@ class _TaskEditScreenState extends State<TaskEditScreen>
         setState(() {
           // Photo comment updated in the database
         });
+        PhotoGallery.notify();
       }
     });
 
@@ -348,10 +364,6 @@ class _TaskEditScreenState extends State<TaskEditScreen>
         description: 'Default Checklist',
         listType: CheckListType.owned);
     await DaoCheckList().insertForTask(newChecklist, task);
-  }
-
-  void _notifyGallery() {
-    June.getState(PhotoGallery.new).setState();
   }
 
   @override

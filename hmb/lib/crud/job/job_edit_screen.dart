@@ -1,21 +1,16 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
-import 'package:go_router/go_router.dart';
 import 'package:june/june.dart';
 
 import '../../dao/dao_customer.dart';
 import '../../dao/dao_job.dart';
 import '../../dao/dao_job_status.dart';
-import '../../dao/dao_photo.dart'; // Import the Photo DAO
 import '../../dao/dao_system.dart';
-import '../../dao/dao_task.dart';
 import '../../entity/customer.dart';
 import '../../entity/job.dart';
 import '../../entity/job_status.dart';
-import '../../entity/photo.dart'; // Import the Photo entity
 import '../../util/money_ex.dart';
 import '../../util/platform_ex.dart';
 import '../../widgets/hmb_button.dart';
@@ -25,6 +20,7 @@ import '../../widgets/hmb_form_section.dart';
 import '../../widgets/hmb_select_contact.dart';
 import '../../widgets/hmb_select_site.dart';
 import '../../widgets/hmb_text_field.dart';
+import '../../widgets/photo_gallery.dart';
 import '../../widgets/rich_editor.dart';
 import '../../widgets/select_customer.dart';
 import '../base_full_screen/entity_edit_screen.dart';
@@ -97,25 +93,6 @@ class JobEditScreenState extends State<JobEditScreen>
     }
   }
 
-  Future<List<Photo>> _fetchTaskPhotos() async {
-    final tasks = await DaoTask().getTasksByJob(widget.job!.id);
-    final photos = <Photo>[];
-    for (final task in tasks) {
-      final taskPhotos = await DaoPhoto().getByTask(task.id);
-      photos.addAll(taskPhotos);
-    }
-    return photos;
-  }
-
-  Future<void> _showFullScreenPhoto(BuildContext context, String imagePath,
-      String taskName, String comment) async {
-    await context.push('/photo_viewer', extra: {
-      'imagePath': imagePath,
-      'taskName': taskName,
-      'comment': comment,
-    });
-  }
-
   @override
   Widget build(BuildContext context) =>
       JuneBuilder(() => SelectedCustomer()..customerId = widget.job?.customerId,
@@ -156,62 +133,11 @@ class JobEditScreenState extends State<JobEditScreen>
                             _chooseSite(customer, job),
 
                             // Display task photos
-                            _buildPhotoGallery(),
+                            PhotoGallery(job: job!),
 
                             // Manage tasks
                             _manageTasks(job),
                           ]))));
-
-  /// Show a list of photo thumbnails for the job.
-  Widget _buildPhotoGallery() => JuneBuilder(PhotoGallery.new,
-      builder: (context) => FutureBuilderEx<List<Photo>>(
-            // ignore: discarded_futures
-            future: _fetchTaskPhotos(),
-            builder: (context, photos) => SizedBox(
-              height: 100,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: photos!
-                    .map((photo) => Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: GestureDetector(
-                            onTap: () async {
-                              // Fetch the task for this photo to get
-                              // the task name.
-                              final task =
-                                  await DaoTask().getById(photo.taskId);
-                              if (context.mounted) {
-                                await _showFullScreenPhoto(context,
-                                    photo.filePath, task!.name, photo.comment);
-                              }
-                            },
-                            child: Stack(
-                              children: [
-                                Image.file(
-                                  File(photo.filePath),
-                                  width: 80,
-                                  height: 80,
-                                  fit: BoxFit.cover,
-                                ),
-                                const Positioned(
-                                  bottom: 8,
-                                  right: 0,
-                                  child: ColoredBox(
-                                    color: Colors.black45,
-                                    child: Icon(
-                                      Icons.zoom_out_map,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ))
-                    .toList(),
-              ),
-            ),
-          ));
 
   Widget _showSummary() => HMBTextField(
         focusNode: _summaryFocusNode,
@@ -358,8 +284,4 @@ class SelectJobStatus {
   SelectJobStatus();
 
   int? jobStatusId;
-}
-
-class PhotoGallery extends JuneState {
-  PhotoGallery();
 }
