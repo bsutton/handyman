@@ -107,9 +107,13 @@ class JobEditScreenState extends State<JobEditScreen>
     return photos;
   }
 
-  Future<void> _showFullScreenPhoto(
-      BuildContext context, String imagePath) async {
-    await context.push('/photo_viewer', extra: imagePath);
+  Future<void> _showFullScreenPhoto(BuildContext context, String imagePath,
+      String taskName, String comment) async {
+    await context.push('/photo_viewer', extra: {
+      'imagePath': imagePath,
+      'taskName': taskName,
+      'comment': comment,
+    });
   }
 
   @override
@@ -171,13 +175,36 @@ class JobEditScreenState extends State<JobEditScreen>
                     .map((photo) => Padding(
                           padding: const EdgeInsets.all(8),
                           child: GestureDetector(
-                            onTap: () =>
-                                _showFullScreenPhoto(context, photo.filePath),
-                            child: Image.file(
-                              File(photo.filePath),
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.cover,
+                            onTap: () async {
+                              // Fetch the task for this photo to get
+                              // the task name.
+                              final task =
+                                  await DaoTask().getById(photo.taskId);
+                              if (context.mounted) {
+                                await _showFullScreenPhoto(context,
+                                    photo.filePath, task!.name, photo.comment);
+                              }
+                            },
+                            child: Stack(
+                              children: [
+                                Image.file(
+                                  File(photo.filePath),
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                ),
+                                const Positioned(
+                                  bottom: 8,
+                                  right: 0,
+                                  child: ColoredBox(
+                                    color: Colors.black45,
+                                    child: Icon(
+                                      Icons.zoom_out_map,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ))

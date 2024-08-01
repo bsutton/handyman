@@ -179,10 +179,17 @@ GoRouter get _router => GoRouter(
             GoRoute(
               path: 'photo_viewer',
               builder: (context, state) {
-                final imagePath = state.extra! as String;
-                return FullScreenPhotoViewer(imagePath: imagePath);
+                final args = state.extra! as Map<String, String>;
+                final imagePath = args['imagePath']!;
+                final taskName = args['taskName']!;
+                final comment = args['comment']!;
+                return FullScreenPhotoViewer(
+                  imagePath: imagePath,
+                  taskName: taskName,
+                  comment: comment,
+                );
               },
-            ),
+            )
           ],
         ),
       ],
