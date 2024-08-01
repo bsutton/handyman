@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:future_builder_ex/future_builder_ex.dart';
+import 'package:go_router/go_router.dart';
 import 'package:june/june.dart';
 
 import '../../dao/dao_customer.dart';
@@ -106,6 +107,11 @@ class JobEditScreenState extends State<JobEditScreen>
     return photos;
   }
 
+  Future<void> _showFullScreenPhoto(
+      BuildContext context, String imagePath) async {
+    await context.push('/photo_viewer', extra: imagePath);
+  }
+
   @override
   Widget build(BuildContext context) =>
       JuneBuilder(() => SelectedCustomer()..customerId = widget.job?.customerId,
@@ -164,11 +170,15 @@ class JobEditScreenState extends State<JobEditScreen>
                 children: photos!
                     .map((photo) => Padding(
                           padding: const EdgeInsets.all(8),
-                          child: Image.file(
-                            File(photo.filePath),
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.cover,
+                          child: GestureDetector(
+                            onTap: () =>
+                                _showFullScreenPhoto(context, photo.filePath),
+                            child: Image.file(
+                              File(photo.filePath),
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ))
                     .toList(),
