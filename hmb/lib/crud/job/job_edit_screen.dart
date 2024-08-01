@@ -97,10 +97,10 @@ class JobEditScreenState extends State<JobEditScreen>
   }
 
   Future<List<Photo>> _fetchTaskPhotos() async {
-    final tasks = await DaoTask().getTasksByJob(widget.job!);
+    final tasks = await DaoTask().getTasksByJob(widget.job!.id);
     final photos = <Photo>[];
     for (final task in tasks) {
-      final taskPhotos = await PhotoDao().getPhotosByTaskId(task.id);
+      final taskPhotos = await DaoPhoto().getByTask(task.id);
       photos.addAll(taskPhotos);
     }
     return photos;
@@ -146,31 +146,35 @@ class JobEditScreenState extends State<JobEditScreen>
                             _chooseSite(customer, job),
 
                             // Display task photos
-                            FutureBuilderEx<List<Photo>>(
-                              // ignore: discarded_futures
-                              future: _fetchTaskPhotos(),
-                              builder: (context, photos) => SizedBox(
-                                height: 100,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: photos!
-                                      .map((photo) => Padding(
-                                            padding: const EdgeInsets.all(8),
-                                            child: Image.file(
-                                              File(photo.filePath),
-                                              width: 80,
-                                              height: 80,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ))
-                                      .toList(),
-                                ),
-                              ),
-                            ),
+                            _buildPhotoGallery(),
 
                             // Manage tasks
                             _manageTasks(job),
                           ]))));
+
+  /// Show a list of photo thumbnails for the job.
+  Widget _buildPhotoGallery() => JuneBuilder(PhotoGallery.new,
+      builder: (context) => FutureBuilderEx<List<Photo>>(
+            // ignore: discarded_futures
+            future: _fetchTaskPhotos(),
+            builder: (context, photos) => SizedBox(
+              height: 100,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: photos!
+                    .map((photo) => Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Image.file(
+                            File(photo.filePath),
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ),
+          ));
 
   Widget _showSummary() => HMBTextField(
         focusNode: _summaryFocusNode,
@@ -317,4 +321,8 @@ class SelectJobStatus {
   SelectJobStatus();
 
   int? jobStatusId;
+}
+
+class PhotoGallery extends JuneState {
+  PhotoGallery();
 }
