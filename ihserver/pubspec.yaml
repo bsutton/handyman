@@ -11,10 +11,10 @@ dependencies:
     version: ^1.3.0
   args: ^2.4.2
   cron: ^0.6.0
-  dcli: ^4.0.1-beta.4
-  dcli_core: ^4.0.1-beta.4
+  dcli: ^6.0.5
+  dcli_core: ^6.1.0
   dnsolve: ^1.0.0
-  email_validator: ^2.1.17
+  email_validator: ^3.0.0
   http_parser: ^4.0.2
   mailer: ^6.0.1
   mime: ^1.0.4
@@ -25,15 +25,15 @@ dependencies:
   shelf_letsencrypt:
     hosted: https://onepub.dev/api/jbbxpsdavu/
     version: ^2.0.0
-  shelf_multipart: ^1.0.0
+  shelf_multipart: ^2.0.0
   shelf_rate_limiter: ^1.0.1
   shelf_router: ^1.1.4
   shelf_static: ^1.1.2
-  simple_mysql_orm: ^4.0.0-alpha.2
+  simple_mysql_orm: ^5.0.0
 
  
 dev_dependencies:
-  lint_hard: ^4.0.0
+  lint_hard: ^5.0.0
   test: ^1.25.0
 
 executables:

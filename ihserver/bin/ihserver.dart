@@ -36,7 +36,7 @@ void main() async {
   final domain = Domain(name: config.fqdn, email: config.domainEmail);
 
   final letsEncrypt = build(
-      mode: Config().production == true
+      mode: Config().production
           ? CertificateMode.production
           : CertificateMode.staging);
 

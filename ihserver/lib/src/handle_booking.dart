@@ -1,7 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:shelf/shelf.dart';
-import 'package:shelf_multipart/form_data.dart';
-import 'package:shelf_multipart/multipart.dart';
+import 'package:shelf_multipart/shelf_multipart.dart';
 
 import 'logger.dart';
 import 'mailer.dart';
@@ -9,12 +8,17 @@ import 'mailer.dart';
 Future<Response> handleBooking(Request request) async {
   try {
     if (!_isMultipart(request)) {
-      return Response.badRequest(body: 'Exported formData');
+      return Response.badRequest(body: 'Expected formData');
     }
 
     final params = <String, String>{};
 
-    await for (final formData in request.multipartFormData) {
+    final formDataRequest = request.formData();
+
+    if (formDataRequest == null) {
+      return Response.badRequest(body: 'No form Data found');
+    }
+    await for (final formData in formDataRequest.formData) {
       final dataString = await formData.part.readString();
       params[formData.name] = dataString;
     }
@@ -64,6 +68,7 @@ Your email address looks to be invalid. Please correct it or call 0451 086 561 t
         day3: day3);
 
     return Response.ok("{result:'success'}");
+
     // ignore: avoid_catches_without_on_clauses
   } catch (e, st) {
     qlogerr('Error handling booking: $e $st');
@@ -186,8 +191,8 @@ Name: $name <br>
       body: message);
 }
 
-bool _isMultipart(Request request) =>
-    request.isMultipart && request.isMultipartForm;
+bool _isMultipart(Request request) => request.multipart() != null;
+// return multipart != null && multipart.isMultipart && request.isMultipartForm;
 
 class PreferredDate {
   PreferredDate(Map<String, String> params, String key) {
