@@ -55,6 +55,8 @@ void _restart() {
     createDir(pathToHandymanBin, recursive: true);
   }
 
+  /// we can't copy over running exe but we can deleted it.
+  deleteDir(pathToHandymanBin);
   copyTree(pathToHandymanAltBin, pathToHandymanBin, overwrite: true);
 
   // set execute priviliged
