@@ -10,18 +10,23 @@ void main(List<String> args) {
 
   print(green('Compiling ihserver'));
   final project = DartProject.self;
-  DartScript.fromFile(join('bin', 'ihserver.dart'), project: project)
-      .compile(overwrite: true);
+  DartScript.fromFile(
+    join('bin', 'ihserver.dart'),
+    project: project,
+  ).compile(overwrite: true);
 
   print(green('Compiling launch'));
-  DartScript.fromFile(join('bin', 'ihlaunch.dart'), project: project)
-      .compile(overwrite: true);
+  DartScript.fromFile(
+    join('bin', 'ihlaunch.dart'),
+    project: project,
+  ).compile(overwrite: true);
 
   print(green('Packing static resources under ${truepath('www_root')}'));
   Resources().pack();
 
   final buildSettings = SettingsYaml.load(
-      pathToSettings: join(project.pathToProjectRoot, 'tool', 'build.yaml'));
+    pathToSettings: join(project.pathToProjectRoot, 'tool', 'build.yaml'),
+  );
 
   final scpCommand = buildSettings.asString('scp_command');
   final targetServer = buildSettings.asString('target_server');
@@ -32,8 +37,10 @@ void main(List<String> args) {
   /// compiled into the deploy script.
 
   print(green('Compiling tool/deploy.dart'));
-  DartScript.fromFile(join('tool', 'deploy.dart'), project: project)
-      .compile(overwrite: true);
+  DartScript.fromFile(
+    join('tool', 'deploy.dart'),
+    project: project,
+  ).compile(overwrite: true);
 
   print(green("deploying 'deploy' to $targetDirectory"));
   '$scpCommand tool/deploy $targetServer:$targetDirectory'.run;

@@ -37,44 +37,48 @@ Future<Response> handleBooking(Request request) async {
     qlog('New Booking details: $name $email $phone $day1 $day2 $day3');
 
     if (!EmailValidator.validate(email ?? 'invalid')) {
-      return Response.badRequest(body: '''
-Your email address looks to be invalid. Please correct it or call 0451 086 561 to make a booking ''');
+      return Response.badRequest(
+        body: '''
+Your email address looks to be invalid. Please correct it or call 0451 086 561 to make a booking ''',
+      );
     }
 
     if (!await sendBooking(
-        name: name,
-        email: email,
-        phone: phone,
-        description: description,
-        street: street,
-        suburb: suburb,
-        day1: day1,
-        day2: day2,
-        day3: day3)) {
+      name: name,
+      email: email,
+      phone: phone,
+      description: description,
+      street: street,
+      suburb: suburb,
+      day1: day1,
+      day2: day2,
+      day3: day3,
+    )) {
       return Response.internalServerError(
-          body:
-              '''Sorry but the booking attempt fail. Please call 0451 086 561 to make a booking''');
+        body:
+            '''Sorry but the booking attempt fail. Please call 0451 086 561 to make a booking''',
+      );
     }
 
     await sendBookingReceived(
-        name: name,
-        email: email,
-        phone: phone,
-        description: description,
-        street: street,
-        suburb: suburb,
-        day1: day1,
-        day2: day2,
-        day3: day3);
+      name: name,
+      email: email,
+      phone: phone,
+      description: description,
+      street: street,
+      suburb: suburb,
+      day1: day1,
+      day2: day2,
+      day3: day3,
+    );
 
     return Response.ok("{result:'success'}");
-
-    // ignore: avoid_catches_without_on_clauses
   } catch (e, st) {
     qlogerr('Error handling booking: $e $st');
     return Response.internalServerError(
-        body:
-            '''Sorry but the booking attempt fail. Please call 0451 086 561 to make a booking''');
+      body:
+          '''Sorry but the booking attempt fail. Please call 0451 086 561 to make a booking''',
+    );
   }
 }
 
@@ -147,23 +151,25 @@ Name: $name <br>
     qlog('Sending booking confirmaiton: $message');
 
     await sendEmail(
-        from: 'info@ivanhoehandyman.com.au',
-        to: email,
-        subject: 'Ivanhoe Handyman Service Booking Received',
-        body: message.toString());
+      from: 'info@ivanhoehandyman.com.au',
+      to: email,
+      subject: 'Ivanhoe Handyman Service Booking Received',
+      body: message.toString(),
+    );
   }
 }
 
-Future<bool> sendBooking(
-    {required String name,
-    required String? email,
-    required String phone,
-    required String description,
-    required PreferredDate day1,
-    required PreferredDate day2,
-    required PreferredDate day3,
-    required String street,
-    required String suburb}) async {
+Future<bool> sendBooking({
+  required String name,
+  required String? email,
+  required String phone,
+  required String description,
+  required PreferredDate day1,
+  required PreferredDate day2,
+  required PreferredDate day3,
+  required String street,
+  required String suburb,
+}) async {
   final message = '''
 Ivanhoe Handyman Service Booking<br>
 <br>
@@ -185,10 +191,11 @@ Name: $name <br>
 
   qlog('Sending booking: $message');
   return sendEmail(
-      from: email ?? 'notsupplied@ivanhohandyman.com.au',
-      to: 'bsutton@onepub.dev',
-      subject: 'Ivanhoe Handyman Service Booking',
-      body: message);
+    from: email ?? 'notsupplied@ivanhohandyman.com.au',
+    to: 'bsutton@onepub.dev',
+    subject: 'Ivanhoe Handyman Service Booking',
+    body: message,
+  );
 }
 
 bool _isMultipart(Request request) => request.multipart() != null;

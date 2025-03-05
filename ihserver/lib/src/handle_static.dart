@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_types_on_closure_parameters
-
 import 'dart:io';
 
 import 'package:dcli/dcli.dart';
@@ -28,13 +26,17 @@ Response _handleStatic(Request request, String filename) {
   }
 
   final mime = MediaType.parse(
-      lookupMimeType('.${extension(filename)}') ?? 'application/octet-stream');
+    lookupMimeType('.${extension(filename)}') ?? 'application/octet-stream',
+  );
 
   const oneMonth = '2592000';
-  return Response.ok(File(pathToFile).openRead(), headers: {
-    'Content-Type': mime.mimeType,
-    'Cache-Control': 'max-age=$oneMonth'
-  });
+  return Response.ok(
+    File(pathToFile).openRead(),
+    headers: {
+      'Content-Type': mime.mimeType,
+      'Cache-Control': 'max-age=$oneMonth',
+    },
+  );
 }
 
 String? _pathToStaticContent;

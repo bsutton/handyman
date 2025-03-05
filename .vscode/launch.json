@@ -5,16 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "email_server",
-            "cwd": "email_server",
+            "name": "ihserver",
+            "program": "ihserver/bin/ihserver.dart",
             "request": "launch",
             "type": "dart"
         },
-        {
-            "name": "gcp_lambda",
-            "cwd": "gcp_lambda",
-            "request": "launch",
-            "type": "dart"
-        }
     ]
 }

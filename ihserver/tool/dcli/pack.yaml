@@ -17,8 +17,3 @@ externals:
   - external:
     path: bin/ihlaunch.sh
     mount: altbin/ihlaunch.sh    
-
-
-  - external:
-    path: release/config.yaml
-    mount: config/config.yaml

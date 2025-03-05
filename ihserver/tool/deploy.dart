@@ -57,6 +57,7 @@ void _restart() {
 
   /// we can't copy over running exe but we can deleted it.
   deleteDir(pathToHandymanBin);
+  createDir(pathToHandymanBin);
   copyTree(pathToHandymanAltBin, pathToHandymanBin, overwrite: true);
 
   // set execute priviliged
@@ -77,7 +78,10 @@ void killProcess(String processName) {
 }
 
 void makeExecutable(
-    String pathToIHServer, String pathToLauncher, String pathToLauncherScript) {
+  String pathToIHServer,
+  String pathToLauncher,
+  String pathToLauncherScript,
+) {
   // set execute priviliged
   chmod(pathToIHServer, permission: '710');
   chmod(pathToLauncher, permission: '710');

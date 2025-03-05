@@ -11,14 +11,18 @@ import 'package:path/path.dart';
 
 void main(List<String> args) {
   print('Logging to: ${Config().pathToLogfile}');
-  final pathToIHServer =
-      join(dirname(DartScript.self.pathToScript), 'ihserver');
+  final pathToIHServer = join(
+    dirname(DartScript.self.pathToScript),
+    'ihserver',
+  );
   qlog('Launching ihserver');
 
   // start the server and relaunch it if it fails.
   for (;;) {
     final result = pathToIHServer.start(
-        nothrow: true, progress: Progress(qlog, stderr: qlogerr));
+      nothrow: true,
+      progress: Progress(qlog, stderr: qlogerr),
+    );
     qlog(red('ihserver failed with exitCode: ${result.exitCode}'));
     qlog('restarting ihserver in 10 seconds');
     sleep(10);

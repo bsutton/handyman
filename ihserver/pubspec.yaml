@@ -4,20 +4,22 @@ description: Ivanhoe Handyman Services web server.
 repository: https://github.com/bsutton/handyman
 publish_to: https://onepub.dev/api/jbbxpsdavu/
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: '>=3.7.0 <4.0.0'
 dependencies:
   acme_client:
     hosted: https://onepub.dev/api/jbbxpsdavu/
     version: ^1.3.0
   args: ^2.4.2
   cron: ^0.6.0
-  dcli: ^6.0.5
-  dcli_core: ^6.1.0
+  date_time_format: ^2.0.1
+  dcli: ^7.0.1
+  dcli_core: ^7.0.1
   dnsolve: ^1.0.0
   email_validator: ^3.0.0
   http_parser: ^4.0.2
+  intl: ^0.19.0
   mailer: ^6.0.1
-  mime: ^1.0.4
+  mime: ^2.0.0
   mime_type: ^1.0.0
   path: ^1.9.0
   settings_yaml: ^8.1.0-alpha.2
@@ -29,11 +31,11 @@ dependencies:
   shelf_rate_limiter: ^1.0.1
   shelf_router: ^1.1.4
   shelf_static: ^1.1.2
-  simple_mysql_orm: ^5.0.0
+  yaml: ^3.1.3
 
  
 dev_dependencies:
-  lint_hard: ^5.0.0
+  lint_hard: ^6.0.0
   test: ^1.25.0
 
 executables:

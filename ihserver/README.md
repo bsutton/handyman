@@ -80,6 +80,24 @@ The following is a sample for your **production** environment
 `<project root>/release/config.yaml`
 
 ```yaml
+
+# To obtain a app password:
+# https://myaccount.google.com/apppasswords
+
+gmail_app_username: bsutton@onepub.dev
+gmail_app_password: <password>
+path_to_static_content: /opt/handyman/www_root
+lets_encrypt_live: /opt/handyman/letsencrypt/live
+fqdn: ivanhoehandyman.com.au
+domain_email: bsutton@onepub.dev
+https_port: 443
+http_port: 80
+production: true
+binding_address: 0.0.0.0
+logger_path: /var/log/ihserver.log
+
+```
+
 mail_app_username: bsutton@onepub.dev
 gmail_app_password: XXXXXXXXXXX
 path_to_static_content: /opt/handyman/www_root

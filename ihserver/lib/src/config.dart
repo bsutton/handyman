@@ -5,25 +5,32 @@ class Config {
   factory Config() => _config ??= Config._();
 
   Config._() {
-    _settings =
-        SettingsYaml.load(pathToSettings: join('config', 'config.yaml'));
+    _settings = SettingsYaml.load(
+      pathToSettings: join('config', 'config.yaml'),
+    );
 
     username = _settings.asString('gmail_app_username');
     password = _settings.asString('gmail_app_password');
     pathToStaticContent = _settings.asString('path_to_static_content');
-    letsEncryptLive = _settings.asString('lets_encrypt_live',
-        defaultValue: '/opt/ihs/letsencrypt/live');
+    letsEncryptLive = _settings.asString(
+      'lets_encrypt_live',
+      defaultValue: '/opt/ihs/letsencrypt/live',
+    );
     fqdn = _settings.asString('fqdn');
     domainEmail = _settings.asString('domain_email');
     httpsPort = _settings.asInt('https_port', defaultValue: 443);
     httpPort = _settings.asInt('http_port', defaultValue: 80);
     production = _settings.asBool('production', defaultValue: false);
     useHttps = _settings.asBool('use_https');
-    bindingAddress =
-        _settings.asString('binding_address', defaultValue: '0.0.0.0');
+    bindingAddress = _settings.asString(
+      'binding_address',
+      defaultValue: '0.0.0.0',
+    );
     pathToLogfile = _settings.asString('logger_path', defaultValue: 'print');
   }
   static Config? _config;
+
+  static const String hmbStartsYaml = 'hmb_starts.yaml';
 
   late final String username;
   late final String password;

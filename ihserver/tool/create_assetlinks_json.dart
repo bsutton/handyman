@@ -15,21 +15,31 @@ void main() async {
   const releaseAlias = 'hmbkey';
   const debugKeystorePath = '../../hmb/hmb-key-debug.keystore';
   const debugAlias = 'hmb-debug-key';
-  final outputFilePath = join(DartProject.self.pathToProjectRoot, 'www_root',
-      '.well-known', 'assetlinks.json');
+  final outputFilePath = join(
+    DartProject.self.pathToProjectRoot,
+    'www_root',
+    '.well-known',
+    'assetlinks.json',
+  );
 
   // Settings().setVerbose(enabled: true);
 
   try {
     var password = ask('Release keystore password: ', hidden: true);
     // Generate SHA-256 fingerprint for the release keystore
-    final releaseFingerprint =
-        await getFingerprint(releaseKeystorePath, releaseAlias, password);
+    final releaseFingerprint = await getFingerprint(
+      releaseKeystorePath,
+      releaseAlias,
+      password,
+    );
 
     password = ask('Debug keystore password: ', hidden: true);
     // Generate SHA-256 fingerprint for the debug keystore
-    final debugFingerprint =
-        await getFingerprint(debugKeystorePath, debugAlias, password);
+    final debugFingerprint = await getFingerprint(
+      debugKeystorePath,
+      debugAlias,
+      password,
+    );
 
     // Create the assetlinks.json content
     final assetlinksContent = '''
@@ -70,7 +80,10 @@ void main() async {
 }
 
 Future<String?> getFingerprint(
-    String keystorePath, String alias, String password) async {
+  String keystorePath,
+  String alias,
+  String password,
+) async {
   print('Generating fingerprint for $alias');
 
   Progress result;
@@ -78,10 +91,7 @@ Future<String?> getFingerprint(
     tmpFile.write(password);
     result = '''
 keytool -list -v -storepass:file $tmpFile -keystore $keystorePath -alias $alias'''
-        .start(
-      progress: Progress.capture(),
-      nothrow: true,
-    );
+        .start(progress: Progress.capture(), nothrow: true);
 
     if (result.exitCode != 0) {
       throw FailedToGenerate('generation failed: ${result.lines}');
@@ -97,9 +107,9 @@ keytool -list -v -storepass:file $tmpFile -keystore $keystorePath -alias $alias'
     }
 
     throw FailedToGenerate(
-        'Error: SHA-256 fingerprint not found in keytool output.');
+      'Error: SHA-256 fingerprint not found in keytool output.',
+    );
   });
-  // ignore: avoid_catches_without_on_clauses
 }
 
 class FailedToGenerate implements Exception {
