@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="ihserver API docs, for the Dart programming language.">
+  <title>ihserver - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">ihserver package</li>
+  </ol>
+  <div class="self-name">ihserver</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <div class="toggle" id="theme-button" title="Toggle brightness">
+    <label for="theme">
+      <input type="checkbox" id="theme" value="light-theme">
+      <span id="dark-theme-button" class="material-symbols-outlined">
+        dark_mode
+      </span>
+      <span id="light-theme-button" class="material-symbols-outlined">
+        light_mode
+      </span>
+    </label>
+  </div>
+</header>
+<main>
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="ivanhoe-handyman-services-web-server">Ivanhoe Handyman Services Web server.</h1>
+<p>This is a complete web server with a builtin letsencrypt client that obtains certs
+and serves static content.</p>
+<p>The web server deploys a static web site and includes a single live end point /booking</p>
+<p>The web server is deployed as a single executable that contains the static content!</p>
+<p>The static content is packed into the web server executable using the '<a href="https://dcli.onepub.dev/dcli-tools-1/dcli-pack">dcli pack</a>' command.</p>
+<p>When you start the webserver it:</p>
+<ul>
+<li>unpacks the static content</li>
+<li>obtains a HTTPS certificate from LetsEncrypt (including doing auto renews)</li>
+<li>Listens on http and https ports</li>
+<li>Serves index.html and a varity of associated file times.</li>
+<li>Exposes a single live end point '/booking' that sends an email
+when called with valid parameters.</li>
+</ul>
+<p>To build/deploy the IHAServer you need to create your static content and
+create the config file under the project:</p>
+<p><project root="">/config/config.yaml
+<project root="">/www_root</project></project></p>
+<h1 id="builddeploy">Build/Deploy</h1>
+<h2 id="target-system">Target system</h2>
+<p>On the target system create:
+<code>/opt/handyman</code></p>
+<p>Change the permissions so that you have access:</p>
+<p><code>sudo chown &lt;me&gt;:&lt;me&gt; /opt/handyman</code></p>
+<h2 id="dev-system">Dev system</h2>
+<p>The build/deploy process is controlled by tool/build.yaml</p>
+<p>Configure your build.yaml</p>
+<p>Example</p>
+<pre class="language-dart"><code>target_server:  handyman.com
+target_directory: /opt/handyman
+scp_command: scp
+</code></pre>
+<p>Run tool/build.dart</p>
+<p>Once the build has run it will have copied a single exe <code>deploy</code> to the
+target system in /opt/handyman.</p>
+<p>Login to the target system and run:</p>
+<pre class="language-dart"><code>cd /opt/handyman
+sudo ./deploy
+</code></pre>
+<p>Update your DNS A record to point to your new system.</p>
+<p>You are now live.</p>
+<h1 id="configuration">configuration</h1>
+<p>The config.yaml file is used to configure the server.</p>
+<p>You will need two config.yaml files, one for development and one for the release
+environment:</p>
+<table>
+<thead>
+<tr>
+<th>usage</th>
+<th>location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>release path</td>
+<td><project root="">/release/config.yaml</project></td>
+</tr>
+<tr>
+<td>development path</td>
+<td><project root="">/config/config.yaml</project></td>
+</tr>
+</tbody>
+</table>
+<p>The following is a sample for your <strong>production</strong> environment
+<code>&lt;project root&gt;/release/config.yaml</code></p>
+<pre class="language-yaml"><code class="language-yaml">
+# To obtain a app password:
+# https://myaccount.google.com/apppasswords
+
+gmail_app_username: bsutton@onepub.dev
+gmail_app_password: &lt;password&gt;
+path_to_static_content: /opt/handyman/www_root
+lets_encrypt_live: /opt/handyman/letsencrypt/live
+fqdn: ivanhoehandyman.com.au
+domain_email: bsutton@onepub.dev
+https_port: 443
+http_port: 80
+production: true
+binding_address: 0.0.0.0
+logger_path: /var/log/ihserver.log
+
+</code></pre>
+<p>mail_app_username: <a href="mailto:bsutton@onepub.dev">bsutton@onepub.dev</a>
+gmail_app_password: XXXXXXXXXXX
+path_to_static_content: /opt/handyman/www_root
+lets_encrypt_live: /opt/handyman/letsencrypt/live
+fqdn: ivanhoehandyman.com.au
+domain_email: <a href="mailto:bsutton@onepub.dev">bsutton@onepub.dev</a>
+https_port: 443
+http_port: 80
+production: true
+binding_address: 0.0.0.0
+logger_path: /var/log/ihserver.log</p>
+<pre class="language-dart"><code>
+The following is a sample for your **development** environment
+
+`&lt;project root&gt;/config/config.yaml`
+```yaml
+gmail_app_username: bsutton@onepub.dev
+gmail_app_password: XXXXXXXXXXX
+path_to_static_content: /home/bsutton/git/handyman/www_root
+lets_encrypt_live: /opt/ihs/letsencrypt/live
+fqdn: squarephone.biz
+domain_email: bsutton@onepub.dev
+https_port: 10443
+http_port: 1080
+production: false
+binding_address: 0.0.0.0
+logger_path: console
+
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>setting</th>
+<th>purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gmail_app_username</td>
+<td>username of google workspace account. Required to using the /booking endpoint to send emails</td>
+</tr>
+<tr>
+<td>gmail_app_password</td>
+<td>password of the google workspace account.</td>
+</tr>
+<tr>
+<td>path_to_static_content</td>
+<td>location where the server will look for the sites static web content</td>
+</tr>
+<tr>
+<td>lets_encrypt_live</td>
+<td>The location to store the lets encrypt certificate.</td>
+</tr>
+<tr>
+<td>fqdn</td>
+<td>The fully qualified domain name of your web site</td>
+</tr>
+<tr>
+<td>domain_email</td>
+<td>The email address we submit to Lets Encrypt so it can send renewal notices and other critical communications. (We do however renew certificates automatically).</td>
+</tr>
+<tr>
+<td>https_port</td>
+<td>The port to listen to https requests on.</td>
+</tr>
+<tr>
+<td>http_port</td>
+<td>The port to listen to http requests on. This port MUST be open as it is required by Lets Encrypt to obtain a certificate</td>
+</tr>
+<tr>
+<td>production</td>
+<td>Controls wheter we obtain a live or staging Lets Encrypt certificate. You should start by setting this to false until you have seen IHAServer successfully obtain a certificate. You can then change the setting to 'true' and restart the IAHServer to obtain a live certificate. <strong>See blow for additional information</strong></td>
+</tr>
+<tr>
+<td>binding_address</td>
+<td>The IP address that IAHServer will listen to. Using 0.0.0.0 tells the IAHServer to listen on all local addresses. If you use a specific address it must be a local addres on the server.</td>
+</tr>
+<tr>
+<td>logger_path</td>
+<td>The path to write log messages to. If you set this value to 'console' log messages are printed to the stdout (the console). This is useful in a development environment</td>
+</tr>
+</tbody>
+</table>
+<p><strong>READ THIS !!!</strong></p>
+<p><strong>production setting</strong></p>
+<p>The production setting in config.yaml, controls  whether we obtain a live or staging Lets Encrypt certificate.</p>
+<p><em>This is important</em> as the production flag controls whether we get a staging
+or live Lets Encrypt certificate. Lets Encrypt has <em>very strict rate limits</em> on
+the number of certificates it will issue to a production system (5 per 48 hrs?)
+so if you get something wrong (your http port isn't open) you can end up not being able to get a live
+certificate for 48 hrs.</p>
+<h1 id="email">Email</h1>
+<p>The IHServer has a '/booking' end-point which can send an email.
+It does this by connection to gmail. You will need a gmail app password
+for this to work.</p>
+<p>If you are not using the /booking end point then you don't need to configure
+the gmail app username/password.</p>
+<p>Use the following link to get an app password (assumes you have a gmail workspace account.)
+<a href="https://myaccount.google.com/apppasswords">https://myaccount.google.com/apppasswords</a></p>
+<h1 id="development">Development</h1>
+<p>Within you development environement you are likely to be behind a NAT.
+To test the cert aquistion and renewal you will need to forward
+port 443 and 80 from your local router to your development box.</p>
+<p>You will need a DNS server with a real domain name and an A record that
+points to your router's public IP.</p>
+<p>On Linux, you will need to make the server use ports above 1024 (you can only
+listen to ports below 1024 if you are root - not recommended for dev).</p>
+<p>I suggest:
+80 -&gt; 8080
+443 -&gt; 8443</p>
+<p>You will need to change the config/config.yaml port settings to match the port
+numbers you choose.</p>
+<p>You should generally test using a staging certificate until you are certain your configuration
+and NAT are set up correctly.</p>
+<h2 id="run-the-service-locally">Run the service locally</h2>
+<p>To debug the IAHServer you can simply launch bin/ihserver.dart in your favourite IDE.</p>
+<p>You can run this function example on your own machine using Docker to simulate
+running in a hosted environment.</p>
+<pre class="language-shell"><code class="language-shell">$ docker build -t email_server .
+...
+
+$ docker run -it -p 8080:8080 --name app email_server
+Listening on :8080
+</code></pre>
+<p>You can test the server using postman
+Method: post
+Body: x-www-form-urlencoded
+Args:
+name:
+email:
+phone:
+description:
+...</p>
+<p>If you're curious about the size of the image you created, enter:</p>
+<pre class="language-shell"><code class="language-shell">$ docker image ls email_server
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+email_server        latest    3f23c737877b   1 minute ago     11.6MB
+</code></pre>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+        </dl>
+      </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">ihserver package</li>
+</ol>
+
+    <h5 class="hidden-xs"><span class="package-name">ihserver</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+</main>
+<footer>
+  <span class="no-break">
+    ihserver
+      0.0.2
+  </span>
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+
