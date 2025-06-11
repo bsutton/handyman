@@ -15,6 +15,7 @@ Router buildRouter() {
         ..get('/images/<.*>', handleStatic)
         ..get('/images/samples/<.*>', handleStatic)
         ..get('/<*.html>', handleStatic)
+        ..get('/hmb/<*.html>', handleStatic)
         // validates deep links used by the hmb app.
         ..get('/.well-known/assetlinks.json', handleStatic)
         // New route for the start records page.
