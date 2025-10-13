@@ -14,8 +14,8 @@ import 'package:ihserver/src/start_collector.dart';
 import 'package:path/path.dart';
 import 'package:shelf_letsencrypt/shelf_letsencrypt.dart';
 
-/// Simple web server that can serve stastic content and email
-/// a booking.
+/// Simple web server that can serve static content and email
+/// an enquiry.
 void main() async {
   final config = Config();
   final pathToStaticContent = config.pathToStaticContent;

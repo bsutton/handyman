@@ -45,7 +45,7 @@ body {
 }
 
 
-#mobile-booking {
+#mobile-enquiry {
     display: none;
 }
 
@@ -178,14 +178,14 @@ body {
 
     }
 
-    #booking {
+    #enquiry {
         text-align: right;
     }
 }
 
 @media screen and (max-width: 600px) {
 
-    #mobile-booking {
+    #mobile-enquiry {
         position: fixed;
         bottom: 0px;
         left: 0px;
@@ -227,14 +227,14 @@ body {
         flex-direction: column;
     }
 
-    #booking {
+    #enquiry {
         display: flex;
         justify-content: space-between;
         flex-direction: row;
 
     }
 
-    #booking {
+    #enquiry {
         text-align: left;
     }
 
@@ -254,7 +254,7 @@ body {
 }
 
 @media screen and (max-width: 460px) {
-    #booking {
+    #enquiry {
         flex-direction: column;
         width: 100%;
     }

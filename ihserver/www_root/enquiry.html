@@ -1,0 +1,142 @@
+<div id="enquiry-dialog" class="ihs-dialog" role="dialog" aria-modal="true" aria-labelledby="enquiry-title">
+  <div id="border">
+    <div id="content">
+      <div class="ihs-dialog-title" id="enquiry-title">Make an enquiry</div>
+
+      <p>
+        Tell me a little about the job and how to reach you.
+        I’ll give you a call to discuss and usually arrange a time to come out and see it.
+        <br>
+      </p>
+
+      <form id="enquiry-form" name="form" action="enquiry" method="post" novalidate>
+        <!-- Honeypot for bots -->
+        <div style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+          <label>Leave this field empty</label>
+          <input type="text" name="website">
+        </div>
+
+        <input type="hidden" name="formType" value="enquiry">
+
+        <div id="form-grid">
+          <!-- Contact details -->
+          <div class="grid-row">
+            <div class="col1">
+              <label class="grid-label" for="name">Name</label>
+            </div>
+            <div class="col2">
+              <input id="name" name="name" required autocomplete="name" maxlength="120">
+            </div>
+          </div>
+
+          <div class="grid-row">
+            <div class="col1">
+              <label class="grid-label" for="email">Email</label>
+            </div>
+            <div class="col2">
+              <input id="email" name="email" type="email" autocomplete="email" maxlength="200">
+            </div>
+          </div>
+
+          <div class="grid-row">
+            <div class="col1">
+              <label class="grid-label" for="phone">Phone No.</label>
+            </div>
+            <div class="col2">
+              <input id="phone" type="tel" name="phone" required autocomplete="tel" maxlength="40">
+            </div>
+          </div>
+
+          <!-- Address (suburb helpful for coverage/quotes) -->
+          <label for="address-street">Street (optional)</label>
+          <input id="address-street" name="address-street" autocomplete="address-line1" maxlength="200">
+          <label for="address-suburb">Suburb</label>
+          <input id="address-suburb" name="address-suburb" required autocomplete="address-level2" maxlength="100">
+
+          <!-- Job description -->
+          <p>Job Description:</p>
+          <textarea id="description" name="description" rows="8" maxlength="4096"
+            placeholder="What needs doing? Any photos or links you can share are helpful."></textarea>
+
+          <!-- Preferred call times -->
+          <p>Preferred time for a call back:</p>
+          <div class="grid-row">
+            <div class="col1">
+              <label class="grid-label" for="callback-time">Time</label>
+            </div>
+            <div class="col2">
+              <select id="callback-time" name="callback-time">
+                <option value="">No preference</option>
+                <option value="morning">Morning (8–11)</option>
+                <option value="midday">Midday (11–2)</option>
+                <option value="afternoon">Afternoon (2–6)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Optional site visit windows -->
+          <p>Preferred site visit windows (optional):</p>
+
+          <div class="day grid-row">
+            <div class="col1">
+              <label class="grid-label" for="day1-date">First:</label>
+            </div>
+            <div class="col2-date">
+              <input type="date" id="day1-date" name="day1-date">
+            </div>
+            <div class="col3">
+              <fieldset id="day1" aria-label="First preference time">
+                <label><input type="radio" value="am" name="day1_time"> AM</label>
+                <label><input type="radio" value="pm" name="day1_time"> PM</label>
+              </fieldset>
+            </div>
+          </div>
+
+          <div class="day grid-row">
+            <div class="col1">
+              <label class="grid-label" for="day2-date">Second:</label>
+            </div>
+            <div class="col2-date">
+              <input type="date" id="day2-date" name="day2-date">
+            </div>
+            <div class="col3">
+              <fieldset id="day2" aria-label="Second preference time">
+                <label><input type="radio" value="am" name="day2_time"> AM</label>
+                <label><input type="radio" value="pm" name="day2_time"> PM</label>
+              </fieldset>
+            </div>
+          </div>
+
+          <div class="day grid-row">
+            <div class="col1">
+              <label class="grid-label" for="day3-date">Third:</label>
+            </div>
+            <div class="col2-date">
+              <input type="date" id="day3-date" name="day3-date">
+            </div>
+            <div class="col3">
+              <fieldset id="day3" aria-label="Third preference time">
+                <label><input type="radio" value="am" name="day3_time"> AM</label>
+                <label><input type="radio" value="pm" name="day3_time"> PM</label>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <!-- Clear process copy; no payment/enquiry language -->
+      <div class="enquiry-refund">
+        <p>
+          I’ll call you to discuss your job and, if needed, arrange a time to visit.
+          <br>
+          <strong>Free quotes</strong>. Time &amp; Materials or Fixed-price — whatever suits the job best.
+          <br>
+          No payment is required at this stage.
+        </p>
+      </div>
+
+      <div class="button" id="submit-button" onclick="submitEnquiry(event)">Send enquiry</div>
+      <div class="button" id="cancel-button" onclick="cancelEnquiry(event)">Cancel</div>
+    </div>
+  </div>
+</div>

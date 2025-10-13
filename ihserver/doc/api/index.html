@@ -49,7 +49,7 @@
   <h1 id="ivanhoe-handyman-services-web-server">Ivanhoe Handyman Services Web server.</h1>
 <p>This is a complete web server with a builtin letsencrypt client that obtains certs
 and serves static content.</p>
-<p>The web server deploys a static web site and includes a single live end point /booking</p>
+<p>The web server deploys a static web site and includes a single live end point /enquiry</p>
 <p>The web server is deployed as a single executable that contains the static content!</p>
 <p>The static content is packed into the web server executable using the '<a href="https://dcli.onepub.dev/dcli-tools-1/dcli-pack">dcli pack</a>' command.</p>
 <p>When you start the webserver it:</p>
@@ -58,7 +58,7 @@ and serves static content.</p>
 <li>obtains a HTTPS certificate from LetsEncrypt (including doing auto renews)</li>
 <li>Listens on http and https ports</li>
 <li>Serves index.html and a varity of associated file times.</li>
-<li>Exposes a single live end point '/booking' that sends an email
+<li>Exposes a single live end point '/enquiry' that sends an email
 when called with valid parameters.</li>
 </ul>
 <p>To build/deploy the IHAServer you need to create your static content and
@@ -168,7 +168,7 @@ logger_path: console
 <tbody>
 <tr>
 <td>gmail_app_username</td>
-<td>username of google workspace account. Required to using the /booking endpoint to send emails</td>
+<td>username of google workspace account. Required to using the /enquiry endpoint to send emails</td>
 </tr>
 <tr>
 <td>gmail_app_password</td>
@@ -221,10 +221,10 @@ the number of certificates it will issue to a production system (5 per 48 hrs?)
 so if you get something wrong (your http port isn't open) you can end up not being able to get a live
 certificate for 48 hrs.</p>
 <h1 id="email">Email</h1>
-<p>The IHServer has a '/booking' end-point which can send an email.
+<p>The IHServer has a '/enquiry' end-point which can send an email.
 It does this by connection to gmail. You will need a gmail app password
 for this to work.</p>
-<p>If you are not using the /booking end point then you don't need to configure
+<p>If you are not using the /enquiry end point then you don't need to configure
 the gmail app username/password.</p>
 <p>Use the following link to get an app password (assumes you have a gmail workspace account.)
 <a href="https://myaccount.google.com/apppasswords">https://myaccount.google.com/apppasswords</a></p>

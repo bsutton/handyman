@@ -55,13 +55,13 @@ loadHtml = async function (url) {
 }
 
 
-// show the booking dialog
-showBooking = async function (event) {
+// show the enquiry dialog
+showEnquiry = async function (event) {
     closeModal(event);
-    showModal(event, 'booking.html');
+    showModal(event, 'enquiry.html');
 }
 
-// show the booking dialog
+// show the accept T&C dialog
 showAccept = async function (event) {
     showModal(event, 'accept.html');
 }

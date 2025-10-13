@@ -3,7 +3,7 @@
 This is a complete web server with a builtin letsencrypt client that obtains certs
 and serves static content.
 
-The web server deploys a static web site and includes a single live end point /booking
+The web server deploys a static web site and includes a single live end point /enquiry
 
 The web server is deployed as a single executable that contains the static content!
 
@@ -14,7 +14,7 @@ When you start the webserver it:
 * obtains a HTTPS certificate from LetsEncrypt (including doing auto renews)
 * Listens on http and https ports
 * Serves index.html and a varity of associated file times.
-* Exposes a single live end point '/booking' that sends an email
+* Exposes a single live end point '/enquiry' that sends an email
    when called with valid parameters.
 
 
@@ -134,7 +134,7 @@ logger_path: console
 
 | setting | purpose |
 | ------------ | ----------------- |
-| gmail_app_username | username of google workspace account. Required to using the /booking endpoint to send emails |
+| gmail_app_username | username of google workspace account. Required to using the /enquiry endpoint to send emails |
 | gmail_app_password | password of the google workspace account. |
 | path_to_static_content | location where the server will look for the sites static web content |
 | lets_encrypt_live | The location to store the lets encrypt certificate. |
@@ -162,11 +162,11 @@ certificate for 48 hrs.
 
 
 # Email
-The IHServer has a '/booking' end-point which can send an email.
+The IHServer has a '/enquiry' end-point which can send an email.
 It does this by connection to gmail. You will need a gmail app password
 for this to work.
 
-If you are not using the /booking end point then you don't need to configure
+If you are not using the /enquiry end point then you don't need to configure
 the gmail app username/password.
 
 Use the following link to get an app password (assumes you have a gmail workspace account.)
