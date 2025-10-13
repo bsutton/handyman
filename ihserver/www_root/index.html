@@ -8,7 +8,6 @@
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-
         gtag('config', 'G-QCDJXTPKLN');
     </script>
     <meta charset="UTF-8">
@@ -28,14 +27,58 @@
     <link rel="stylesheet" defer href="css/tooltip.css" type="text/css" media="screen">
     <script type="application/javascript" defer src="js/modal.js"></script>
     <script type="application/javascript" defer src="js/booking.js"></script>
-
     <link rel="canonical" href="https://ivanhoehandyman.com.au/">
+
+    <!-- Balanced "Free quotes" styling -->
+    <style>
+        .free-quote-ribbon {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            margin: 0 0 12px 0;
+            padding: 10px 16px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #f8f5e6 0%, #f0e5c8 100%);
+            color: #3d2b12;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            font-size: 1.5em;
+        }
+
+        .free-quote-ribbon .sparkle {
+            opacity: 0.8;
+            margin: 0 0.35rem;
+        }
+
+        /* Make the “Free quotes” beside links look like part of them */
+        .free-quote-pill {
+            margin-left: 0.3em;
+            font-size: 0.95em;
+            font-weight: 500;
+            color: #0000ee;
+            text-underline-offset: 2px;
+        }
+
+        .free-quote-pill:hover {
+            color: #003f80;
+        }
+    </style>
 </head>
 
 <body id="body" style="background-color: #b69466;">
     <div id="border">
         <h1>Ivanhoe Handyman Services</h1>
+
+        <div class="free-quote-ribbon" role="note" aria-label="Free quotes notice">
+            <span class="sparkle" aria-hidden="true">✨</span>
+            Free quotes — no obligation
+            <span class="sparkle" aria-hidden="true">✨</span>
+        </div>
+
         <hr class="line">
+
         <div id="content">
             <div id="image-row" class="container">
                 <div id="lhs-text" class="cell">
@@ -83,7 +126,9 @@
                         </ul>
                     </div>
                     <div id="booking">
-                        <div><a href="" onclick="showAccept(event)"> Book a job</a></div>
+                        <div>
+                            <a href="" onclick="showAccept(event)">Book a job (free quotes)</a>
+                        </div>
                         <div>or</div>
                         <div>
                             <div class="tooltip">
@@ -114,9 +159,12 @@
                 </div>
             </div>
 
-            <div id="callout">
-                Callout fee: $100 then $88 ph. Paid on the day.
+            <div id="callout" style="margin: 0 auto; width: fit-content; text-align: left; font-size: 26px;">
+                <strong>Pricing:</strong> <br>
+                <b>Time and Materials:</b> $100 call-out, $88 per hour<br>
+                <b>Fixed Price:</b> free quotes available.
             </div>
+
             <hr class="line">
             <div id="testimonials">
                 <div class="container">
@@ -127,31 +175,23 @@
                             <div id="testimonial">
                                 <div class="testimonial-job">Re-silicon shower</div>
                                 <div class="testimonial-body">Brett provides experience with speed and efficiency to
-                                    deliver an
-                                    excellent service.
+                                    deliver an excellent service.
                                     I highly recommend him.</div>
                                 <div class="testimonial-name">Will - Alphington</div>
                             </div>
                             <div id="testimonial">
-                                <div class="testimonial-job">Install plith boards around house to stop dog chewing
-                                    on
+                                <div class="testimonial-job">Install plith boards around house to stop dog chewing on
                                     heating ducts</div>
-                                <div class="testimonial-body">I love your work.
-                                    The dog hates you!
-                                    Thanks you Brett, will work with you again soon and recommend.
-                                </div>
+                                <div class="testimonial-body">I love your work. The dog hates you!
+                                    Thanks Brett, will work with you again soon and recommend.</div>
                                 <div class="testimonial-name">Unhandy Greg - Kew</div>
                             </div>
                             <div id="testimonial">
                                 <div class="testimonial-job">Repair rotted window sill</div>
-                                <div class="testimonial-body">Brett came to the rescue to repair a partly rotten
-                                    window
-                                    sill!<br>
-                                    <br>
-                                    Profressional all along the way from quoting to invoicing, let alone workmanship
-                                    which
-                                    aimed to address the cause of the WoodRot in the first palce!!<br>
-
+                                <div class="testimonial-body">Brett came to the rescue to repair a partly rotten window
+                                    sill!<br><br>
+                                    Professional all along the way from quoting to invoicing, workmanship aimed to
+                                    address the cause of the wood rot!<br>
                                     Price was below what was quoted and budgeted which is always a welcome surprise,
                                     particualarly when you are paying off an antique vase in instalments that you
                                     really
@@ -159,7 +199,7 @@
                                     <br>
                                     Highly recommended and I defintely look foward to engaging Brett's services in
                                     the
-                                    future...which will be to create a wall niche for the vase...<br>
+                                    future...which will be to create a wall niche for the vase...
                                     <br>
                                     Personally located in Ivanhoe, it is safe to say Brett is certainly our local
                                     handyman!!
@@ -168,8 +208,8 @@
                             </div>
                             <div id="testimonial">
                                 <div class="testimonial-job">Trim and repair doors</div>
-                                <div class="testimonial-body"> Through my local neighborhood network I was recommended
-                                    Ivanhoe Handyman Service and in recent weeks Brett has blitzed a plethera of jobs
+                                <div class="testimonial-body">Through my local neighborhood network I was recommended
+                                    Ivanhoe Handyman Service and in recent weeks Brett has blitzed a plethora of jobs
                                     around my home that had been in the 'too hard' basket.<br>
                                     <br>
                                     He has done so with skill,
@@ -180,10 +220,6 @@
                                 </div>
                                 <div class="testimonial-name">Clare - Ivanhoe</div>
                             </div>
-
-
-
-
                         </div>
                     </div>
                 </div>
@@ -257,7 +293,6 @@
                                             payment
                                             link
                                         </li>
-                                        <li>The first fifteen minutes is included in the callout fee.</li>
                                         <li>I bill in 15 minutes blocks or part there of</li>
                                         <li>If I need materials, beyond a few basic screws, you will be charged for
                                             those
@@ -342,17 +377,16 @@
 
         </div>
     </div>
-    <div id="mobile-booking" class="button"><a href="" onclick="showAccept(event)"> Book a job</a>
+    <div id="mobile-booking" class="button">
+        <a href="" onclick="showAccept(event)">Book a job</a>
+        <span class="free-quote-pill">Free quotes</span>
     </div>
 
     <!-- placeholder to insert modal dialog -->
     <div id="modal-dialog" class="modal-box modal-box-closed fixed-container">
         <div id="modal-container" class="scrollable-child"></div>
     </div>
-
-    <!-- the overlay is used to hide the page when we display a modal dialog-->
     <div id="modal-overlay" class="modal-overlay"></div>
-
 </body>
 
 </html>
