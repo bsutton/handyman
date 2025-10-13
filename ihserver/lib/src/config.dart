@@ -2,6 +2,40 @@ import 'package:path/path.dart';
 import 'package:settings_yaml/settings_yaml.dart';
 
 class Config {
+  static Config? _config;
+
+  static const hmbStartsYaml = 'hmb_starts.yaml';
+
+  late final String username;
+
+  late final String password;
+
+  late final String pathToStaticContent;
+
+  /// Path to the lets encrypt certiicates normally
+  /// /etc/letsencrypt/live
+  late final String letsEncryptLive;
+
+  late final bool production;
+
+  late final String fqdn;
+
+  late final String domainEmail;
+
+  late final SettingsYaml _settings;
+
+  // if false we handle request via http and don't
+  // start the https service.
+  late final bool useHttps;
+
+  late final int httpPort;
+
+  late final int httpsPort;
+
+  late final String bindingAddress;
+
+  late final String pathToLogfile;
+
   factory Config() => _config ??= Config._();
 
   Config._() {
@@ -28,34 +62,6 @@ class Config {
     );
     pathToLogfile = _settings.asString('logger_path', defaultValue: 'print');
   }
-  static Config? _config;
-
-  static const String hmbStartsYaml = 'hmb_starts.yaml';
-
-  late final String username;
-  late final String password;
-  late final String pathToStaticContent;
-
-  /// Path to the lets encrypt certiicates normally
-  /// /etc/letsencrypt/live
-  late final String letsEncryptLive;
-
-  late final bool production;
-
-  late final String fqdn;
-
-  late final String domainEmail;
-
-  late final SettingsYaml _settings;
-
-  // if false we handle request via http and don't
-  // start the https service.
-  late final bool useHttps;
-  late final int httpPort;
-  late final int httpsPort;
-  late final String bindingAddress;
-
-  late final String pathToLogfile;
 
   String get loadedFrom => _settings.filePath;
 }

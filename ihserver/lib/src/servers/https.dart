@@ -57,7 +57,7 @@ Future<void> _startHttpsServer(LetsEncrypt letsEncrypt, Domain domain) async {
 /// Redirect all http traffic to https.
 /// This shouldn't interfere with lets encrypt as ti hooks
 /// into the  pipeline before this middleware is called.
-FutureOr<Response?> _redirectToHttps(Request request) async {
+FutureOr<Response?> _redirectToHttps(Request request) {
   if (request.requestedUri.scheme == 'http') {
     final headers = <String, String>{
       'location':

@@ -1,4 +1,3 @@
-import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 import 'handle_booking.dart';
@@ -19,6 +18,6 @@ Router buildRouter() {
         // validates deep links used by the hmb app.
         ..get('/.well-known/assetlinks.json', handleStatic)
         // New route for the start records page.
-        ..post('/booking', (Request request) async => handleBooking(request));
+        ..post('/booking', handleBooking);
   return router;
 }

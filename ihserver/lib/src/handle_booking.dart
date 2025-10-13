@@ -169,7 +169,7 @@ Future<bool> sendBooking({
   required PreferredDate day3,
   required String street,
   required String suburb,
-}) async {
+}) {
   final message = '''
 Ivanhoe Handyman Service Booking<br>
 <br>
@@ -202,13 +202,15 @@ bool _isMultipart(Request request) => request.multipart() != null;
 // return multipart != null && multipart.isMultipart && request.isMultipartForm;
 
 class PreferredDate {
+  late final String date;
+
+  late final String ampm;
+
   PreferredDate(Map<String, String> params, String key) {
     date = params['$key-date'] ?? 'na';
     final am = params['$key-am'];
     ampm = am ?? params['$key-pm'] ?? 'not provided';
   }
-  late final String date;
-  late final String ampm;
 
   @override
   String toString() => '$date $ampm';

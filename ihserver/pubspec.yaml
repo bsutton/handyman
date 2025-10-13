@@ -17,7 +17,7 @@ dependencies:
   dnsolve: ^1.0.0
   email_validator: ^3.0.0
   http_parser: ^4.0.2
-  intl: ^0.19.0
+  intl: ^0.20.2
   mailer: ^6.0.1
   mime: ^2.0.0
   mime_type: ^1.0.0

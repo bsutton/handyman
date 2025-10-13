@@ -3,11 +3,13 @@ import 'package:dcli/dcli.dart';
 import 'config.dart';
 
 class Logger {
+  static Logger? _self;
+
+  late final String pathToLog;
+
   factory Logger() => _self ??= Logger._();
 
   Logger._() : pathToLog = Config().pathToLogfile;
-  static Logger? _self;
-  late final String pathToLog;
 
   void log(String message) {
     if (pathToLog == 'console') {

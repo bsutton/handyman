@@ -30,6 +30,6 @@ String formatDuration(Duration duration, {bool seconds = false}) {
 String formatTime(DateTime date, [String format = 'h:mm:ss a']) =>
     DateFormat(format).format(date);
 
-DateFormat dateFormat = DateFormat('yyyy-MM-dd hh:mm a');
+var dateFormat = DateFormat('yyyy-MM-dd hh:mm a');
 
 DateTime? parseDateTime(String? value) => dateFormat.tryParse(value ?? '');
