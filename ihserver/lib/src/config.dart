@@ -36,6 +36,9 @@ class Config {
 
   late final String pathToLogfile;
 
+  // if true then we are running in debug mode.
+  late final bool debug;
+
   factory Config() => _config ??= Config._();
 
   Config._() {
@@ -61,6 +64,8 @@ class Config {
       defaultValue: '0.0.0.0',
     );
     pathToLogfile = _settings.asString('logger_path', defaultValue: 'print');
+
+    debug = _settings.asBool('debug', defaultValue: false);
   }
 
   String get loadedFrom => _settings.filePath;

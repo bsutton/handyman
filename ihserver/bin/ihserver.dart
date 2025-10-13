@@ -59,6 +59,10 @@ Future<void> _checkConfiguration(String pathToStaticContent) async {
 }
 
 Future<void> _sendRestartEmail() async {
+  if (Config().debug) {
+    qlog('Debug mode: not sending restart email');
+    return;
+  }
   qlog('Sending restart email to bsutton@onepub.dev');
   final result = await sendEmail(
     from: 'startup@onepub.dev',

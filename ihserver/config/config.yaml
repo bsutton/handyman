@@ -13,3 +13,4 @@ production: false
 binding_address: 0.0.0.0
 logger_path: console
 use_https: false
+debug: true
