@@ -24,3 +24,5 @@ hmb/hmb-key-debug.keystore.zip
 hmb/*.aab
 hmb/*.apk
 ihserver/custom_lint.log
+forecast/
+ihserver/logs/analyzer.txt
