@@ -66,7 +66,7 @@ packages:
     source: hosted
     version: "2.13.0"
   basic_utils:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: basic_utils
       sha256: "548047bef0b3b697be19fa62f46de54d99c9019a69fb7db92c69e19d87f633c7"

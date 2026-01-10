@@ -6,6 +6,7 @@ import 'package:args/args.dart';
 import 'package:dcli/dcli.dart';
 import 'package:dcli/posix.dart';
 import 'package:ihserver/src/dcli/resource/generated/resource_registry.g.dart';
+import 'package:ihserver/src/version/version.g.dart';
 import 'package:path/path.dart';
 
 final pathToHandyman = join(rootPath, 'opt', 'handyman');
@@ -24,6 +25,8 @@ void main(List<String> args) {
   final parsed = argParser.parse(args);
 
   Settings().setVerbose(enabled: parsed['verbose'] as bool);
+
+  print('Deploying: ihserver $packageVersion');
 
   _createDirectory(pathToWwwRoot);
 

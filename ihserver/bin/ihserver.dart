@@ -11,6 +11,7 @@ import 'package:ihserver/src/mailer.dart';
 import 'package:ihserver/src/servers/http.dart';
 import 'package:ihserver/src/servers/https.dart';
 import 'package:ihserver/src/start_collector.dart';
+import 'package:ihserver/src/version/version.g.dart';
 import 'package:path/path.dart';
 import 'package:shelf_letsencrypt/shelf_letsencrypt.dart';
 
@@ -46,7 +47,7 @@ Future<void> _checkFQDNResolved(String fqdn) async {
 }
 
 Future<void> _checkConfiguration(String pathToStaticContent) async {
-  qlog(green('Starting Handyman Server'));
+  qlog(green('Starting Handyman Server: $packageVersion'));
   qlog(blue('Loading config.yaml from ${truepath(Config().loadedFrom)}'));
   qlog(blue('Path to static content: $pathToStaticContent'));
   final pathToIndexHtml = join(pathToStaticContent, 'index.html');

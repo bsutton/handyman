@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 
+// import 'package:basic_utils/basic_utils.dart';
+import 'package:basic_utils/basic_utils.dart' hide Domain;
 import 'package:cron/cron.dart';
 import 'package:dcli/dcli.dart';
 import 'package:shelf/shelf.dart';
-import 'package:shelf_letsencrypt/shelf_letsencrypt.dart';
+import 'package:shelf_letsencrypt/shelf_letsencrypt.dart'; // hide Domain;
 
 import '../certificate.dart';
 import '../config.dart';
@@ -84,10 +86,29 @@ Future<void> refreshIfRequired(
   LetsEncrypt letsEncrypt,
   Domain domain,
 ) async {
+  /// Checks the local certificate expiry and forces renewal when it's missing,
+  /// expired, or within the minimum validity window, then restarts servers if
+  /// a new certificate was issued.
   qlog(blue('Checking if cert needs to be renewed'));
+  final timeLeft = _localCertificateTimeLeft(letsEncrypt, domain);
+
+  // renewal trigger in line with the eventually shorter certificate
+  // lifespan of 45days.
+  const minValidity = Duration(days: 15);
+  final forceRenewal =
+      timeLeft == null || timeLeft.isNegative || timeLeft < minValidity;
+  if (forceRenewal) {
+    final hoursLeft = timeLeft?.inHours;
+    final reason =
+        hoursLeft == null
+            ? 'local certificate unavailable'
+            : 'local certificate expires in ${hoursLeft}h';
+    qlog(blue('Forcing renewal check: $reason'));
+  }
   final result = await letsEncrypt.checkCertificate(
     domain,
     requestCertificate: true,
+    forceRequestCertificate: forceRenewal,
   );
 
   if (result.isOkRefreshed) {
@@ -99,4 +120,30 @@ Future<void> refreshIfRequired(
   } else {
     qlog(blue('Renewal not required'));
   }
+}
+
+Duration? _localCertificateTimeLeft(LetsEncrypt letsEncrypt, Domain domain) {
+  final config = Config();
+  final fullChainPath =
+      '${config.letsEncryptLive}/${domain.name}/${letsEncrypt.certificatesHandler.fullChainPEMFileName}';
+  final fullChainFile = File(fullChainPath);
+  if (!fullChainFile.existsSync()) {
+    return null;
+  }
+
+  final pem = fullChainFile.readAsStringSync();
+  final match = RegExp(
+    r'-----BEGIN CERTIFICATE-----[\s\S]+?-----END CERTIFICATE-----',
+  ).firstMatch(pem);
+  if (match == null) {
+    return null;
+  }
+
+  final certificate = X509Utils.x509CertificateFromPem(match.group(0)!);
+  final notAfter = certificate.tbsCertificate?.validity.notAfter;
+  if (notAfter == null) {
+    return null;
+  }
+
+  return notAfter.difference(DateTime.now());
 }
