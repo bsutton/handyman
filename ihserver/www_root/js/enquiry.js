@@ -35,7 +35,20 @@
       if (request.readyState === 4) {
         if (request.status === 200) {
           console.log('Request successful:', request.responseText);
-          alert('Thanks — your enquiry has been sent. I’ll call you back soon.');
+          let payload = null;
+          try {
+            payload = JSON.parse(request.responseText);
+          } catch (_) {
+            payload = null;
+          }
+          if (payload && payload.emailSent === false) {
+            alert(
+              'Your enquiry has been recorded, but the email could not be sent. '
+              + 'If this is urgent, please call 0451 086 561.',
+            );
+          } else {
+            alert('Thanks — your enquiry has been sent. I’ll call you back soon.');
+          }
           closeModal(event);
         } else {
           console.error('Unexpected status:', request.status, request.responseText);
@@ -77,15 +90,33 @@
   function validateEnquiry() {
     const formEl = document.getElementById(FORM_ID);
 
+    const businessName = formEl.querySelector('[name="business-name"]');
+    const firstName = formEl.querySelector('[name="first-name"]');
+    const surname = formEl.querySelector('[name="surname"]');
     const name = formEl.querySelector('[name="name"]');
     const phone = formEl.querySelector('[name="phone"]');
     const suburb = formEl.querySelector('[name="address-suburb"]');
     const desc = formEl.querySelector('[name="description"]');
     const honeypot = formEl.querySelector('[name="website"]'); // should be empty
 
+    const businessNameValue = businessName ? businessName.value.trim() : '';
+    const firstNameValue = firstName ? firstName.value.trim() : '';
+    const surnameValue = surname ? surname.value.trim() : '';
+
+    if (name) {
+      name.value = businessNameValue
+        ? businessNameValue
+        : [firstNameValue, surnameValue].filter(Boolean).join(' ').trim();
+    }
+
     // Basic required fields
-    if (!name.value.trim() || !phone.value.trim() || !suburb.value.trim()) {
-      alert('Please enter your name, phone number, and suburb.');
+    if ((!businessNameValue && !firstNameValue) ||
+        !phone.value.trim() ||
+        !suburb.value.trim()) {
+      alert(
+        'Please enter a business name or your first name, plus phone number '
+        + 'and suburb.',
+      );
       return false;
     }
 

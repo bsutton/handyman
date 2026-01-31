@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_multipart/shelf_multipart.dart';
 
+import 'booking_request_store.dart';
 import 'logger.dart';
 import 'mailer.dart';
 
@@ -27,11 +30,17 @@ Future<Response> handleEnquiry(Request request) async {
     final honeypot = params['website']?.trim() ?? '';
     if (honeypot.isNotEmpty) {
       qlog('Enquiry blocked (honeypot): $honeypot');
-      return Response.ok("{result:'success'}"); // pretend success
+      return Response.ok(
+        jsonEncode({'result': 'success', 'emailSent': true}),
+        headers: {'Content-Type': 'application/json'},
+      ); // pretend success
     }
 
     // Extract fields
     final name = (params['name'] ?? '').trim();
+    final businessName = (params['business-name'] ?? '').trim();
+    final firstName = (params['first-name'] ?? '').trim();
+    final surname = (params['surname'] ?? '').trim();
     final email = params['email']?.trim();
     final phone = (params['phone'] ?? '').trim();
     final description = (params['description'] ?? '').trim();
@@ -65,6 +74,31 @@ Your email address looks invalid. Please correct it or leave it blank, '''
 New enquiry: name="$name" email="$email" phone="$phone" suburb="$suburb" days=[$day1, $day2, $day3]
 ''');
 
+    // Store a booking request for HMB sync (even if emails fail).
+    try {
+      await BookingRequestStore().add({
+        'name': name,
+        'businessName': businessName,
+        'firstName': firstName,
+        'surname': surname,
+        'email': email ?? '',
+        'phone': phone,
+        'description': description,
+        'street': street,
+        'suburb': suburb,
+        'day1': day1.toString(),
+        'day2': day2.toString(),
+        'day3': day3.toString(),
+      });
+    } catch (e) {
+      qlog('Failed to store booking request: $e');
+      return Response.internalServerError(
+        body:
+            'Sorry, something went wrong submitting your enquiry. '
+            'Please call 0451 086 561.',
+      );
+    }
+
     // Send internal notification (to you)
     final sentInternal = await sendEnquiry(
       name: name,
@@ -78,16 +112,8 @@ New enquiry: name="$name" email="$email" phone="$phone" suburb="$suburb" days=[$
       day3: day3,
     );
 
-    if (!sentInternal) {
-      return Response.internalServerError(
-        body:
-            '''
-Sorry, sending your enquiry failed. Please call 0451 086 561 to make an enquiry.''',
-      );
-    }
-
     // Send acknowledgement to the customer (if they supplied an email)
-    await sendEnquiryReceived(
+    final sentCustomer = await sendEnquiryReceived(
       name: name,
       email: email,
       phone: phone,
@@ -99,7 +125,17 @@ Sorry, sending your enquiry failed. Please call 0451 086 561 to make an enquiry.
       day3: day3,
     );
 
-    return Response.ok("{result:'success'}");
+    if (!sentInternal || !sentCustomer) {
+      return Response.ok(
+        jsonEncode({'result': 'success', 'emailSent': false}),
+        headers: {'Content-Type': 'application/json'},
+      );
+    }
+
+    return Response.ok(
+      jsonEncode({'result': 'success', 'emailSent': true}),
+      headers: {'Content-Type': 'application/json'},
+    );
   } catch (e, st) {
     qlogerr('Error handling enquiry: $e $st');
     return Response.internalServerError(
@@ -110,7 +146,7 @@ Sorry, sending your enquiry failed. Please call 0451 086 561 to make an enquiry.
   }
 }
 
-Future<void> sendEnquiryReceived({
+Future<bool> sendEnquiryReceived({
   required String name,
   required String? email,
   required String phone,
@@ -124,7 +160,7 @@ Future<void> sendEnquiryReceived({
   // Only send if an email was provided
   if (email == null || email.isEmpty) {
     qlog('No email supplied; skipping enquiry acknowledgement email.');
-    return;
+    return true;
   }
 
   final message = StringBuffer('''
@@ -159,7 +195,7 @@ Your Ivanhoe Handyman<br>
 ''');
 
   qlog('Sending enquiry acknowledgement to $email');
-  await sendEmail(
+  return sendEmail(
     from: 'info@ivanhoehandyman.com.au',
     to: email,
     subject: 'Ivanhoe Handyman — Enquiry received',

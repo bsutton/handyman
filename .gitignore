@@ -26,3 +26,4 @@ hmb/*.apk
 ihserver/custom_lint.log
 forecast/
 ihserver/logs/analyzer.txt
+ihserver/config/booking_requests.json

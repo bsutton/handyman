@@ -39,6 +39,12 @@ class Config {
   // if true then we are running in debug mode.
   late final bool debug;
 
+  /// Shared secret used by HMB app to fetch booking requests.
+  late final String hmbApiToken;
+
+  /// Path to store booking requests as JSON.
+  late final String bookingRequestsPath;
+
   factory Config() => _config ??= Config._();
 
   Config._() {
@@ -66,6 +72,12 @@ class Config {
     pathToLogfile = _settings.asString('logger_path', defaultValue: 'print');
 
     debug = _settings.asBool('debug', defaultValue: false);
+
+    hmbApiToken = _settings.asString('hmb_api_token');
+    bookingRequestsPath = _settings.asString(
+      'booking_requests_path',
+      defaultValue: join('config', 'booking_requests.json'),
+    );
   }
 
   String get loadedFrom => _settings.filePath;

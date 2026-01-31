@@ -17,15 +17,36 @@
         </div>
 
         <input type="hidden" name="formType" value="enquiry">
+        <input type="hidden" id="customer-name" name="name">
 
         <div id="form-grid">
           <!-- Contact details -->
           <div class="grid-row">
             <div class="col1">
-              <label class="grid-label" for="name">Name</label>
+              <label class="grid-label" for="business-name-field">
+                Business Name (optional)
+              </label>
             </div>
             <div class="col2">
-              <input id="name" name="name" required autocomplete="name" maxlength="120">
+              <input id="business-name-field" name="business-name" autocomplete="organization" maxlength="120">
+            </div>
+          </div>
+
+          <div class="grid-row">
+            <div class="col1">
+              <label class="grid-label" for="first-name">First Name</label>
+            </div>
+            <div class="col2">
+              <input id="first-name" name="first-name" autocomplete="given-name" maxlength="80">
+            </div>
+          </div>
+
+          <div class="grid-row">
+            <div class="col1">
+              <label class="grid-label" for="surname">Surname</label>
+            </div>
+            <div class="col2">
+              <input id="surname" name="surname" autocomplete="family-name" maxlength="80">
             </div>
           </div>
 
