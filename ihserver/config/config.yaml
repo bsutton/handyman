@@ -14,5 +14,5 @@ binding_address: 0.0.0.0
 logger_path: console
 use_https: false
 debug: true
-hmb_api_token: ""
+hmb_api_token: "abc 1234"
 booking_requests_path: /home/bsutton/git/handyman/ihserver/config/booking_requests.json

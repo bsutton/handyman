@@ -29,6 +29,7 @@
     request.onerror = function (e) {
       alert('Network error submitting your enquiry. Please try again.');
       console.error(e);
+      resetSubmitting();
     };
 
     request.onreadystatechange = function () {
@@ -52,8 +53,12 @@
           closeModal(event);
         } else {
           console.error('Unexpected status:', request.status, request.responseText);
-          alert('Sorry, something went wrong submitting your enquiry.\n'
-                + 'Please try again or call 0451 086 561.');
+          const message = (request.responseText || '').trim();
+          alert(
+            message
+              || ('Sorry, something went wrong submitting your enquiry.\n'
+                + 'Please try again or call 0451 086 561.'),
+          );
           // Keep the dialog open so the user doesn’t lose their input
           // You can reset the button here if you prefer:
           resetSubmitting();
@@ -90,32 +95,27 @@
   function validateEnquiry() {
     const formEl = document.getElementById(FORM_ID);
 
-    const businessName = formEl.querySelector('[name="business-name"]');
     const firstName = formEl.querySelector('[name="first-name"]');
     const surname = formEl.querySelector('[name="surname"]');
-    const name = formEl.querySelector('[name="name"]');
+    const email = formEl.querySelector('[name="email"]');
     const phone = formEl.querySelector('[name="phone"]');
+    const street = formEl.querySelector('[name="address-street"]');
     const suburb = formEl.querySelector('[name="address-suburb"]');
     const desc = formEl.querySelector('[name="description"]');
     const honeypot = formEl.querySelector('[name="website"]'); // should be empty
 
-    const businessNameValue = businessName ? businessName.value.trim() : '';
     const firstNameValue = firstName ? firstName.value.trim() : '';
     const surnameValue = surname ? surname.value.trim() : '';
 
-    if (name) {
-      name.value = businessNameValue
-        ? businessNameValue
-        : [firstNameValue, surnameValue].filter(Boolean).join(' ').trim();
-    }
-
     // Basic required fields
-    if ((!businessNameValue && !firstNameValue) ||
+    if (!firstNameValue ||
+        !surnameValue ||
+        !email.value.trim() ||
         !phone.value.trim() ||
+        !street.value.trim() ||
         !suburb.value.trim()) {
       alert(
-        'Please enter a business name or your first name, plus phone number '
-        + 'and suburb.',
+        'Please enter your first name, surname, email, phone number, street, and suburb.',
       );
       return false;
     }

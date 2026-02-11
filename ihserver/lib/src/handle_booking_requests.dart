@@ -70,9 +70,12 @@ Future<Response> handleBookingReject(Request request) async {
       return Response.notFound('Booking request not found');
     }
 
-    final data = requestData.data;
-    final email = data['email']?.toString().trim() ?? '';
-    final name = data['name']?.toString().trim() ?? 'there';
+    final email = requestData.email.trim();
+    final firstName = requestData.firstName.trim();
+    final surname = requestData.surname.trim();
+    final name =
+        [firstName, surname].where((part) => part.isNotEmpty).join(' ').trim();
+    final greetingName = name.isEmpty ? 'there' : name;
 
     if (email.isEmpty) {
       return Response.badRequest(body: 'Booking request has no email address');
@@ -81,7 +84,7 @@ Future<Response> handleBookingReject(Request request) async {
     final message = '''
 Ivanhoe Handyman Service — Enquiry update<br>
 <br>
-Hi ${_htmlEscape(name)},<br>
+Hi ${_htmlEscape(greetingName)},<br>
 <br>
 Thanks for your enquiry. Unfortunately, I won’t be able to proceed at this time.<br>
 <br>

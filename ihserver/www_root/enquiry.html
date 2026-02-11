@@ -17,7 +17,6 @@
         </div>
 
         <input type="hidden" name="formType" value="enquiry">
-        <input type="hidden" id="customer-name" name="name">
 
         <div id="form-grid">
           <!-- Contact details -->
@@ -37,7 +36,7 @@
               <label class="grid-label" for="first-name">First Name</label>
             </div>
             <div class="col2">
-              <input id="first-name" name="first-name" autocomplete="given-name" maxlength="80">
+              <input id="first-name" name="first-name" required autocomplete="given-name" maxlength="80">
             </div>
           </div>
 
@@ -46,7 +45,7 @@
               <label class="grid-label" for="surname">Surname</label>
             </div>
             <div class="col2">
-              <input id="surname" name="surname" autocomplete="family-name" maxlength="80">
+              <input id="surname" name="surname" required autocomplete="family-name" maxlength="80">
             </div>
           </div>
 
@@ -55,7 +54,7 @@
               <label class="grid-label" for="email">Email</label>
             </div>
             <div class="col2">
-              <input id="email" name="email" type="email" autocomplete="email" maxlength="200">
+              <input id="email" name="email" type="email" required autocomplete="email" maxlength="200">
             </div>
           </div>
 
@@ -69,8 +68,8 @@
           </div>
 
           <!-- Address (suburb helpful for coverage/quotes) -->
-          <label for="address-street">Street (optional)</label>
-          <input id="address-street" name="address-street" autocomplete="address-line1" maxlength="200">
+          <label for="address-street">Street</label>
+          <input id="address-street" name="address-street" required autocomplete="address-line1" maxlength="200">
           <label for="address-suburb">Suburb</label>
           <input id="address-suburb" name="address-suburb" required autocomplete="address-level2" maxlength="100">
 

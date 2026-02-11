@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:booking_request/booking_request.dart';
 import 'package:dcli/dcli.dart';
 import 'package:path/path.dart';
 
-import 'booking_requests.dart';
 import 'config.dart';
 
 class BookingRequestStore {
@@ -74,13 +74,35 @@ class BookingRequestStore {
     return all.where((r) => !r.imported).toList();
   }
 
-  Future<BookingRequest> add(Map<String, dynamic> data) => _queue(
+  Future<BookingRequest> add({
+    required String businessName,
+    required String firstName,
+    required String surname,
+    required String email,
+    required String phone,
+    required String description,
+    required String street,
+    required String suburb,
+    required String day1,
+    required String day2,
+    required String day3,
+  }) => _queue(
     () => _withLock(() async {
       final all = await _listAllUnlocked();
       final request = BookingRequest(
         id: _generateId(),
         createdAt: DateTime.now().toUtc(),
-        data: data,
+        businessName: businessName,
+        firstName: firstName,
+        surname: surname,
+        email: email,
+        phone: phone,
+        description: description,
+        street: street,
+        suburb: suburb,
+        day1: day1,
+        day2: day2,
+        day3: day3,
         imported: false,
       );
       all.add(request);
@@ -112,7 +134,17 @@ class BookingRequestStore {
                         ? BookingRequest(
                           id: r.id,
                           createdAt: r.createdAt,
-                          data: r.data,
+                          businessName: r.businessName,
+                          firstName: r.firstName,
+                          surname: r.surname,
+                          email: r.email,
+                          phone: r.phone,
+                          description: r.description,
+                          street: r.street,
+                          suburb: r.suburb,
+                          day1: r.day1,
+                          day2: r.day2,
+                          day3: r.day3,
                           imported: true,
                         )
                         : r,

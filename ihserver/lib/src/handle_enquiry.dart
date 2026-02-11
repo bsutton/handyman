@@ -37,59 +37,63 @@ Future<Response> handleEnquiry(Request request) async {
     }
 
     // Extract fields
-    final name = (params['name'] ?? '').trim();
     final businessName = (params['business-name'] ?? '').trim();
     final firstName = (params['first-name'] ?? '').trim();
     final surname = (params['surname'] ?? '').trim();
-    final email = params['email']?.trim();
+    final email = (params['email'] ?? '').trim();
     final phone = (params['phone'] ?? '').trim();
     final description = (params['description'] ?? '').trim();
     final street = (params['address-street'] ?? '').trim();
-    final suburb = (params['address-suburb'] ?? '').trim();
+    final suburb =
+        ((params['address-suburb'] ?? params['suburb']) ?? '').trim();
 
     // Dates are optional now
     final day1 = PreferredDate(params, 'day1');
     final day2 = PreferredDate(params, 'day2');
     final day3 = PreferredDate(params, 'day3');
 
-    // Basic validation for enquiry (name, phone, suburb are required)
-    if (name.isEmpty || phone.isEmpty || suburb.isEmpty) {
+    // Basic validation for enquiry
+    if (firstName.isEmpty ||
+        surname.isEmpty ||
+        email.isEmpty ||
+        phone.isEmpty ||
+        street.isEmpty ||
+        suburb.isEmpty) {
       return Response.badRequest(
-        body: '''
-Please provide your name, phone number, and suburb so I can call you back.''',
+        body:
+            'Please provide your first name, surname, email, phone number, '
+            'street, and suburb so I can call you back.',
       );
     }
 
-    // Email is optional; if present, validate
-    if ((email ?? '').isNotEmpty && !EmailValidator.validate(email!)) {
+    // Email is required and must be valid
+    if (!EmailValidator.validate(email)) {
       return Response.badRequest(
-        body:
-            '''
-Your email address looks invalid. Please correct it or leave it blank, '''
-            'or call 0451 086 561 to make an enquiry.',
+        body: '''
+Your email address looks invalid. Please correct it and try again, 
+or call 0451 086 561 to make an enquiry.''',
       );
     }
 
     qlog('''
-New enquiry: name="$name" email="$email" phone="$phone" suburb="$suburb" days=[$day1, $day2, $day3]
+New enquiry: firstName="$firstName" surname="$surname" businessName="$businessName" email="$email" phone="$phone" suburb="$suburb" days=[$day1, $day2, $day3]
 ''');
 
     // Store a booking request for HMB sync (even if emails fail).
     try {
-      await BookingRequestStore().add({
-        'name': name,
-        'businessName': businessName,
-        'firstName': firstName,
-        'surname': surname,
-        'email': email ?? '',
-        'phone': phone,
-        'description': description,
-        'street': street,
-        'suburb': suburb,
-        'day1': day1.toString(),
-        'day2': day2.toString(),
-        'day3': day3.toString(),
-      });
+      await BookingRequestStore().add(
+        businessName: businessName,
+        firstName: firstName,
+        surname: surname,
+        email: email,
+        phone: phone,
+        description: description,
+        street: street,
+        suburb: suburb,
+        day1: day1.toString(),
+        day2: day2.toString(),
+        day3: day3.toString(),
+      );
     } catch (e) {
       qlog('Failed to store booking request: $e');
       return Response.internalServerError(
@@ -101,7 +105,9 @@ New enquiry: name="$name" email="$email" phone="$phone" suburb="$suburb" days=[$
 
     // Send internal notification (to you)
     final sentInternal = await sendEnquiry(
-      name: name,
+      businessName: businessName,
+      firstName: firstName,
+      surname: surname,
       email: email,
       phone: phone,
       description: description,
@@ -114,7 +120,9 @@ New enquiry: name="$name" email="$email" phone="$phone" suburb="$suburb" days=[$
 
     // Send acknowledgement to the customer (if they supplied an email)
     final sentCustomer = await sendEnquiryReceived(
-      name: name,
+      businessName: businessName,
+      firstName: firstName,
+      surname: surname,
       email: email,
       phone: phone,
       description: description,
@@ -147,8 +155,10 @@ New enquiry: name="$name" email="$email" phone="$phone" suburb="$suburb" days=[$
 }
 
 Future<bool> sendEnquiryReceived({
-  required String name,
-  required String? email,
+  required String businessName,
+  required String firstName,
+  required String surname,
+  required String email,
   required String phone,
   required String description,
   required String street,
@@ -156,17 +166,11 @@ Future<bool> sendEnquiryReceived({
   required PreferredDate day1,
   required PreferredDate day2,
   required PreferredDate day3,
-}) async {
-  // Only send if an email was provided
-  if (email == null || email.isEmpty) {
-    qlog('No email supplied; skipping enquiry acknowledgement email.');
-    return true;
-  }
-
+}) {
   final message = StringBuffer('''
 Ivanhoe Handyman Service — Enquiry received<br>
 <br>
-Thanks for getting in touch, $name.<br>
+Thanks for getting in touch, $firstName.<br>
 I'll give you a call (usually within one business day) to discuss your job and, if needed, arrange a time to visit.<br>
 <br>
 You might find these helpful in the meantime:<br>
@@ -174,9 +178,11 @@ You might find these helpful in the meantime:<br>
 • <a href="https://ivanhoehandyman.com.au/legal.html">Terms &amp; Conditions</a><br>
 <br>
 <strong>Your details</strong><br>
-Name: $name<br>
+Business Name: ${businessName.isEmpty ? 'not supplied' : businessName}<br>
+First Name: $firstName<br>
+Surname: $surname<br>
 Phone: $phone<br>
-Email: ${email.isEmpty ? 'not supplied' : email}<br>
+Email: $email<br>
 Address:<br>
 &nbsp;&nbsp;Street: ${street.isEmpty ? 'not supplied' : street}<br>
 &nbsp;&nbsp;Suburb: $suburb<br>
@@ -204,8 +210,10 @@ Your Ivanhoe Handyman<br>
 }
 
 Future<bool> sendEnquiry({
-  required String name,
-  required String? email,
+  required String businessName,
+  required String firstName,
+  required String surname,
+  required String email,
   required String phone,
   required String description,
   required PreferredDate day1,
@@ -217,9 +225,11 @@ Future<bool> sendEnquiry({
   final message = '''
 Ivanhoe Handyman Service — New enquiry<br>
 <br>
-Name: $name<br>
+Business Name: ${businessName.isEmpty ? 'not supplied' : businessName}<br>
+First Name: $firstName<br>
+Surname: $surname<br>
 Phone: $phone<br>
-Email: ${email ?? 'not supplied'}<br>
+Email: $email<br>
 Address:<br>
 &nbsp;&nbsp;Street: ${street.isEmpty ? 'not supplied' : street}<br>
 &nbsp;&nbsp;Suburb: $suburb<br>
@@ -235,7 +245,7 @@ ${day3.provided ? '$day3<br>' : ''}
 
   qlog('Sending internal enquiry notification');
   return sendEmail(
-    from: email ?? 'info@ivanhoehandyman.com.au',
+    from: email,
     to: 'bsutton@onepub.dev',
     subject: 'Ivanhoe Handyman — New enquiry',
     body: message,
