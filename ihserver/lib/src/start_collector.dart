@@ -9,8 +9,8 @@ Future<void> startCollector() async {
   // Define the port to listen on.
   const port = 4040;
 
-  // Bind the socket to any available IPv4 address on the specified port.
-  final socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, port);
+  // Accept IPv6 and IPv4 through one IPv6 socket, including on IPv6-only hosts.
+  final socket = await RawDatagramSocket.bind(InternetAddress.anyIPv6, port);
   qlog('UDP server is running on ${socket.address.address}:$port');
 
   // Define the file where messages will be appended.

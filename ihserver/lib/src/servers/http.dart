@@ -7,6 +7,7 @@ import '../config.dart';
 import '../logger.dart';
 import '../middleware/log_client_ip.dart';
 import '../router.dart';
+import '../unlock_gate.dart';
 import 'rate_limiter.dart';
 
 late HttpServer server;
@@ -17,6 +18,7 @@ Future<void> startWebServer() async {
   final handler = const Pipeline()
       .addMiddleware(logClientRequestMiddleware())
       .addMiddleware(rateLimiter.rateLimiter())
+      .addMiddleware(unlockMiddleware())
       .addHandler(router.call);
 
   final server = await serve(
@@ -24,5 +26,10 @@ Future<void> startWebServer() async {
     Config().bindingAddress,
     Config().httpPort,
   );
-  qlog('Serving at http://${server.address.host}:${server.port}');
+  final httpUri = Uri(
+    scheme: 'http',
+    host: server.address.address,
+    port: server.port,
+  );
+  qlog('Serving at $httpUri');
 }

@@ -1,1 +1,5 @@
 .failed_tracker
+
+# These commands are source wrappers, not generated binaries.
+!/tool/build
+!/tool/deploy

@@ -9,11 +9,15 @@ externals:
     mount: www_root/.well-known/assetlinks.json
 
   - external:
-    path: bin/ihserver
+    path: build/server/bundle/bin/ihserver
     mount: altbin/ihserver
   - external:
-    path: bin/ihlaunch
+    path: build/launcher/bundle/bin/ihlaunch
     mount: altbin/ihlaunch
   - external:
     path: bin/ihlaunch.sh
     mount: altbin/ihlaunch.sh    
+
+  - external:
+    path: build/server/bundle/lib
+    mount: lib

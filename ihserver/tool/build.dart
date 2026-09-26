@@ -1,50 +1,71 @@
 #! /usr/bin/env dart
 
-import 'package:dcli/dcli.dart';
-import 'package:path/path.dart';
-import 'package:settings_yaml/settings_yaml.dart';
+import 'dart:io';
 
-void main(List<String> args) {
-  // 'dcli pack'.run;
-  // 'zip -r www_root.zip www_root'.run;
+import 'package:args/args.dart';
+import 'package:dcli/dcli.dart';
+
+import 'remote.dart';
+
+Future<void> main(List<String> args) async {
+  final parser = ArgParser()
+    ..addFlag('local', negatable: false, help: 'Build without deploying.')
+    ..addFlag('help', abbr: 'h', negatable: false, help: 'Show usage.');
+  final options = parser.parse(args);
+  if (options.rest.isNotEmpty) {
+    stderr.writeln('Unexpected positional arguments.');
+    exitCode = 64;
+    return;
+  }
+  if (options['help'] as bool) {
+    print('Usage: dart run tool/build.dart [--local]\n${parser.usage}');
+    return;
+  }
 
   print(green('Compiling ihserver'));
-  final project = DartProject.self;
-  DartScript.fromFile(
-    join('bin', 'ihserver.dart'),
-    project: project,
-  ).compile(overwrite: true);
+  Directory.current = projectRoot;
+  buildBundle('bin/ihserver.dart', 'build/server');
 
   print(green('Compiling launch'));
-  DartScript.fromFile(
-    join('bin', 'ihlaunch.dart'),
-    project: project,
-  ).compile(overwrite: true);
+  buildBundle('bin/ihlaunch.dart', 'build/launcher');
 
   print(green('Packing static resources under ${truepath('www_root')}'));
   Resources().pack();
 
-  final buildSettings = SettingsYaml.load(
-    pathToSettings: join(project.pathToProjectRoot, 'tool', 'build.yaml'),
-  );
+  // Pack the compiled binaries before building the installer that embeds them.
 
-  final scpCommand = buildSettings.asString('scp_command');
-  final targetServer = buildSettings.asString('target_server');
-  final targetDirectory = buildSettings.asString('target_directory');
+  print(green('Compiling server installer'));
+  buildBundle('tool/install.dart', 'build/install');
 
-  /// Order is important.
-  /// We must compile iahserver and the resources as they are all
-  /// compiled into the deploy script.
+  if (options['local'] as bool) {
+    print(green('Local build complete: build/install/bundle'));
+    return;
+  }
 
-  print(green('Compiling tool/deploy.dart'));
-  DartScript.fromFile(
-    join('tool', 'deploy.dart'),
-    project: project,
-  ).compile(overwrite: true);
+  try {
+    await RemoteDeployment.load().deploy();
+  } on ProcessException catch (error) {
+    stderr.writeln(error);
+    exitCode = error.errorCode > 0 ? error.errorCode : 1;
+  } on FormatException catch (error) {
+    stderr.writeln(error.message);
+    exitCode = 1;
+  }
+}
 
-  print(green("deploying 'deploy' to $targetDirectory"));
-  '$scpCommand tool/deploy $targetServer:$targetDirectory'.run;
-
-  print(orange('build/deploy complete'));
-  print("log into the $targetServer and run 'sudo ./deploy'");
+/// Native assets require a CLI bundle rather than `dart compile exe`.
+void buildBundle(String target, String output) {
+  final result = Process.runSync('dart', [
+    'build',
+    'cli',
+    '--target',
+    target,
+    '--output',
+    output,
+  ]);
+  if (result.exitCode != 0) {
+    stderr.write(result.stderr);
+    exit(result.exitCode);
+  }
+  stdout.write(result.stdout);
 }

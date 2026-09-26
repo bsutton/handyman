@@ -14,25 +14,24 @@ Future<bool> sendEmail({
   final smtpServer = gmail(config.username, config.password);
 
   // configure the from
-  final message =
-      Message()
-        ..from = Address(from, 'Ivanhoe Handyman Services')
-        ..recipients.add(to)
-        ..subject = subject
-        ..html = body;
+  final message = Message()
+    ..from = Address(from, 'Ivanhoe Handyman Services')
+    ..recipients.add(to)
+    ..subject = subject
+    ..html = body;
 
   try {
     final sendReport = await send(message, smtpServer);
     qlog('email sent $sendReport');
     return true;
   } on SmtpMessageValidationException catch (e) {
-    qlogerr('Error: $e');
+    qlogerr('Email validation failed.');
     for (final problem in e.problems) {
-      qlogerr('${problem.code} ${problem.msg}');
+      qlogerr('Email validation problem: ${problem.code}');
     }
     return false;
-  } catch (e) {
-    qlog('Error: $e');
+  } catch (_) {
+    qlog('Email delivery failed.');
     return false;
   }
 }

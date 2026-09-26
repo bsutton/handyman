@@ -27,3 +27,7 @@ ihserver/custom_lint.log
 forecast/
 ihserver/logs/analyzer.txt
 ihserver/config/booking_requests.json
+
+# Native CLI bundles and local encrypted credentials
+ihserver/build/
+*.lbox

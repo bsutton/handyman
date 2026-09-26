@@ -13,6 +13,7 @@ import '../config.dart';
 import '../logger.dart';
 import '../middleware/log_client_ip.dart';
 import '../router.dart';
+import '../unlock_gate.dart';
 import 'rate_limiter.dart';
 
 enum CertificateMode { staging, production }
@@ -20,19 +21,21 @@ enum CertificateMode { staging, production }
 late HttpServer server;
 late HttpServer secureServer;
 
-Future<void> startHttpsServer(Domain domain) async {
+Future<void> startHttpsServer(List<Domain> domains) async {
   final letsEncrypt = build(
-    mode:
-        Config().production
-            ? CertificateMode.production
-            : CertificateMode.staging,
+    mode: Config().production
+        ? CertificateMode.production
+        : CertificateMode.staging,
   );
-  await _startHttpsServer(letsEncrypt, domain);
+  await _startHttpsServer(letsEncrypt, domains);
 
-  await _startRenewalService(letsEncrypt, domain);
+  await _startRenewalService(letsEncrypt, domains);
 }
 
-Future<void> _startHttpsServer(LetsEncrypt letsEncrypt, Domain domain) async {
+Future<void> _startHttpsServer(
+  LetsEncrypt letsEncrypt,
+  List<Domain> domains,
+) async {
   final router = buildRouter();
 
   final redirectToHttps = createMiddleware(requestHandler: _redirectToHttps);
@@ -41,19 +44,30 @@ Future<void> _startHttpsServer(LetsEncrypt letsEncrypt, Domain domain) async {
       .addMiddleware(redirectToHttps)
       .addMiddleware(logClientRequestMiddleware())
       .addMiddleware(rateLimiter.rateLimiter())
+      .addMiddleware(unlockMiddleware())
       .addHandler(router.call);
 
-  final servers = await letsEncrypt.startServer(handler, [domain]);
+  final servers = await letsEncrypt.startServer(handler, domains);
 
-  server = servers[0]; // HTTP Server.
-  secureServer = servers[1]; // HTTPS Server.
+  server = servers.http;
+  secureServer = servers.https;
 
   // Enable gzip:
   server.autoCompress = true;
   secureServer.autoCompress = true;
 
-  qlog('Serving at http://${server.address.host}:${server.port}');
-  qlog('Serving at https://${secureServer.address.host}:${secureServer.port}');
+  final httpUri = Uri(
+    scheme: 'http',
+    host: server.address.address,
+    port: server.port,
+  );
+  qlog('Serving at $httpUri');
+  final httpsUri = Uri(
+    scheme: 'https',
+    host: secureServer.address.address,
+    port: secureServer.port,
+  );
+  qlog('Serving at $httpsUri');
 }
 
 /// Redirect all http traffic to https.
@@ -72,24 +86,37 @@ FutureOr<Response?> _redirectToHttps(Request request) {
 
 Future<void> _startRenewalService(
   LetsEncrypt letsEncrypt,
-  Domain domain,
+  List<Domain> domains,
 ) async {
-  final httpPort = Config().httpPort;
   Cron().schedule(
     Schedule(hours: '*/1'), // every hour
-    () => refreshIfRequired(httpPort, letsEncrypt, domain),
+    () => refreshIfRequired(letsEncrypt, domains),
   );
 }
 
 Future<void> refreshIfRequired(
-  int httpPort,
   LetsEncrypt letsEncrypt,
-  Domain domain,
+  List<Domain> domains,
 ) async {
+  var renewed = false;
+  for (final domain in domains) {
+    if (await _refreshDomain(letsEncrypt, domain)) {
+      renewed = true;
+    }
+  }
+  if (renewed) {
+    qlog(blue('Certificates renewed - restarting HTTPS service'));
+    await Future.wait<void>([server.close(), secureServer.close()]);
+    await _startHttpsServer(letsEncrypt, domains);
+    qlog(blue('HTTPS service restarted'));
+  }
+}
+
+Future<bool> _refreshDomain(LetsEncrypt letsEncrypt, Domain domain) async {
   /// Checks the local certificate expiry and forces renewal when it's missing,
   /// expired, or within the minimum validity window, then restarts servers if
   /// a new certificate was issued.
-  qlog(blue('Checking if cert needs to be renewed'));
+  qlog(blue('Checking certificate renewal for ${domain.name}'));
   final timeLeft = _localCertificateTimeLeft(letsEncrypt, domain);
 
   // renewal trigger in line with the eventually shorter certificate
@@ -99,11 +126,10 @@ Future<void> refreshIfRequired(
       timeLeft == null || timeLeft.isNegative || timeLeft < minValidity;
   if (forceRenewal) {
     final hoursLeft = timeLeft?.inHours;
-    final reason =
-        hoursLeft == null
-            ? 'local certificate unavailable'
-            : 'local certificate expires in ${hoursLeft}h';
-    qlog(blue('Forcing renewal check: $reason'));
+    final reason = hoursLeft == null
+        ? 'local certificate unavailable'
+        : 'local certificate expires in ${hoursLeft}h';
+    qlog(blue('Forcing renewal check for ${domain.name}: $reason'));
   }
   final result = await letsEncrypt.checkCertificate(
     domain,
@@ -112,14 +138,14 @@ Future<void> refreshIfRequired(
   );
 
   if (result.isOkRefreshed) {
-    qlog(blue('certificate was renewed - restarting service'));
-    // restart the servers.
-    await Future.wait<void>([server.close(), secureServer.close()]);
-    await _startHttpsServer(letsEncrypt, domain);
-    qlog(blue('services restarted'));
+    qlog(blue('Certificate renewed for ${domain.name}'));
+    return true;
+  } else if (result.isOK) {
+    qlog(blue('Renewal not required for ${domain.name}'));
   } else {
-    qlog(blue('Renewal not required'));
+    qlogerr('Certificate renewal failed for ${domain.name}: $result');
   }
+  return false;
 }
 
 Duration? _localCertificateTimeLeft(LetsEncrypt letsEncrypt, Domain domain) {
