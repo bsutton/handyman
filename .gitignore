@@ -31,3 +31,7 @@ ihserver/config/booking_requests.json
 # Native CLI bundles and local encrypted credentials
 ihserver/build/
 *.lbox
+
+.mcp_logs/
+
+booking_request/.dart_tool/
