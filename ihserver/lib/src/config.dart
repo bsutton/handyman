@@ -95,6 +95,14 @@ class Config {
 
   late final int httpsPort;
 
+  Uri get unlockUrl =>
+      Uri(scheme: 'https', host: fqdn, port: httpsPort, path: '/unlock');
+
+  String get unlockInstructions => useHttps
+      ? 'Open $unlockUrl and enter the Lockbox password to unlock.'
+      : 'HTTPS is disabled; unlock the Lockbox locally through the '
+            'configured agent or vault.';
+
   late final String bindingAddress;
 
   late final String pathToLogfile;

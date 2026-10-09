@@ -204,7 +204,6 @@ The server needs its adjacent `lib` directory; do not deploy only its executable
 | `tool/build --help` or `-h` | Show build usage. |
 | `tool/deploy` | Upload and install the existing build, then restart. |
 | `tool/deploy --reload` | Restart the remote installed service without uploading. |
-| `tool/deploy --restart` | Alias for `--reload`. |
 | `tool/deploy --help` or `-h` | Show deployment usage. |
 | `tool/reload` | Shortcut for `tool/deploy --reload`; no build or upload. |
 | `tool/reload --help` or `-h` | Show the delegated deployment usage. |
@@ -220,7 +219,6 @@ The equivalent source entry points are `dart run tool/build.dart`,
 | `/opt/handyman/bin/ihserver` | Run the server in the foreground; run from `/opt/handyman`. |
 | `/opt/handyman/bin/ihlaunch --help` or `-h` | Show supervisor usage. |
 | `sudo /opt/handyman/bin/ihlaunch --reload` | Restart the installed supervisor and server, then exit. |
-| `sudo /opt/handyman/bin/ihlaunch --restart` | Alias for `--reload`. |
 | `/opt/handyman/bin/ihlaunch` | Run the supervisor in the foreground; run from `/opt/handyman`. |
 | `<bundle>/bin/install --help` or `-h` | Show installer usage without installing. |
 | `sudo <bundle>/bin/install` | Install packaged resources and restart. |
@@ -234,14 +232,18 @@ has no restart option—use `ihlaunch`.
 
 Help does not require application credentials. Restart stops this installation's
 supervisor before its server and starts the supervisor in `/opt/handyman`.
-A successful restart message confirms the launcher was started; the application
-may still need unlocking. Do not start a second foreground server or supervisor
+A successful restart message confirms the launcher was started and prints unlock
+instructions using the installed configuration. The application may still need
+unlocking. Do not start a second foreground server or supervisor
 while the installed service is running.
 
 ## Unlock after deployment or reboot
 
 When credentials are unavailable, HTTP/HTTPS starts in locked mode. Normal
 application routes return `503`; the UDP collector and startup email wait.
+The startup log prints unlock instructions before attempting automatic credential
+loading, and reports `Unlock required` if that attempt fails. With HTTPS enabled,
+the instructions include the configured unlock URL and any nonstandard port.
 Visit **https://ivanhoehandyman.com.au/unlock** (or your configured `fqdn`, with
 the HTTPS port if nonstandard) and enter the **Lockbox password**, not the Vault
 passphrase. Use the primary hostname: the form checks that origin, even when

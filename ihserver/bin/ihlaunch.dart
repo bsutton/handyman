@@ -20,8 +20,7 @@ Future<void> main(List<String> args) async {
       'reload',
       negatable: false,
       help: 'Restart the installed service and exit.',
-    )
-    ..addFlag('restart', negatable: false, help: 'Alias for --reload.');
+    );
   late final ArgResults options;
   try {
     options = parser.parse(args);
@@ -36,17 +35,26 @@ Future<void> main(List<String> args) async {
     return;
   }
   if (options['help'] as bool) {
-    print('Usage: ihlaunch [--reload|--restart]\n${parser.usage}');
+    print('Usage: ihlaunch [--reload]\n${parser.usage}');
     return;
   }
-  if (options['reload'] as bool || options['restart'] as bool) {
+  if (options['reload'] as bool) {
     if (!Shell.current.isPrivilegedProcess) {
       stderr.writeln('Run sudo /opt/handyman/bin/ihlaunch --reload');
       exitCode = 1;
       return;
     }
+    // Read the same configuration as the restarted service, regardless of
+    // the directory from which the administrator invoked this command.
+    Directory.current = installationPath;
+    final config = Config();
     await restartService();
-    print('Service restart requested. Check /var/log/ihserver.log.');
+    print('Service restart requested. Check ${config.pathToLogfile}.');
+    print(
+      'Credentials must be unlocked after restart. '
+      'If automatic credential loading does not unlock them: '
+      '${config.unlockInstructions}',
+    );
     return;
   }
   print('Logging to: ${Config().pathToLogfile}');

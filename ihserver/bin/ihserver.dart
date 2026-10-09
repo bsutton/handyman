@@ -43,12 +43,17 @@ Future<void> main(List<String> args) async {
   final config = Config();
   qlog('Starting Handyman Server: $packageVersion');
   config.startupReport.forEach(qlog);
+  qlog(
+    'Credentials must be unlocked before normal service can start. '
+    'If automatic credential loading does not unlock them: '
+    '${config.unlockInstructions}',
+  );
   try {
     await config.loadCredentials();
     qlog('Credentials loaded: all three configured variables validated.');
   } on CredentialException catch (error) {
     qlogerr('Credentials unavailable: ${error.failure.name}. ${error.message}');
-    qlog('Credentials locked. Open https://${config.fqdn}/unlock to unlock.');
+    qlog('Unlock required. ${config.unlockInstructions}');
   }
   final pathToStaticContent = config.pathToStaticContent;
   await _checkConfiguration(pathToStaticContent);

@@ -1,4 +1,4 @@
-#! /usr/bin/env dart
+#! /usr/bin/env dcli
 
 import 'dart:io';
 
@@ -9,19 +9,18 @@ import 'remote.dart';
 Future<void> main(List<String> args) async {
   final parser = ArgParser()
     ..addFlag('help', abbr: 'h', negatable: false, help: 'Show usage.')
-    ..addFlag('reload', negatable: false, help: 'Restart without uploading.')
-    ..addFlag('restart', negatable: false, help: 'Alias for --reload.');
+    ..addFlag('reload', negatable: false, help: 'Restart without uploading.');
   try {
     final options = parser.parse(args);
     if (options.rest.isNotEmpty) {
       throw const FormatException('Unexpected positional arguments.');
     }
     if (options['help'] as bool) {
-      print('Usage: tool/deploy [--reload|--restart]\n${parser.usage}');
+      print('Usage: tool/deploy [--reload]\n${parser.usage}');
       return;
     }
     final remote = RemoteDeployment.load();
-    if (options['reload'] as bool || options['restart'] as bool) {
+    if (options['reload'] as bool) {
       await remote.reload();
     } else {
       await remote.deploy();
