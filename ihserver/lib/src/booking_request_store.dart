@@ -59,11 +59,18 @@ class BookingRequestStore {
       return <BookingRequest>[];
     }
     final decoded = jsonDecode(contents) as List<dynamic>;
-    return decoded
+    final requests = decoded
         .map(
           (e) => BookingRequest.fromJson(Map<String, dynamic>.from(e as Map)),
         )
         .toList();
+    // Earlier versions retained acknowledged requests with imported=true.
+    // These already have a confirmed copy in the app and can be removed too.
+    if (requests.any((request) => request.imported)) {
+      requests.removeWhere((request) => request.imported);
+      await _writeAll(requests);
+    }
+    return requests;
   }
 
   Future<List<BookingRequest>> listAll() =>
@@ -123,34 +130,13 @@ class BookingRequestStore {
     }),
   );
 
-  Future<void> markImported(List<String> ids) => _queue(
+  /// Remove requests only after the client acknowledges its local import.
+  Future<void> removeAcknowledged(List<String> ids) => _queue(
     () => _withLock(() async {
       final all = await _listAllUnlocked();
-      final updated =
-          all
-              .map(
-                (r) =>
-                    ids.contains(r.id)
-                        ? BookingRequest(
-                          id: r.id,
-                          createdAt: r.createdAt,
-                          businessName: r.businessName,
-                          firstName: r.firstName,
-                          surname: r.surname,
-                          email: r.email,
-                          phone: r.phone,
-                          description: r.description,
-                          street: r.street,
-                          suburb: r.suburb,
-                          day1: r.day1,
-                          day2: r.day2,
-                          day3: r.day3,
-                          imported: true,
-                        )
-                        : r,
-              )
-              .toList();
-      await _writeAll(updated);
+      final acknowledged = ids.toSet();
+      all.removeWhere((request) => acknowledged.contains(request.id));
+      await _writeAll(all);
     }),
   );
 

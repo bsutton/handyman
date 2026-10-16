@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:email_validator/email_validator.dart';
 import 'package:shelf/shelf.dart';
 
 import 'booking_request_store.dart';
@@ -36,7 +37,7 @@ Future<Response> handleBookingAck(Request request) async {
         .map((e) => e.toString())
         .toList();
     final store = BookingRequestStore();
-    await store.markImported(ids);
+    await store.removeAcknowledged(ids);
     return Response.ok(
       jsonEncode({'acknowledged': ids.length}),
       headers: {'Content-Type': 'application/json'},
@@ -49,7 +50,17 @@ Future<Response> handleBookingAck(Request request) async {
 
 /// The user/handyman rejected the booking request with a
 /// reason. We send an email to the enquirer with the reason.
-Future<Response> handleBookingReject(Request request) async {
+Future<Response> handleBookingReject(
+  Request request, {
+  Future<bool> Function({
+        required String from,
+        required String to,
+        required String subject,
+        required String body,
+      })
+      sendRejectionEmail =
+      sendEmail,
+}) async {
   if (!isHmbAuthorized(request)) {
     return Response.forbidden('Forbidden');
   }
@@ -66,22 +77,34 @@ Future<Response> handleBookingReject(Request request) async {
 
     final store = BookingRequestStore();
     final requestData = await store.getById(id);
-    if (requestData == null) {
+    final delivery = decoded['delivery_method']?.toString();
+    if (delivery != null && delivery != 'email') {
+      return Response.badRequest(body: 'Unsupported delivery method');
+    }
+    // Imported requests have been removed; the authenticated app retains
+    // their contact details and supplies the rejection destination.
+    final destination = decoded['destination']?.toString().trim() ?? '';
+    if (requestData == null && destination.isEmpty) {
       return Response.notFound('Booking request not found');
     }
 
-    final email = requestData.email.trim();
-    final firstName = requestData.firstName.trim();
-    final surname = requestData.surname.trim();
-    final name =
-        [firstName, surname].where((part) => part.isNotEmpty).join(' ').trim();
+    final email = destination.isNotEmpty
+        ? destination
+        : requestData?.email.trim() ?? '';
+    final firstName = requestData?.firstName.trim() ?? '';
+    final surname = requestData?.surname.trim() ?? '';
+    final name = [
+      firstName,
+      surname,
+    ].where((part) => part.isNotEmpty).join(' ').trim();
     final greetingName = name.isEmpty ? 'there' : name;
 
-    if (email.isEmpty) {
-      return Response.badRequest(body: 'Booking request has no email address');
+    if (!EmailValidator.validate(email)) {
+      return Response.badRequest(body: 'Invalid rejection email address');
     }
 
-    final message = '''
+    final message =
+        '''
 Ivanhoe Handyman Service — Enquiry update<br>
 <br>
 Hi ${_htmlEscape(greetingName)},<br>
@@ -96,7 +119,7 @@ Brett<br>
 Your Ivanhoe Handyman<br>
 ''';
 
-    final sent = await sendEmail(
+    final sent = await sendRejectionEmail(
       from: 'info@ivanhoehandyman.com.au',
       to: email,
       subject: 'Ivanhoe Handyman — Enquiry update',
