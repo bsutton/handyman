@@ -55,6 +55,102 @@ void main() {
     },
   );
 
+  test('locked browser response links to the existing secure form', () async {
+    final response = await handler(
+      Request(
+        'GET',
+        Uri.parse('https://example.invalid/nested/path?secret=canary'),
+        headers: {'accept': 'text/html,application/xhtml+xml,*/*;q=0.8'},
+      ),
+    );
+    expect(response.statusCode, 503);
+    expect(response.headers['content-type'], 'text/html; charset=utf-8');
+    expect(response.headers['cache-control'], 'no-store');
+    expect(response.headers['retry-after'], '30');
+    expect(response.headers['vary'], 'Accept');
+    expect(response.headers['x-content-type-options'], 'nosniff');
+    expect(response.headers['x-frame-options'], 'DENY');
+    expect(
+      response.headers['content-security-policy'],
+      contains("default-src 'none'"),
+    );
+    final body = await response.readAsString();
+    expect(body, contains('href="/unlock"'));
+    expect(body, contains('enter the passphrase'));
+    expect(body, isNot(contains('canary')));
+    expect(body, isNot(contains('name="csrf"')));
+    expect(unlocked, isFalse);
+    expect(await nonce(), isNotEmpty);
+  });
+
+  for (final accept in [
+    '',
+    '*/*',
+    'application/json',
+    'text/plain',
+    'text/html;q=0,application/json',
+    'text/html;q=invalid',
+  ]) {
+    test('locked API keeps plain text for Accept: $accept', () async {
+      final response = await handler(
+        Request(
+          'GET',
+          Uri.parse('https://example.invalid/api'),
+          headers: {'accept': accept},
+        ),
+      );
+      expect(response.statusCode, 503);
+      expect(response.headers['content-type'], 'text/plain; charset=utf-8');
+      expect(response.headers['cache-control'], 'no-store');
+      expect(response.headers['retry-after'], '30');
+      expect(
+        await response.readAsString(),
+        'Service awaiting administrator unlock.',
+      );
+    });
+  }
+
+  test(
+    'non-navigation requests remain plain text even if accepting HTML',
+    () async {
+      final response = await handler(
+        Request(
+          'POST',
+          Uri.parse('https://example.invalid/api'),
+          headers: {'accept': 'text/html'},
+        ),
+      );
+      expect(response.statusCode, 503);
+      expect(response.headers['content-type'], 'text/plain; charset=utf-8');
+      expect(unlocked, isFalse);
+    },
+  );
+
+  test(
+    'unlocked requests pass through unchanged for browser and API',
+    () async {
+      unlocked = true;
+      final original = Response(
+        201,
+        body: 'application',
+        headers: {'cache-control': 'private'},
+      );
+      handler = gate.middleware((_) => original);
+      for (final accept in ['text/html', 'application/json']) {
+        expect(
+          await handler(
+            Request(
+              'GET',
+              Uri.parse('https://example.invalid/'),
+              headers: {'accept': accept},
+            ),
+          ),
+          same(original),
+        );
+      }
+    },
+  );
+
   test('valid unlock enables application routes', () async {
     final response = await handler(post(await nonce(), 'synthetic-password'));
     expect(response.statusCode, 200);

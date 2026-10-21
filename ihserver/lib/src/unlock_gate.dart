@@ -63,10 +63,18 @@ class UnlockGate {
           if (isUnlocked()) {
             return inner(request);
           }
+          final html = _acceptsHtml(request);
           return Response(
             503,
-            body: 'Service awaiting administrator unlock.',
-            headers: {'cache-control': 'no-store', 'retry-after': '30'},
+            body: html ? _lockedPage : 'Service awaiting administrator unlock.',
+            headers: {
+              ..._headers,
+              'content-type': html
+                  ? 'text/html; charset=utf-8'
+                  : 'text/plain; charset=utf-8',
+              'retry-after': '30',
+              'vary': 'Accept',
+            },
           );
         }
         if (request.requestedUri.scheme != 'https') {
@@ -180,6 +188,40 @@ class UnlockGate {
           _busy = false;
         }
       };
+
+  // Require an explicit HTML preference so API and wildcard clients keep
+  // receiving the plain-text maintenance response.
+  static bool _acceptsHtml(Request request) {
+    if (request.method != 'GET' && request.method != 'HEAD') {
+      return false;
+    }
+    for (final range in (request.headers['accept'] ?? '').split(',')) {
+      final parts = range.toLowerCase().split(';');
+      if (parts.first.trim() != 'text/html') {
+        continue;
+      }
+      var quality = 1.0;
+      for (final parameter in parts.skip(1)) {
+        final pair = parameter.trim().split('=');
+        if (pair.first.trim() == 'q') {
+          quality = pair.length == 2
+              ? double.tryParse(pair.last.trim()) ?? 0
+              : 0;
+        }
+      }
+      return quality > 0 && quality <= 1;
+    }
+    return false;
+  }
+
+  static const _lockedPage = '''
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Service awaiting administrator unlock</title></head><body>
+<main><h1>Service awaiting administrator unlock.</h1>
+<p><a href="/unlock">Administrator: enter the passphrase to unlock the service</a></p>
+</main></body></html>''';
 
   String _page([String message = '']) {
     final error = message.isEmpty
