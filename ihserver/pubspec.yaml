@@ -13,17 +13,17 @@ dependencies:
     version: ^0.1.0
   cron: ^0.6.0
   date_time_format: ^2.0.1
-  dcli: ^7.0.1
-  dcli_core: ^7.0.1
-  dnsolve: ^1.0.0
+  dcli: ^10.4.3
+  dcli_core: ^10.4.0
+  dnsolve: ^3.0.0
   email_validator: ^3.0.0
   http_parser: ^4.0.2
   intl: ^0.20.2
-  mailer: ^6.0.1
+  mailer: ^7.2.0
   mime: ^2.0.0
   mime_type: ^1.0.0
   path: ^1.9.0
-  revault_api: ^0.4.0
+  revault_api: ^0.6.0
   settings_yaml: ^8.1.0-alpha.2
   shelf: ^1.4.1
   shelf_letsencrypt: ^2.0.3
@@ -35,7 +35,7 @@ dependencies:
 
  
 dev_dependencies:
-  lint_hard: ^6.0.0
+  lint_hard: ^8.0.1
   test: ^1.25.0
 
 executables:
